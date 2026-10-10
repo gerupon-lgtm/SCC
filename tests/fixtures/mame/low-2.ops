@@ -1,0 +1,4129 @@
+W 0 42
+W 1 ce
+W 2 8a
+W 3 b0
+W 4 0
+W 5 d1
+W 6 2
+W 7 1a
+W 8 65
+W 9 ab
+W a 5d
+W b 10
+W c 56
+W d b9
+W e 40
+W f 30
+W 10 75
+W 11 c4
+W 12 7d
+W 13 45
+W 14 8e
+W 15 c3
+W 16 61
+W 17 c6
+W 18 f8
+W 19 84
+W 1a 42
+W 1b f6
+W 1c 35
+W 1d 74
+W 1e b0
+W 1f 64
+W 20 4c
+W 21 3e
+W 22 b0
+W 23 64
+W 24 e7
+W 25 31
+W 26 d1
+W 27 7c
+W 28 9b
+W 29 b3
+W 2a c2
+W 2b 46
+W 2c 97
+W 2d c4
+W 2e 74
+W 2f 28
+W 30 5
+W 31 a5
+W 32 fd
+W 33 8b
+W 34 4b
+W 35 b8
+W 36 d2
+W 37 7f
+W 38 b3
+W 39 41
+W 3a be
+W 3b 9d
+W 3c c4
+W 3d 26
+W 3e bd
+W 3f 16
+W 40 46
+W 41 a1
+W 42 5f
+W 43 55
+W 44 d9
+W 45 11
+W 46 c7
+W 47 9
+W 48 90
+W 49 8e
+W 4a b7
+W 4b 2
+W 4c ff
+W 4d d5
+W 4e 2e
+W 4f 92
+W 50 cb
+W 51 f0
+W 52 23
+W 53 13
+W 54 68
+W 55 b1
+W 56 7e
+W 57 de
+W 58 65
+W 59 71
+W 5a 14
+W 5b a
+W 5c da
+W 5d 5c
+W 5e b9
+W 5f ea
+W 60 be
+W 61 cc
+W 62 e5
+W 63 54
+W 64 9
+W 65 d6
+W 66 9a
+W 67 d3
+W 68 32
+W 69 fd
+W 6a 5b
+W 6b 6
+W 6c 89
+W 6d 51
+W 6e 77
+W 6f 55
+W 70 28
+W 71 7b
+W 72 b5
+W 73 27
+W 74 92
+W 75 80
+W 76 d7
+W 77 ac
+W 78 9c
+W 79 38
+W 7a 14
+W 7b fe
+W 7c 70
+W 7d 8a
+W 7e ab
+W 7f dd
+T 98
+T 4730
+W 2d e4
+T 265
+W 9d 1b
+T 245
+T 1753
+W 81 0
+T 223
+W 8f 7f
+W 85 0
+W 9a f
+W 48 dd
+W 8f df
+W 1a 74
+T 16
+T 72
+W 8f 65
+T 250
+T 266
+W 8b f8
+W 8f c1
+T 77
+W 86 9
+W 15 81
+W 8a c9
+W 84 1
+W 8f be
+W 43 c
+W 13 3e
+W 80 b
+W 9f dc
+W 89 0
+T 1810
+W 81 0
+T 266
+T 2
+T 143
+W 8f ea
+W 9d 9e
+T 3465
+W 8f c6
+W 8f b8
+T 168
+W 9f c
+T 265
+W 21 61
+T 161
+T 232
+T 236
+W 8f 86
+T 243
+W 87 0
+W 85 0
+W 5 de
+T 230
+W 86 0
+T 2404
+T 260
+T 132
+T 1576
+T 158
+W 82 a
+W 81 0
+W 8f 5c
+W 80 1d
+T 125
+W 86 1
+T 228
+T 42
+W 85 0
+W 8c 5
+W 9f 25
+T 138
+W 82 14
+W 3e 22
+W 9e 7a
+W 8f 46
+T 284
+W 8a ba
+W 84 0
+W 87 0
+W 8a 22
+T 116
+T 84
+W 57 f8
+T 54
+T 292
+T 154
+W 2a de
+W 8f ee
+T 299
+W 91 0
+W 3f 3f
+T 287
+T 292
+W 27 a4
+W 8a 5d
+W 8b ad
+T 83
+W 82 7
+W 83 0
+W 81 0
+W 8f 81
+W 8d c4
+W 6b b0
+T 246
+T 128
+W 52 8a
+W b a4
+W 87 0
+T 129
+T 46
+W 8b 51
+T 83
+W cc 39
+W f 4
+W 58 3
+W 89 0
+W 93 0
+W 9e 9d
+T 247
+T 360
+W 16 1b
+T 37
+W 88 1
+W 6e 51
+W 88 b
+W 8c 60
+W 83 0
+W 84 c
+T 111
+T 213
+T 232
+W 80 c
+W 86 9
+W 84 a
+T 291
+W 4 19
+W 57 e0
+T 296
+T 207
+T 159
+W 95 0
+W 8f c2
+W 76 5
+W 8e 68
+W 8d e6
+W 9a 62
+T 136
+W 98 4
+W 11 79
+W 36 f
+W 40 ce
+W 7d ae
+W 80 7
+T 89
+W 5 63
+W 8f 88
+W 8c 6b
+W 8c 3c
+W 86 b
+W 84 1
+W 9c 71
+T 289
+W 53 9e
+W 9c 67
+T 147
+W 80 8
+W 2d d9
+T 211
+W 82 7
+W 8f 69
+W 88 8
+W 8f 68
+T 275
+W 8f a
+W 80 c
+T 207
+W 31 8
+W 89 0
+T 74
+T 289
+T 114
+W 66 6d
+T 245
+W 8f dd
+W 7a 19
+T 152
+W 8f 71
+T 100
+W 8d b1
+T 41
+T 115
+T 217
+W 83 0
+W 8f 97
+W 7d ef
+W 51 4
+W 87 0
+T 108
+W 5b 3c
+W 83 0
+W 8e 1b
+T 222
+T 48
+W 81 0
+W 8f 6a
+W 87 0
+W 8f 70
+T 13
+W 86 14
+T 4098
+T 93
+T 87
+W 8f 35
+W 8f f8
+T 199
+W 87 0
+W 83 0
+T 2247
+W 89 0
+W 87 0
+T 258
+W 8a fe
+T 142
+W 8a 1b
+W 8f 8f
+W 83 0
+W 8d 85
+W 8c bd
+W 45 50
+T 140
+W 80 14
+T 2270
+W 8d 8
+W 99 0
+T 214
+W 5a ca
+W 2f 47
+T 4241
+W 86 0
+W 8c 2b
+W 82 1
+W 87 0
+T 116
+W 9c a6
+T 149
+W 91 0
+T 25
+W 89 0
+T 286
+T 125
+T 109
+W 87 0
+W 89 0
+W 9 25
+W 18 32
+W 84 9
+W 8f 3f
+T 248
+T 93
+W 8d 92
+T 220
+T 42
+W 85 0
+W 8e a6
+W 69 6
+T 153
+W 8e 21
+W ae 62
+W 4c b6
+W 85 0
+W 8c 69
+W d1 1f
+W 82 a
+W 87 0
+T 273
+W 87 0
+T 280
+W 93 0
+W 8c f4
+T 294
+W 8a fa
+W 84 7
+W 26 23
+W 86 c
+T 242
+T 217
+T 102
+T 295
+W 87 0
+W 8d 81
+W 8e 32
+W 9c 43
+W 98 8
+W 90 a
+T 298
+W 85 0
+T 246
+W 8d 18
+T 155
+W 92 1
+T 150
+T 98
+T 268
+T 231
+T 96
+T 193
+W 9f 83
+W 83 0
+T 260
+W 84 8
+W 89 0
+W 0 d
+W 88 c
+W 2b 9e
+T 1
+T 226
+T 5
+W 86 8
+W 6d ce
+T 116
+T 203
+W 81 0
+W 5f d3
+W 8f 60
+T 37
+T 285
+W 81 0
+W 80 c
+W 74 68
+W 88 1
+W 9b 41
+T 266
+T 91
+W 89 0
+W 2 1d
+W 8b c0
+T 169
+W 6b 65
+W 86 28
+W 60 64
+W 8e 4a
+W 8d f3
+T 184
+T 247
+W 86 c
+W 39 ab
+T 81
+T 362
+T 160
+T 290
+W 5f 69
+W 97 0
+W 8f 8
+W 73 e0
+W 9e d3
+W 99 0
+W 8c 51
+T 166
+T 269
+T 3
+T 271
+T 59
+T 173
+W c ec
+W 89 0
+T 294
+T 229
+W be 1d
+W 54 11
+W 8f ab
+W 89 0
+T 231
+W 82 28
+W 81 0
+T 200
+W 8f f2
+W 83 0
+W 86 1f
+T 99
+T 158
+T 297
+W 66 9a
+W 84 1f
+W 85 0
+W 90 b
+T 222
+W 88 d
+W 3 42
+W 36 39
+W 87 0
+W 60 58
+W 8b 53
+W 8c d8
+W 8f 36
+T 4483
+W 89 0
+W 7a 27
+W 83 0
+T 53
+W 81 0
+T 104
+W 81 0
+T 217
+W 80 7
+W 85 0
+W 8f 86
+W 85 0
+W 19 22
+W 9f 6
+T 104
+T 72
+T 72
+T 57
+T 161
+W 80 0
+T 109
+W 50 0
+W 8d 1e
+T 101
+W 36 e8
+W 9f 53
+W 8b 45
+T 2076
+T 231
+W 8c 4d
+W 84 28
+T 7
+T 168
+W 80 9
+W 8f 7f
+T 247
+W 56 1a
+T 213
+T 219
+W 8d 35
+W 82 a
+W 97 0
+T 185
+T 32
+W 11 81
+T 84
+W 8f 3b
+W 8f 39
+W 82 0
+T 447
+W 47 6d
+W 9b 5a
+T 140
+T 18
+W 4 95
+W 12 43
+W 8f 83
+W 9f d
+T 98
+T 293
+T 2802
+W 64 9d
+W 83 0
+W 92 c
+T 46
+W 9f 50
+W 81 0
+W 83 0
+T 30
+W 91 0
+W 8f 22
+W 80 1
+T 173
+T 241
+W 9b 36
+W 9e b9
+W 83 0
+W 87 0
+T 4748
+T 2
+W 89 0
+W 83 0
+W d0 c3
+T 227
+W 92 b
+W 99 0
+W ca 37
+T 237
+T 231
+T 42
+W 84 b
+W 84 10
+W 5d c3
+W 8f 4f
+W 88 7
+W 8f 1d
+W a3 b5
+T 263
+T 3
+W 87 0
+T 62
+W 84 b
+W 87 0
+T 89
+W 85 0
+T 3489
+W 1b b4
+W 87 0
+W 8f 28
+W 83 0
+T 88
+W 96 1
+W 1e d5
+W 30 2e
+W 9f df
+W 84 28
+T 282
+W 8f 53
+W 96 0
+W d d2
+W 89 0
+W 80 1
+W 77 0
+T 57
+W 8e bd
+T 77
+T 154
+W 89 0
+T 2346
+T 257
+W 86 1
+W 95 0
+W 88 7
+W 8e fb
+W 84 0
+W 8f aa
+T 123
+T 190
+T 12
+W 82 8
+W 8f 77
+T 952
+W 87 0
+T 143
+W 88 0
+W 82 7
+W 8f 97
+W 8f 5
+T 296
+W 86 14
+T 1206
+W 8f e3
+W 59 da
+W 35 10
+W 6e 1b
+W 88 1
+W 89 0
+T 91
+W 86 7
+W 80 14
+W 18 d2
+W 8a 1a
+W 82 a
+W 86 c
+T 227
+T 65
+T 57
+W 36 a2
+T 117
+W 84 24
+W 88 9
+T 24
+T 34
+T 599
+T 8
+W 87 0
+W 86 b
+W 85 0
+T 158
+W 8b 2b
+W 94 a
+W 8d 36
+T 187
+W 83 0
+T 32
+W 82 0
+W 8a d1
+W 86 14
+W 85 0
+W 8e 4f
+T 61
+T 168
+W 81 0
+T 171
+W 8c 2
+T 209
+W 85 0
+T 156
+T 234
+W 83 0
+W 5 5e
+W 5b 11
+W 80 1
+T 227
+T 94
+W 9c b6
+W 9f 1a
+T 128
+W 8a fe
+W 8f c
+T 280
+W 8e 8
+W 84 1f
+T 162
+W 80 18
+W 74 9
+W 86 b
+W 2b b4
+W 8a 57
+W 8e 38
+W 8f 9d
+W 8c 35
+T 41
+W 85 0
+T 120
+W 98 0
+T 226
+W 8a 81
+T 24
+W 8f e8
+T 187
+W 83 0
+W 8f 75
+W 8b de
+T 175
+W 86 b
+W 4b 49
+T 145
+T 89
+W 44 8d
+T 176
+T 637
+T 261
+T 54
+W 68 1e
+W 82 14
+T 467
+T 36
+T 228
+W 80 b
+W 1 3e
+W 9f 40
+T 125
+T 219
+T 130
+W 8f 91
+T 2678
+T 196
+W 88 1f
+W 83 0
+T 3218
+W ab 54
+T 192
+W 8f b7
+W 84 9
+W 86 6
+W 8b 15
+W 12 11
+T 86
+T 249
+W 7f 1e
+T 127
+W 8f 6e
+T 175
+T 110
+T 87
+W 8f 67
+W 8e 7e
+T 18
+T 204
+T 11
+W 8f 4
+T 130
+T 105
+T 151
+W 8f 2e
+W 99 0
+T 34
+T 123
+T 89
+W 54 15
+W c9 e1
+W 58 68
+W 84 14
+T 97
+T 123
+T 206
+W a 6b
+W 95 0
+W 89 0
+W 88 7
+T 273
+W 7a 3e
+W 9f bc
+T 2126
+T 99
+T 64
+T 93
+W 8f dc
+T 195
+W 88 1f
+W 8b 8
+W 85 0
+W c6 75
+W 20 4a
+W 9f f4
+W 41 f6
+T 2022
+T 3396
+W 9c 42
+W 88 1f
+W 77 14
+T 27
+T 193
+T 20
+T 4971
+T 29
+W 65 e7
+W 8c 40
+W 82 7
+W 9b 89
+W 5a 47
+T 113
+T 105
+T 90
+W 89 0
+W 88 9
+T 3274
+T 197
+W 91 0
+T 138
+W 88 0
+W 81 0
+T 77
+T 115
+T 121
+W 8a 48
+W 82 0
+W 83 0
+W 83 0
+W d9 45
+W 9f ba
+W 81 0
+W 98 b
+T 1
+W 2c ac
+W 88 28
+T 157
+W 81 0
+W 92 8
+W ce 58
+T 6
+W 96 9
+W 82 a
+W 81 0
+W 8c 10
+T 283
+W 6d 51
+W 82 1f
+T 153
+W 23 d7
+W 8e 7f
+W 80 7
+W 97 0
+T 92
+T 192
+W b8 f0
+W 68 b6
+W 81 0
+T 245
+T 92
+W 36 83
+T 138
+W 2a d4
+W 80 1f
+W 97 0
+T 101
+W 84 1f
+T 87
+W 7b eb
+W 9f 43
+W 19 84
+T 64
+W 83 0
+T 16
+W 9 a7
+W 8f f5
+T 170
+T 257
+W 87 0
+W 8f a6
+W 6e 60
+T 66
+T 190
+T 24
+W 5b 23
+T 188
+W 82 a
+W 8e 33
+W 86 0
+W 95 0
+T 13
+W 9d 74
+W 8c 38
+T 230
+W 81 0
+W 80 1f
+T 72
+W f 30
+T 285
+T 218
+W 8e 8c
+T 186
+T 288
+W 2 10
+T 243
+T 228
+W 85 0
+T 255
+T 192
+T 230
+T 172
+W 20 2
+T 111
+T 3180
+W 6f 61
+W 8f 34
+W 95 0
+T 1289
+W 8e 8f
+W 85 0
+W 85 0
+W c4 1e
+W 86 c
+T 245
+W 79 70
+T 297
+T 287
+W 7b 19
+T 149
+T 255
+W 5f c8
+T 87
+W 8f 80
+T 192
+T 229
+T 234
+W 85 0
+T 127
+T 298
+W 81 0
+T 142
+T 33
+W a 20
+T 5
+T 30
+W 80 9
+W 8d 78
+W 8b f7
+W 8f 42
+W 82 a
+W 83 0
+T 292
+W 9a 1e
+T 261
+W cd 3e
+T 44
+T 3384
+W 19 2
+T 289
+W 3c 53
+W 85 0
+W 8f 27
+W 54 a5
+T 191
+T 182
+W a1 67
+T 45
+T 35
+W 99 0
+T 201
+T 172
+W 8a 9c
+W 98 c
+W 8b 3e
+W 84 8
+W 8e ae
+W 89 0
+T 71
+T 278
+W 8b 15
+T 187
+T 244
+W 50 6c
+T 194
+T 132
+T 226
+W 85 0
+W 8f a1
+T 149
+T 66
+W 7e 57
+T 34
+T 160
+W 17 c7
+T 245
+W 39 ad
+T 63
+W 85 0
+W 30 e4
+W 9d 20
+W 87 0
+W 4d 20
+W 8f 70
+W 8c 57
+W 9e ed
+T 255
+T 3938
+T 248
+W 8f b1
+T 292
+T 7
+W 8f 7
+T 3615
+W 83 0
+T 69
+T 164
+W 3d f1
+W 89 0
+T 300
+T 86
+W 8f e0
+T 111
+W 80 1
+W 85 0
+T 140
+T 207
+W 8f c2
+T 270
+W 32 65
+W 88 c
+W 88 7
+W 4e 5e
+T 274
+W 12 1b
+W 8f d
+W 2d 3a
+T 208
+T 3508
+T 8
+W 21 ca
+T 122
+W 52 9
+W 7f 77
+W 6d 93
+W 8c 82
+T 195
+W 8f bf
+W 46 25
+W 87 0
+W 82 8
+W 83 0
+W 8f 1b
+W 86 1f
+W d d9
+W 86 1
+W 8f 18
+W 80 1
+W 41 1
+W 51 b3
+W 4e 88
+W ca 3c
+T 178
+W 8d c9
+W 99 0
+T 3132
+T 47
+T 258
+T 162
+T 206
+W 8f 4f
+T 263
+T 279
+T 51
+T 156
+W 46 c5
+W 46 d3
+W 9 5b
+W 49 b
+W 1e c2
+W 87 0
+W c 87
+W 6f b7
+T 150
+T 204
+W 60 fd
+W 83 0
+T 51
+W 8b c0
+T 100
+W 9f 39
+T 263
+W 31 e7
+T 275
+W 4a 57
+W d a5
+T 64
+W 28 77
+W 81 0
+W 81 0
+W 8d 29
+T 27
+W 83 0
+T 118
+W 8f 37
+T 20
+T 159
+T 81
+W 8e 5d
+W 86 1
+W 88 1d
+W 97 0
+T 162
+T 147
+W 9e a
+W 9e a3
+W 93 0
+T 4
+T 251
+W 20 cb
+T 242
+T 223
+W bf c5
+W 2c bf
+W 8f 8d
+W 10 a5
+W 8d 65
+W 8f e
+W 18 91
+T 86
+T 27
+W 8c 5b
+W 8a cb
+W 43 e4
+W 85 0
+W 84 9
+W 93 0
+W 89 0
+W a 2b
+W 8f 3e
+W 88 8
+W 43 1f
+T 182
+W 89 0
+W 62 e1
+W 9d 46
+T 291
+W 80 3
+W 8b 13
+W 8f 18
+W 86 1
+W 6a 5d
+W 52 65
+W 77 9
+T 7
+W 22 7b
+W 9d 44
+T 97
+W 85 0
+W 19 cf
+T 138
+W 85 0
+W 8d bd
+W 8b d3
+W 8f 1a
+T 224
+W 8c b0
+T 25
+W 8e 24
+W 8f 2e
+W 86 7
+W 80 9
+T 167
+T 26
+W 83 0
+T 52
+W 3c e3
+W 81 0
+T 128
+T 4557
+T 269
+T 7
+W 85 0
+W 82 b
+W 99 0
+W 86 1f
+W 86 14
+W 85 0
+T 213
+W 86 7
+W 87 0
+T 13
+W 83 0
+W 98 14
+W 8f 2c
+T 95
+W 5f 7e
+T 100
+W 8a 44
+W 9f dc
+T 168
+W 80 9
+T 17
+W 8c 52
+T 271
+T 168
+W 84 8
+T 238
+W 89 0
+W 7f d0
+T 279
+W 86 1
+W 8a 96
+W 6 86
+T 3
+T 241
+W 84 14
+W 9f 83
+T 70
+T 176
+T 269
+W a7 39
+T 223
+W 7d 3c
+T 160
+T 222
+T 176
+T 75
+T 74
+T 80
+W d6 8c
+W 8f 5c
+T 187
+T 31
+W 6e 1e
+W 76 ba
+W e 0
+W 7 a6
+W 95 0
+T 163
+W 82 1f
+W 8c 34
+T 52
+T 178
+T 247
+T 3812
+W 8f bf
+W 87 0
+W 81 0
+T 24
+T 30
+T 3399
+W 8b c9
+W 9f 48
+W 8f 11
+T 73
+W 3 20
+T 162
+T 53
+W 89 0
+W 8d 74
+W 81 0
+T 30
+W 81 0
+W 89 0
+W 80 28
+T 145
+W 3f c4
+W 85 0
+T 44
+W 9 20
+W 8f d1
+W 86 c
+W 87 0
+W 92 9
+T 158
+W 86 1f
+W 2 5c
+W 85 0
+T 2028
+W 94 28
+W 81 0
+T 92
+T 187
+W 86 28
+W 84 8
+W 8f c
+W 87 0
+T 101
+W 8c ad
+W 8b a2
+W 58 c5
+T 170
+W 55 2e
+W 15 21
+W 8e 93
+T 265
+W 50 33
+T 228
+T 127
+T 262
+T 180
+T 27
+W 8b 5d
+W 81 0
+W 67 b1
+W 87 0
+W a0 7b
+W 8f 21
+W 95 0
+T 183
+T 291
+W 3 ad
+W 2f 52
+W 92 9
+W 84 a
+W 96 14
+T 40
+T 227
+W 86 c
+T 219
+W 86 a
+T 1685
+W 80 19
+W 8f a6
+W a7 a8
+W 24 23
+W 89 0
+T 162
+T 1
+T 103
+W 86 b
+W 34 f2
+W 82 1f
+W 73 2a
+T 89
+W 97 0
+W 1e 52
+W 84 c
+T 70
+W 9d 2d
+W 8f 14
+W aa 18
+W 3a 49
+W 9f 61
+W 5c 1b
+T 139
+W 80 7
+W 8c b9
+T 67
+T 175
+T 182
+W 4e 18
+T 54
+W 86 14
+T 229
+W 83 0
+W 8f 6a
+W 8a 25
+T 205
+T 30
+W 92 b
+W 88 28
+W 47 b6
+T 243
+W 96 1f
+W 8f 1e
+T 96
+W 8f eb
+W bd 5f
+T 297
+W 8f a3
+W 1b 12
+W 8f 30
+T 246
+T 52
+T 214
+W 81 0
+W 86 0
+T 277
+W 8d 98
+W 8f 3d
+T 69
+T 218
+T 223
+T 288
+W 7c e9
+T 78
+W 83 0
+T 138
+W 88 1c
+T 230
+W 3e 36
+W 9f b1
+T 854
+W 86 b
+W 97 0
+W 68 8f
+W 89 0
+W 63 99
+T 239
+W 1d 42
+W 89 0
+W 8e 8d
+W 81 0
+W 8f b8
+W 85 0
+W 52 30
+W 8e 3
+T 244
+T 272
+W 93 0
+T 230
+W 34 a0
+W 25 b2
+T 133
+W 0 1c
+W 70 12
+W 7b 2c
+W 9c fe
+W 99 0
+W 9c 9b
+W 88 0
+T 125
+W 8f a3
+T 293
+W 80 9
+W 8f 60
+W 3a 4f
+W 83 0
+W 89 0
+W d2 c8
+W 81 0
+W 8f 98
+T 289
+W 4e 93
+W 89 0
+T 44
+W 33 7
+T 258
+W 8f 79
+W 15 83
+T 18
+T 8
+W 9f cf
+W 85 0
+W 8a ce
+T 81
+T 235
+T 243
+W 8a 99
+W 8e 0
+T 90
+W 47 2a
+W 15 cd
+W 1e 23
+W 80 0
+W 8a 87
+W b 78
+W 8f d7
+W 8f b8
+W 8a 3c
+W 8f f2
+W 8f 3a
+W 8f 38
+T 2440
+W 8c 2b
+T 205
+T 177
+W 81 0
+W 7d 56
+W 91 0
+T 5
+T 20
+T 35
+T 115
+W 9f 29
+T 277
+W 89 0
+T 77
+W 6d 6a
+W 41 51
+W 94 28
+W 8a 67
+W 8f 34
+W 86 28
+T 149
+W 81 0
+W 8f 5c
+T 259
+W 8f bf
+T 202
+W 80 8
+W 82 b
+T 119
+W 8f a7
+T 171
+W cf 85
+W 2 45
+T 243
+W 86 1
+T 1526
+W 80 a
+W 8f 41
+T 154
+W 8a b3
+W 88 14
+W 8f 7
+W 8f c9
+W 81 0
+T 143
+W 8f 22
+W 83 0
+W 8d c4
+W 87 0
+W 87 0
+W 4e ae
+W 99 0
+W 9f 4c
+W 8c a0
+T 112
+T 153
+W 8d 59
+W 8c 14
+W 8f 6
+W 80 7
+T 169
+W 8d f0
+T 218
+W 21 18
+W 8a f5
+T 213
+W 86 0
+T 66
+W 87 0
+W 8f 34
+W 3a 31
+W 84 a
+T 118
+T 70
+W 8f 7
+T 123
+W 65 c1
+T 72
+T 292
+W 94 1f
+T 256
+W 89 0
+W 62 25
+W 6d 75
+W 32 9
+W 90 14
+T 297
+T 155
+W 2f 3a
+W 8e 23
+W 82 0
+T 294
+W 8d f8
+T 122
+T 73
+W 8f 5a
+T 201
+T 288
+W 8f 7a
+W 3c 50
+W 20 78
+W 8d 65
+T 286
+T 90
+T 4186
+T 249
+W 14 48
+W 86 0
+W 8d b9
+W 5 71
+W 81 0
+W 87 0
+T 53
+T 3071
+W 24 1c
+W 8f bd
+T 47
+W 2a 3f
+T 43
+T 236
+W 9c cf
+T 125
+W 80 c
+W 80 1
+T 82
+W 63 89
+W 80 a
+W 52 b3
+T 67
+T 259
+W 90 1f
+T 283
+W 5d dc
+W 8f cd
+W 8f e8
+T 47
+W b4 87
+T 164
+T 132
+T 212
+W 8c 53
+T 14
+W 9f 92
+W 86 a
+W 81 0
+T 135
+T 110
+W 80 28
+W 88 9
+W 86 13
+T 3790
+W 86 14
+W 82 8
+W 7d d0
+W 81 0
+T 107
+W 88 28
+W 8f b9
+W 8f 40
+W 88 8
+T 167
+T 253
+W 90 0
+W 80 9
+W 8f fa
+T 270
+W 8f f4
+W 89 0
+W 8f d6
+T 3372
+W ca c7
+T 201
+W 28 5a
+W 90 1
+W 6 4
+T 164
+T 66
+T 157
+T 70
+T 240
+T 2778
+T 2429
+W 82 1
+W 39 46
+W 83 0
+W 37 45
+T 13
+T 202
+W 9f b
+W e da
+W 81 0
+W 80 14
+T 2986
+W 80 1
+W c6 5c
+T 214
+W 80 14
+T 208
+W 86 7
+W 8e c3
+T 249
+T 185
+W 94 7
+T 16
+W 44 53
+W 8f da
+T 31
+T 106
+W 8c 2c
+W 9d aa
+T 46
+T 232
+W 80 7
+T 3916
+W 35 ad
+T 222
+W 82 4
+W 8a 6e
+T 245
+T 127
+W 83 0
+T 202
+W 86 13
+T 75
+T 170
+T 99
+W 84 b
+W 89 0
+T 291
+W 98 a
+W 93 0
+W 86 28
+T 12
+T 246
+T 280
+W 81 0
+W 98 7
+T 234
+W 89 0
+W 94 7
+T 202
+T 173
+T 19
+W 95 0
+T 229
+W 8f de
+T 285
+T 84
+T 120
+T 142
+T 112
+W 82 28
+T 220
+W 8b b8
+W 95 0
+W 88 b
+W 80 27
+T 53
+T 242
+T 146
+T 214
+W 80 0
+W 82 7
+W 8f eb
+W 84 28
+W 7a b
+W 97 0
+T 9
+T 42
+W 19 19
+T 135
+T 158
+T 195
+T 139
+W 85 0
+W 80 a
+W 80 7
+T 112
+W 87 0
+T 278
+T 71
+T 158
+T 262
+W 1c 68
+W 91 0
+W 83 0
+W 78 91
+T 179
+T 4
+W 96 a
+W 80 c
+W 81 0
+W 89 0
+T 212
+T 162
+W d 9a
+W 95 0
+W 8f 4a
+W 8f 3e
+W 9a f
+W 1b 66
+W 93 0
+W 37 c0
+T 177
+W 97 0
+W 7 61
+W 9a cf
+T 214
+T 163
+T 90
+W 66 20
+W 9c 2e
+T 198
+T 227
+T 208
+W 94 28
+T 97
+T 255
+T 87
+T 162
+W 80 b
+W 80 9
+W 93 0
+W 8e 9
+T 2853
+T 160
+T 169
+W 75 98
+T 130
+W 9 77
+W 90 7
+W 83 0
+W 9d c0
+W 8f 88
+T 281
+T 26
+T 194
+W 88 1
+W 85 0
+W 8c 37
+T 221
+W 7c 12
+W 8f 5c
+W 8d ed
+W 40 19
+W 44 ee
+T 19
+T 251
+W 6d 78
+W 7c 1d
+T 148
+W 8e 6b
+W 38 c3
+W 98 9
+W 8d 21
+W 86 7
+T 206
+W 2d e1
+T 20
+T 236
+W 96 28
+W 92 8
+T 56
+W 8f 3f
+W 98 c
+W 8f f2
+W 8d 80
+W 98 1
+T 206
+W 82 9
+T 3485
+T 133
+W df d7
+W 89 0
+W 86 c
+W 88 0
+T 258
+W 84 1f
+W a5 fb
+W 9e 4d
+T 146
+T 14
+T 230
+T 233
+W 8f 87
+W 8f e4
+W 8f 52
+W 4d 10
+T 203
+T 177
+W 30 84
+W 82 9
+W 85 0
+T 133
+T 1
+W 82 0
+W 8f 64
+W 8d 16
+W 80 1f
+W 9c 1a
+T 51
+W 50 cd
+W 9f 52
+T 272
+T 168
+W 72 2f
+T 278
+W 62 41
+W 8f f5
+T 209
+T 160
+T 49
+W 91 0
+W 84 c
+W 99 0
+W d3 71
+W 84 c
+T 264
+W 8f f5
+W 96 7
+W 87 0
+T 275
+T 3770
+T 204
+W 85 0
+W 82 1
+W 9a c5
+T 20
+W 94 7
+W 80 b
+T 1758
+T 269
+W 73 b7
+W d de
+W 89 0
+W 15 39
+T 194
+T 67
+W 8b 72
+W 82 1
+W 1f ed
+T 193
+W 88 a
+W 8e cf
+T 4007
+T 38
+T 6
+T 112
+W 3f 2c
+W 7 bd
+W 4d b0
+W 8f 75
+W 8f ae
+W 23 c0
+W 87 0
+W 11 53
+W 95 0
+W 94 14
+T 205
+W 72 4a
+W 8d 19
+W c4 d3
+W 89 0
+T 255
+W 90 c
+T 197
+W aa 60
+W 90 c
+W 16 e
+W 85 0
+T 110
+W 7e 9
+W 9f 7f
+W 88 28
+W b9 60
+W 5 c2
+T 256
+W 8f 6e
+W 85 0
+T 141
+T 298
+W 89 0
+T 73
+W 9f 46
+W 8f 6a
+W 80 7
+T 292
+W 5d 24
+T 158
+W 78 32
+W 4b d6
+T 223
+W 29 b5
+T 4695
+W 8f bb
+W 8f fd
+W 86 a
+T 62
+T 247
+W 87 0
+W 8f a8
+W 87 0
+T 23
+W 13 42
+T 108
+T 121
+W c5 40
+T 33
+W 28 e
+W 94 0
+W 87 0
+T 135
+W 85 0
+W 88 0
+T 60
+W 8a a7
+W 85 0
+W 8d 80
+T 217
+W 8f c3
+W 83 0
+W 9c 86
+W 74 cc
+T 279
+W 89 0
+W 95 0
+W 86 28
+W 9e 2e
+W 86 28
+T 285
+T 281
+T 97
+W 88 b
+W 66 8c
+T 285
+W 83 0
+T 9
+W 6 53
+W 83 0
+T 69
+T 171
+W 45 e0
+W 88 1f
+T 271
+W 84 7
+W 8e d0
+W 8f c6
+T 98
+W 70 b3
+W 8f d
+T 1831
+W 8c 40
+W 85 0
+T 78
+T 74
+W 85 0
+T 29
+W 61 20
+W 99 0
+W 8e b3
+T 151
+T 260
+W 88 b
+W 86 9
+T 123
+W 9f 62
+T 227
+T 286
+W 86 9
+W 70 b9
+W 8a f
+W 83 0
+W 86 1f
+T 196
+T 46
+W 8e 44
+T 250
+T 104
+T 216
+W 88 22
+T 184
+T 13
+T 235
+T 118
+W 74 37
+T 6
+T 262
+W 8f 64
+T 130
+T 211
+W 8f 16
+T 234
+W 63 f2
+T 101
+W 54 e6
+W 84 0
+W 84 7
+W 8c 42
+W 8b 7a
+T 177
+W 8f e1
+W 91 0
+W 8c 1d
+W 6c a3
+W 89 0
+T 212
+W 88 8
+W 82 8
+T 86
+W 83 0
+W 6f ae
+W 1 66
+T 27
+T 313
+T 13
+W 8f c2
+W 8f ea
+W 88 24
+T 181
+W 15 7
+W 80 28
+W 8f a3
+W 8f 16
+T 8
+T 63
+T 137
+T 148
+W 8f fb
+T 56
+T 203
+W 2 e7
+W 8f 0
+W 85 0
+W 7b 5a
+T 150
+T 174
+T 3478
+T 72
+T 244
+W 98 1
+W 8b 45
+W 8f 53
+W e 7e
+W 83 0
+W 18 9b
+W 87 0
+T 180
+T 1136
+W 49 c5
+W 8b b8
+T 102
+T 1280
+W 82 b
+W 86 1f
+W 8f 7b
+W 7b b
+W 2e 77
+T 4480
+W 29 8e
+T 3136
+T 280
+T 269
+W 98 0
+W 84 1
+W 80 1f
+W ce 44
+W a8 21
+W 3d 8d
+W 86 b
+T 251
+W 80 17
+W 7 69
+W 82 1
+W 83 0
+W 8f 9a
+W 8f 6c
+W 64 74
+T 226
+W 9e 63
+W b3 49
+T 1849
+T 43
+T 141
+T 172
+W 9b cc
+W 10 c5
+W 28 3c
+T 263
+T 65
+W 8f a4
+W 80 28
+W 83 0
+T 458
+W 9e 54
+T 133
+W 9d 5c
+T 255
+W 77 d2
+W 70 d2
+W 83 0
+W 9f 5d
+W 2d 44
+T 148
+W 81 0
+W 38 19
+W 88 1
+W 87 0
+T 120
+W 82 7
+W 6f 92
+W 8d 92
+T 233
+W 62 32
+T 219
+T 49
+W 85 0
+W 9a 4c
+W 88 28
+T 13
+T 77
+W 6a 6
+T 202
+W 81 0
+T 2265
+W 8a 4f
+T 48
+W 86 9
+T 186
+W 87 0
+W 85 0
+T 254
+W bd f2
+W 82 c
+W 89 0
+W 6e 97
+W 3a e6
+W 9f 74
+T 73
+T 158
+T 172
+W 9a 9a
+W 83 0
+T 38
+W 8c f1
+T 129
+T 487
+W 87 0
+W 19 fa
+W 8b d5
+W 8d ad
+T 97
+W 72 ed
+T 102
+T 3171
+W 8e a5
+W 32 4f
+W 8f b0
+W 85 0
+W 9c 7a
+W b2 ea
+T 42
+W 64 9b
+W 91 0
+T 122
+W 81 0
+T 180
+T 169
+W 8f f1
+W 8a e8
+T 3427
+W 63 fe
+W 88 28
+W 88 14
+T 37
+W 84 1
+W 8c 33
+W 94 1
+W 94 1f
+W 20 5c
+W 8f 6d
+T 24
+W 81 0
+W 8c 27
+W 99 0
+T 194
+W 8f af
+W 9f 8f
+T 190
+T 158
+W 4f 8c
+T 118
+T 266
+W 8b 35
+W 8b 92
+W 84 14
+W 36 8d
+T 177
+T 111
+T 299
+W 8e 6
+W 87 0
+T 148
+W 6e f8
+W 81 0
+W 89 0
+T 41
+W 8d 0
+T 225
+W 89 0
+T 79
+W 8f a2
+T 180
+W 64 d8
+T 215
+W 83 0
+W 30 c8
+W 86 1e
+W 35 50
+T 275
+T 4335
+T 243
+T 76
+T 13
+W 69 33
+T 165
+W 4a b9
+W 81 0
+T 229
+T 281
+W 81 0
+W 9f 3f
+T 201
+W 7a d9
+W 94 19
+W 5d ca
+W 84 7
+W 8c dc
+T 227
+T 25
+W 2d 76
+T 81
+T 265
+W 63 2b
+W 8f 74
+W 54 60
+W 83 0
+W 82 0
+W 8e 1a
+W 73 f4
+T 74
+W 8b c7
+W 9 40
+W 0 1b
+W 80 11
+T 96
+W 1d 1e
+T 123
+W 97 0
+W 95 0
+T 178
+T 3366
+T 183
+T 3242
+W 85 0
+W 9d 2b
+T 161
+T 60
+T 104
+T 286
+T 1261
+T 59
+T 66
+T 234
+T 110
+W 9c 56
+T 169
+T 239
+W 5c be
+W 7f 9d
+T 62
+W 8f b
+T 16
+W 87 0
+W 92 14
+W 8d 95
+T 290
+W 8b e2
+T 215
+W 35 83
+W 8f 56
+T 40
+W 85 0
+W 85 0
+W 8f 43
+T 85
+T 71
+W 9a 39
+T 4287
+T 71
+T 198
+W 6a ff
+W 87 0
+W 5c 83
+W 8f 72
+T 13
+W 80 3
+W 8a aa
+T 4649
+W 99 0
+W 83 0
+W df d7
+W 9f f1
+W 8f ee
+W 8f 80
+W 84 1
+T 58
+T 33
+T 118
+T 137
+W 3e 9f
+T 89
+W d8 df
+T 1248
+W d e7
+T 32
+W 8f ea
+W 80 1
+T 271
+W 34 b3
+W 81 0
+W 76 a1
+W 64 49
+T 182
+W 95 0
+W 87 0
+W 7f 26
+T 61
+W 8f 0
+W 92 7
+T 75
+T 46
+W 61 14
+W 9d e2
+W 63 bc
+W 8f 48
+W 83 0
+T 77
+W 8f 78
+W 87 0
+W 8b 49
+T 170
+W 8c cd
+W 65 10
+W 92 b
+W 89 0
+T 95
+W 8a a2
+W 6d b3
+W 9e 6e
+T 179
+T 78
+W 8c f1
+W 85 0
+T 179
+T 14
+T 149
+W 8f 78
+W 80 0
+W 8e 2
+W 88 28
+T 85
+T 106
+T 128
+T 2833
+W 87 0
+W 87 0
+W 34 6b
+W 80 0
+W 86 28
+T 231
+W 98 9
+W 8f b2
+W 85 0
+W 55 26
+W 8b 36
+W 8f 26
+W 9f 5a
+T 45
+W 8b 12
+W 94 c
+W 8d 19
+W 8f 51
+W 52 ab
+W 8a 61
+W 8f 5d
+T 125
+W 40 ce
+W 54 20
+W 83 0
+T 4
+W 78 b3
+T 86
+W 8d 3d
+W 90 9
+W 87 0
+W 88 c
+W 50 1f
+W 6e 1d
+W 91 0
+W 8c 69
+W 8e e2
+W 86 c
+W 9f d0
+W 85 0
+T 116
+W 8a 80
+W 1f d5
+W 9f ef
+T 2
+T 222
+W 20 32
+W 81 0
+W 64 f4
+W 8d 2a
+W 96 28
+W 86 14
+W 88 14
+W 84 28
+W 8f 7b
+W c8 67
+T 242
+W 21 76
+W 76 31
+W 8a 7
+T 1205
+W 8b 23
+W 8f 88
+W 81 0
+W 9f b0
+W 8f 6a
+T 256
+W 95 0
+W be 0
+T 735
+W 5a 4
+W 95 0
+W 8f eb
+W 81 0
+W 86 9
+W 83 0
+W 8c 7c
+W 88 1
+W 43 f2
+W 96 b
+T 806
+W 81 0
+T 32
+W 85 0
+W 8f bc
+T 2787
+W 94 14
+W 88 1f
+T 49
+T 113
+T 18
+T 165
+W 85 0
+W 9b da
+T 284
+W 95 0
+W 87 0
+W 87 0
+T 40
+W 8e c9
+W 16 15
+W 54 a6
+T 286
+W 81 0
+T 124
+W 90 a
+W 87 0
+T 231
+W 89 0
+W 81 0
+T 167
+W 83 0
+T 971
+W 8f 5b
+T 83
+W 47 61
+W b0 c3
+W 8a e4
+W 8e 97
+W 71 68
+W 80 2
+T 188
+W 88 a
+T 147
+T 262
+W 89 0
+W 4c 14
+W 84 b
+W 83 0
+T 81
+T 198
+W 8f fc
+W 80 7
+T 137
+W 8b 25
+T 79
+W 96 28
+T 138
+W 8f 12
+W 80 e
+W 9f ac
+T 292
+T 289
+W 3e 5f
+T 200
+T 96
+W 8f 12
+W 9c c2
+W 83 0
+W 82 14
+W 8e a3
+T 279
+W 8f 6e
+T 175
+T 34
+W 21 e3
+T 212
+W 4a e4
+W 8f e5
+W 6a c5
+W 28 e8
+W 81 0
+W 80 1
+W 8a 72
+W 9f b3
+T 237
+T 171
+W 8f 6c
+W 84 a
+W 8f 73
+W 4 b
+T 3359
+W 8d 31
+W 81 0
+W 5b fe
+T 229
+W 9f 10
+T 57
+T 3982
+W 84 28
+W 86 a
+T 153
+W 69 f
+T 93
+T 55
+W 80 14
+T 138
+T 120
+W 8b 34
+T 84
+W 3 7
+W 77 dd
+T 292
+T 228
+W 29 dd
+W 4 73
+W 1 4
+W 95 0
+W ce 1c
+W 9f e9
+W 97 0
+W 68 1a
+W bd 9c
+T 75
+T 143
+W 8b 5d
+T 279
+W 6 8b
+W 6 2c
+W 8b c5
+W 8f 80
+W 9f 35
+W 6d f8
+T 54
+W 87 0
+W 86 a
+T 170
+W 80 1
+W 8f 3f
+T 20
+W 8d 74
+T 169
+W 8b fb
+W 87 0
+T 187
+T 179
+T 221
+T 23
+W a2 5f
+W 27 2a
+T 106
+W 96 a
+W 89 0
+W 96 1
+T 124
+W 88 7
+W 90 7
+W 4e b7
+T 254
+W 87 0
+T 176
+W 8f 32
+W 2 a2
+W 96 a
+W 8a 45
+W 13 90
+T 240
+W 84 0
+W 9c d
+T 136
+W 8f 51
+T 246
+T 280
+W 8c 2a
+W 89 0
+W 98 14
+W 8b 58
+W 55 a4
+W 99 0
+W 29 38
+T 169
+T 250
+W d a1
+W 8f 76
+W 8d f6
+W 81 0
+T 159
+W 88 1
+T 112
+W 85 0
+T 170
+T 227
+W 8d 28
+W 7c db
+W 87 0
+T 142
+W 81 0
+T 231
+T 182
+T 146
+W 25 8a
+W cf b
+W 59 a6
+T 282
+W 8f 52
+W 9f c2
+W 98 1f
+T 70
+T 3009
+W 88 14
+W c 1
+T 193
+W 86 19
+T 242
+T 45
+W 89 0
+W 8f cc
+T 2145
+T 283
+W 92 0
+W 3b 81
+W 87 0
+W 8b 7
+W 8f a7
+W 98 9
+T 40
+W 80 0
+T 49
+W 85 0
+W 33 8e
+T 16
+W 81 0
+W 8f 27
+W 82 28
+W 32 e7
+T 226
+W 1 3f
+W 37 56
+W 8a 44
+T 383
+T 78
+T 18
+T 274
+W 15 20
+W 83 0
+T 171
+W 8a 89
+T 26
+W 2c 3d
+T 70
+T 214
+W 89 0
+T 151
+T 24
+W 96 28
+T 168
+T 105
+W 8f 55
+T 129
+W 90 b
+W 8a 19
+T 297
+T 45
+W 89 0
+T 53
+W 82 3
+W 95 0
+T 23
+T 292
+W 8f e1
+T 46
+T 275
+T 91
+T 14
+W 84 1
+W 98 7
+W 8f fd
+T 154
+T 108
+W 8d f1
+W 92 14
+T 237
+T 240
+T 169
+W 86 27
+W 84 1
+W 8f ef
+W 2e e2
+W 90 a
+T 292
+T 203
+T 49
+W 81 0
+W 88 c
+T 171
+T 293
+T 53
+W 88 b
+W 83 0
+T 193
+W 87 0
+W 86 0
+W 60 e1
+T 84
+W 8c 3d
+W 8a c2
+W 99 0
+T 155
+T 133
+W 87 0
+T 103
+W 8c 33
+W 8d b
+T 197
+T 86
+T 59
+W 8e 87
+T 75
+W 83 0
+W 13 fe
+T 89
+T 196
+T 1029
+W 8f ed
+W 4 42
+T 3729
+T 65
+T 212
+W 42 1a
+W 83 0
+W 18 f8
+T 172
+W 8b a0
+W 92 1f
+W 8f da
+W 86 9
+W 88 0
+T 117
+T 151
+W 34 18
+W 8f d3
+T 12
+T 268
+T 174
+T 195
+W 8 50
+W b6 23
+W 41 85
+T 209
+W 87 0
+W 99 0
+W 40 3b
+W 85 0
+W 6b fb
+T 177
+W 8f 1
+W 3a e4
+W 78 5a
+W 85 0
+T 2298
+T 258
+W 83 0
+T 272
+W 88 14
+T 234
+W 89 0
+W 89 0
+W 8d 42
+W 8f 9f
+W 1c 16
+W 9 dd
+W 88 28
+T 3006
+W 8f 3d
+T 612
+W f f2
+W 82 8
+W 85 0
+W 89 0
+W 91 0
+W 5c 97
+T 2718
+W 92 14
+T 131
+T 19
+W 8e 77
+W 9f 20
+W 88 a
+W 8b 4d
+T 176
+T 96
+W 81 0
+T 24
+W 8f ba
+W 8e 8e
+W 3c 1
+W 84 23
+T 293
+T 96
+W 97 0
+W 50 2f
+T 84
+W 8f c0
+W 8c 0
+W 36 cd
+W 89 0
+T 218
+T 132
+T 118
+W 8f 26
+T 282
+T 263
+T 269
+T 3870
+W 93 0
+W 8e 67
+W 85 0
+T 276
+W 82 0
+W 8a 9d
+W 92 1c
+W 87 0
+W 9f c2
+W 87 0
+W 8f 75
+W 2a 73
+W 87 0
+W 81 0
+W 85 0
+T 270
+T 203
+T 146
+T 115
+W 87 0
+T 27
+W 87 0
+W 50 e3
+W 84 0
+W 86 b
+W 9f 53
+T 4857
+T 227
+W 95 0
+W 85 0
+W 8d 3d
+T 4872
+W 47 49
+W 1d 30
+W 4e b9
+T 230
+T 136
+T 96
+W 82 9
+T 138
+W 53 6b
+W 73 23
+T 2
+T 124
+W 90 9
+W 8c cc
+T 74
+T 108
+W 8f 2f
+T 272
+T 175
+W 89 0
+T 278
+W 9d 32
+W 87 0
+W 80 8
+W 8b f9
+W 74 61
+W af 18
+W 83 0
+W 4c c7
+W 84 c
+W 89 0
+T 149
+W 85 0
+W 93 0
+W 1 34
+W 85 0
+W 8d da
+W 9b 75
+T 234
+T 94
+W 84 c
+W 8c f0
+T 187
+T 183
+T 173
+W 63 42
+W 72 82
+T 110
+W 1 d2
+W 8f 4d
+W 37 21
+W 47 89
+W 52 3a
+W 84 28
+W 8f b9
+W 89 0
+W 8f c
+T 60
+T 124
+W 83 0
+W 94 7
+T 249
+W 15 2f
+T 151
+W 81 0
+W 8f 73
+W 62 4d
+W 13 89
+T 267
+W 87 0
+T 48
+T 214
+W 8b a4
+T 161
+W 86 14
+W 88 28
+T 100
+T 44
+W 80 7
+T 221
+W 81 0
+W 81 0
+W 96 a
+W 83 0
+T 3581
+W 88 28
+T 211
+T 261
+T 152
+T 117
+W 85 0
+W 86 14
+W 38 2b
+T 58
+W 4e 95
+W 81 0
+W 8d d6
+W 81 0
+W 6 e9
+W 82 14
+T 29
+W 88 a
+W 88 0
+W 32 20
+W 8f 34
+T 238
+T 49
+W 87 0
+W 8f b5
+W 8e 2b
+T 206
+W 9f 13
+W 8f 96
+W 88 9
+W 9 65
+W 9f f7
+W 88 28
+W 9f fe
+W 8f 3b
+T 194
+T 94
+W 8f 7c
+W 76 61
+T 135
+T 129
+W 8f a7
+T 299
+W 89 0
+W 83 0
+W 91 0
+T 61
+W 96 2
+T 235
+W d 1a
+T 53
+W 87 0
+T 186
+T 211
+W 87 0
+T 164
+T 178
+W 65 3c
+T 2642
+W 8f 4c
+W 8b 1e
+T 132
+T 651
+W 9f 57
+T 34
+W 82 b
+T 188
+W 9f e8
+W 44 b9
+W 87 0
+W 82 9
+W 41 1
+T 4
+T 185
+W 80 1
+T 46
+W 73 60
+T 134
+T 139
+W 87 0
+W 8b 68
+T 144
+W d6 11
+W 8a 5b
+T 300
+W 4d 13
+W 87 0
+T 15
+W 92 9
+T 1287
+W 18 32
+W 4d 72
+T 184
+T 4099
+W 87 0
+T 55
+W 87 0
+W 81 0
+T 62
+W 88 1
+W 88 7
+W b df
+W 9f e6
+W 74 a0
+W 86 1
+W 8c 3d
+W 1 5f
+T 223
+W 8c 6c
+T 105
+W 70 3d
+W 8b 2a
+W 8c e8
+W 8f 3b
+W 8f c6
+T 550
+T 3082
+T 50
+T 267
+W 2f 7b
+W 99 0
+W 85 0
+W 8d 61
+T 228
+W 8f 68
+T 257
+T 279
+T 215
+W 82 c
+W 86 9
+W 8d 6
+T 192
+T 281
+W 88 0
+W 8f 5c
+W 2 c4
+W 8b e2
+T 270
+W 8c ba
+T 113
+W 80 a
+T 194
+T 102
+T 4009
+T 119
+W 81 0
+W 40 62
+W 15 af
+W 9f 42
+W c5 ac
+W 8f b6
+W 9c 3f
+W 8c 84
+W 8f 73
+W 38 d8
+T 123
+T 141
+W 81 0
+W 88 7
+T 117
+T 133
+W 89 0
+W df af
+W 47 5e
+T 84
+W 8b db
+W 8f db
+W 9c 17
+T 130
+T 16
+W 8f 90
+W 9a 16
+W 8f 55
+W 2a f8
+W 81 0
+W 82 1
+W 91 0
+T 95
+T 281
+W 88 1f
+T 476
+W 95 0
+W 8f 25
+W a0 65
+W 83 0
+W 86 c
+W 68 fa
+W 94 a
+W 75 4c
+W 8c 17
+W 8a ec
+T 190
+T 293
+T 7
+T 202
+W 89 0
+T 3562
+W 81 0
+T 122
+W 9f 71
+T 140
+T 118
+T 155
+W 8f 2
+W 8c d4
+W 48 31
+W 80 9
+W 95 0
+T 56
+W 9f e
+W 81 0
+W 82 b
+T 294
+W 8a dc
+T 5
+T 4166
+W 2c be
+W 8f 99
+W 8f 6c
+W 8b 76
+W 8a e8
+W 8e 89
+W a 3a
+T 273
+W 9d 24
+W 89 0
+T 359
+W 9f 5c
+T 120
+W 8e 98
+T 146
+W 5a 95
+W 8c b8
+T 268
+T 14
+T 31
+W 41 f0
+W 80 9
+W b 5
+T 295
+T 244
+W 8c 15
+W 87 0
+W 94 14
+W 8f f3
+T 165
+T 138
+T 213
+T 117
+T 206
+W 2e 1e
+W 60 e7
+W 84 1f
+W 73 6a
+T 218
+T 118
+W 8f 75
+W 8a d2
+T 61
+W 81 0
+W 85 0
+W 8f 85
+T 87
+W 87 0
+T 183
+W 8a ee
+W 8b 45
+W 82 9
+W 60 93
+T 251
+W 84 14
+W 84 b
+W 8d d6
+W 1a 6c
+W 92 7
+W 87 0
+T 2734
+W 90 e
+W 80 a
+T 134
+W 85 0
+T 195
+W 8d 4a
+W 8e 9d
+T 254
+T 196
+T 84
+W 8c 17
+W 81 0
+T 190
+W 34 e7
+W d8 e9
+W 27 9f
+T 176
+W 8f 40
+W 90 7
+W 8b 10
+W 4b 1d
+T 1052
+W 8e 62
+W 9f c7
+T 239
+T 158
+W 87 0
+T 68
+W 85 0
+T 141
+T 106
+T 149
+W 86 9
+T 13
+T 72
+W 8d 3f
+W 98 7
+W 82 28
+W 87 0
+W 89 0
+W 91 0
+W 8f ab
+W 89 0
+W 8a dc
+W 9f 7f
+W 89 0
+T 150
+W 87 0
+W 81 0
+W 86 7
+W 88 28
+T 58
+T 201
+T 21
+W 8a 29
+W 8f 3f
+W 81 0
+W 9f 37
+W 83 0
+W 81 0
+T 276
+T 235
+T 257
+T 16
+W 0 34
+W 9f fc
+T 887
+W 8f b1
+W 8e 28
+T 251
+T 211
+W 9f d7
+W 89 0
+W 8c b9
+W 84 9
+T 181
+W 80 0
+W 85 0
+W 8f 8
+T 239
+W 8f 7c
+W 8f 2a
+W 8d 82
+W 8f 87
+T 53
+W 8e db
+W 9 ec
+W 8a 2e
+W 9c cf
+W 82 9
+W 85 0
+W 80 23
+T 187
+W 8a 2f
+W 87 0
+W 83 0
+W 89 0
+T 113
+T 219
+W 8a 4e
+W 8f fc
+W 1f 78
+T 8
+W 7c 89
+W 8f 1
+W 86 a
+W 1b ee
+W 8f e4
+T 73
+T 150
+W 8f 25
+T 180
+W 8b 41
+W 8f cf
+W 9f 11
+W 8f 0
+W 31 7
+W 6d 92
+W 27 f9
+W 29 9b
+W 83 0
+W 91 0
+W 93 0
+W 15 33
+W 9d f7
+W 89 0
+W 8b f0
+T 175
+W 80 c
+T 86
+W 9f 29
+W 8e 24
+T 230
+W 7f 91
+T 130
+W 73 ac
+W 26 1d
+T 269
+W 8c b0
+W 87 0
+T 2064
+T 191
+W 81 0
+W 83 0
+T 253
+W 9c c1
+W 8f 20
+T 96
+W 8f 4f
+T 6
+W 8b 27
+T 39
+T 205
+T 82
+W 1c b1
+W 81 0
+W 8d 3d
+T 262
+W 88 a
+T 18
+W 8e 5f
+W 6f 55
+W 80 14
+T 53
+T 160
+W 87 0
+W 3a 6c
+W da e1
+W 9a 20
+W 8e ee
+W 91 0
+W 87 0
+W 5d 7f
+W 81 0
+T 71
+T 54
+T 2865
+T 259
+W 55 3e
+T 189
+W 86 c
+T 172
+T 17
+W 9f 98
+W c 58
+T 277
+W 87 0
+T 249
+W 82 1f
+W 8f dc
+T 295
+W 8c e
+W 8a 25
+T 152
+W 8a 2f
+W 81 0
+W 97 0
+W 9a 58
+W 91 0
+T 157
+T 236
+W 7c af
+W 89 0
+T 67
+W 65 32
+W 93 0
+W 82 1
+W 9c a5
+W 73 64
+W 47 3b
+W 85 0
+T 299
+T 153
+W 1b 72
+W 95 0
+T 3
+T 174
+T 114
+T 103
+W 78 71
+W 60 c4
+W 88 7
+W 96 a
+W 8f 4a
+T 203
+T 1216
+T 11
+T 93
+W 8f f1
+W 54 e9
+W 8d d1
+W 8c ab
+W 88 b
+W bb a
+T 212
+T 157
+W 8c bd
+W 8d fc
+T 19
+W 80 1f
+T 249
+W 82 c
+W 44 93
+T 86
+W 8b 66
+W 8b 3b
+W 60 18
+W 8b 12
+W 87 0
+T 56
+W 8a 14
+W 80 a
+W 87 0
+W 84 14
+W 19 4e
+T 139
+W 36 8d
+T 106
+W 8f 82
+W 8d e6
+W 9a d
+T 14
+W 5d 43
+T 221
+T 3699
+W 8c 6a
+W 84 1f
+T 122
+W 94 1
+T 101
+W 8f db
+W 84 9
+W 86 7
+W 8d fd
+W 5f dc
+T 76
+W 9 c1
+W 13 30
+T 138
+W 8f 39
+W 8f ae
+T 81
+T 80
+W 77 b8
+T 132
+W 88 28
+T 83
+W 85 0
+T 223
+W 85 0
+W 59 5f
+W 9d e
+T 80
+W 81 0
+T 212
+W 8f 4e
+T 25
+W 80 9
+T 156
+T 4200
+W 73 31
+W 8c a1
+W 88 28
+W 83 0
+W 0 de
+W 88 1
+T 220
+T 184
+W 80 c
+W 1f 80
+W 7f ca
+T 206
+W 88 1
+T 87
+W 8d a6
+W 83 0
+W 8f b5
+W 7c b0
+W 8f f2
+W 67 13
+T 3869
+T 121
+W a bb
+W 9f f
+T 59
+W 9f 11
+T 166
+W 88 0
+T 22
+T 158
+T 1553
+W 8d fd
+T 231
+W 48 b0
+W 88 a
+W 4a 1b
+W 84 8
+W 86 f
+T 142
+T 109
+W 89 0
+W 8d 32
+T 208
+T 3523
+W 93 0
+W 80 9
+W 94 a
+W 88 7
+T 43
+W 85 0
+W 5e cb
+W 85 0
+W 8c 84
+T 50
+W 8e 66
+T 4278
+W 8f c4
+T 179
+T 121
+W 4e 51
+T 205
+W 77 9f
+T 4234
+T 55
+W bf cb
+W 85 0
+W 8a 67
+W 13 93
+W 8a bc
+W b7 b7
+T 123
+W 8f 5a
+T 194
+T 622
+W 3 a
+W 82 14
+T 264
+T 389
+W 67 52
+T 212
+T 218
+T 19
+W 94 8
+T 128
+T 290
+W 43 22
+W 84 9
+W 80 14
+T 48
+W 31 3a
+T 200
+W 13 9d
+W 88 14
+T 85
+W 88 a
+T 112
+T 105
+W 8f 54
+W 8c 16
+W 14 14
+T 182
+T 4540
+W 87 0
+W 88 1f
+T 90
+T 195
+W 8c 34
+T 245
+W 87 0
+W 90 c
+T 127
+W 2 56
+W 8f d1
+W 71 8d
+T 179
+T 300
+W 83 0
+W 81 0
+W 8f fd
+W 3a a1
+W 98 c
+W 93 0
+W 8d 9
+T 192
+W 8f 1b
+T 115
+W 63 7f
+T 61
+T 174
+W 8f 6b
+W 85 0
+T 243
+T 221
+T 190
+T 282
+W 81 0
+T 280
+W 9f 30
+W 83 0
+W 8f 78
+W af 77
+T 257
+W 89 0
+W 8f 72
+W 84 b
+T 199
+W 84 7
+W 8a b
+W 8f be
+W 8e e6
+T 228
+T 264
+W 17 9e
+T 236
+T 5
+T 1060
+W 8c 4d
+W 8c 83
+W 88 1f
+T 99
+T 1397
+W 72 b3
+T 234
+T 91
+W 94 c
+T 121
+W 4d 27
+T 268
+W 92 14
+T 9
+W 81 0
+T 37
+W 91 0
+W 53 df
+W 86 1f
+W 89 0
+W 82 17
+T 265
+W 5d 51
+W 8e b5
+T 265
+W 39 47
+W 3c 2b
+T 97
+W 5c c3
+W 86 3
+W 40 a5
+W 7d 95
+T 171
+W 88 1
+W 98 0
+T 281
+T 279
+W 93 0
+T 126
+W 8f d6
+T 164
+W 8f fc
+T 227
+W 86 28
+W 9f 35
+W 90 14
+T 273
+W d5 89
+W 36 d
+T 130
+W 86 a
+T 206
+W 83 0
+W 8a f6
+W 7f fe
+T 226
+W 7b 1
+W 85 0
+W 8f 5
+W 8f 5d
+T 84
+W 87 0
+T 110
+W 80 28
+W 7d 86
+T 44
+T 110
+W 8d ff
+T 160
+T 57
+W 83 0
+T 62
+W 85 0
+W 95 0
+T 155
+T 143
+W 88 b
+T 89
+W 8f 72
+T 186
+W 3b a
+T 141
+W 89 0
+W 8f 83
+T 4048
+T 32
+W 83 0
+T 81
+T 263
+W 8f 1a
+T 205
+T 114
+T 92
+W 9d bc
+T 42
+W 8f 6
+W 88 8
+T 79
+T 75
+W 85 0
+T 49
+T 7
+W 3c ec
+T 120
+T 223
+W 8d eb
+T 293
+T 226
+W 48 c5
+W 19 ef
+W a7 53
+T 281
+W 83 0
+W 9f 5e
+T 276
+W 9f 6e
+W 46 83
+W 63 1e
+T 37
+T 118
+W 47 45
+T 214
+W 26 bf
+T 109
+W 29 1
+W 82 16
+W 86 28
+T 171
+W 2f 9a
+T 3838
+W 91 0
+W ac c
+T 1777
+W 4b a3
+W 8f 1e
+T 62
+W 4c 5f
+W 8e 77
+T 260
+W 86 0
+W 8f 4c
+T 148
+T 247
+T 137
+W 88 7
+W 9b 50
+W 89 0
+W 84 c
+W 8b 7
+W 97 0
+T 116
+W 8f 8a
+T 64
+W 8f 43
+T 199
+T 1576
+W 89 0
+T 127
+T 132
+W 27 31
+W 8f 61
+T 223
+W 62 81
+T 101
+W 68 34
+W 8f 62
+W 89 0
+W 83 0
+T 235
+T 297
+W 8f eb
+W 99 0
+W 9f 7a
+W 9e 4
+T 161
+W 80 7
+T 152
+W 8f a9
+T 271
+W 84 1
+T 12
+T 25
+T 90
+W 44 e1
+W 9 fa
+W 7a 6e
+T 41
+T 252
+T 3244
+W 80 14
+W 9e e4
+W 86 c
+W 8c 8d
+T 3319
+W 87 0
+W 8b 94
+W 96 8
+W 6a 55
+W 8c 33
+W 18 18
+T 79
+W 8a 2b
+W 8e 17
+T 177
+W 9a d0
+T 129
+T 263
+W 35 fe
+W 98 8
+T 283
+T 75
+T 89
+W 4c 5a
+T 122
+W 8f 3d
+W 11 5c
+W 87 0
+W 8a 41
+W 8f 7a
+W 8f 2f
+W 8d b
+W 65 9a
+W 87 0
+W 8d df
+W 5f 93
+W 86 b
+W 89 0
+W 80 a
+W 1c fe
+W 8b 4e
+W 8c d9
+T 62
+W 51 a9
+W 87 0
+W 99 0
+W 9a 1
+W 81 0
+W 9d 27
+W 86 7
+W db 69
+T 112
+T 112
+T 149
+T 88
+T 227
+W 83 0
+T 196
+T 33
+W 35 6c
+W 8f d4
+W 8f fe
+W 9e ea
+T 58
+W 81 0
+W 8a 61
+W 83 0
+T 273
+W 8f f
+W 20 b3
+W 85 0
+T 70
+W 83 0
+T 75
+T 47
+W 82 8
+W 8a 8c
+W 4a ac
+T 125
+W 88 0
+T 75
+W 8c c6
+T 24
+W 56 62
+W 81 0
+T 28
+T 206
+W 8f 63
+W 9f 12
+T 188
+W 9a 26
+T 129
+T 95
+W 4e 73
+W 81 0
+T 137
+W 8b 28
+T 215
+T 115
+T 223
+T 273
+W 70 7f
+T 9
+T 770
+W 8a 20
+W 88 7
+W 84 8
+W 89 0
+W 86 0
+W 8c e5
+T 1000

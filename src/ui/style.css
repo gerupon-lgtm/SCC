@@ -1,0 +1,111 @@
+/* 色・書体はここに集める（docs/screens.md デザイントークン。変更はA区分） */
+:root {
+  --bg: #121417;
+  --panel: #1b1f24;
+  --line: #2c323a;
+  --fg: #e8eaed;
+  --muted: #9aa0a6;
+  --accent: #4fc3a1;
+  --accent-fg: #0b1f19;
+  --warn: #f2b84b;
+  --error: #ff7a7a;
+  --key-white: #e9e6df;
+  --key-white-down: #9fdcc9;
+  --key-black: #22262c;
+  --key-black-down: #2f8f74;
+  --font: system-ui, -apple-system, "Hiragino Sans", "Noto Sans JP", sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+:root[data-font="b"] { --font: "BIZ UDPGothic", "Noto Sans JP", "Hiragino Sans", sans-serif; }
+:root[data-font="c"] { --font: var(--mono); }
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+h1, h2 { font-weight: 600; margin: 0; }
+h1 { font-size: 1.15rem; }
+h2 { font-size: 0.95rem; color: var(--muted); margin-bottom: 8px; }
+button, select, input { font: inherit; color: inherit; }
+
+.app-header, .app-footer {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+  padding: 12px 16px;
+}
+.app-footer { color: var(--muted); font-size: 0.85rem; flex-wrap: wrap; }
+.app-footer a { color: var(--muted); }
+.tentative { font-weight: 400; color: var(--muted); font-size: 0.85rem; }
+.version { color: var(--muted); font-size: 0.85rem; font-family: var(--mono); }
+
+.app {
+  display: grid; gap: 12px; padding: 0 16px;
+  grid-template-columns: 1fr;
+  max-width: 1100px; margin: 0 auto;
+}
+@media (min-width: 760px) {
+  .app { grid-template-columns: 1fr 1fr; }
+  .start, .keyboard-panel, .channels { grid-column: 1 / -1; }
+}
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; min-width: 0; }
+.row { display: flex; align-items: center; gap: 12px; }
+.note { color: var(--muted); font-size: 0.85rem; margin: 8px 0 0; }
+
+.start-button {
+  width: 100%; padding: 14px; border: 0; border-radius: 8px;
+  background: var(--accent); color: var(--accent-fg); font-weight: 600; font-size: 1.1rem; cursor: pointer;
+}
+.start-button.running { background: var(--line); color: var(--fg); }
+.start-button:disabled { opacity: 0.6; cursor: progress; }
+button.small {
+  padding: 6px 10px; border-radius: 6px; border: 1px solid var(--line); background: transparent; cursor: pointer;
+}
+button.small:disabled { opacity: 0.4; cursor: default; }
+
+.status dl { margin: 0; display: grid; gap: 4px; }
+.status dl > div { display: grid; grid-template-columns: 6.5em 1fr; gap: 8px; }
+.status dt { color: var(--muted); }
+.status dd { margin: 0; }
+.warn { color: var(--warn); }
+.error { color: var(--error); margin: 8px 0 0; }
+
+.volume input[type="range"] { flex: 1; accent-color: var(--accent); }
+.volume output { font-family: var(--mono); min-width: 3em; text-align: right; }
+
+.wave-buttons { display: flex; flex-wrap: wrap; gap: 8px; }
+.wave-buttons button {
+  display: grid; justify-items: center; gap: 2px;
+  padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line); background: transparent; cursor: pointer;
+  font-size: 0.8rem; min-width: 58px;
+}
+.wave-buttons button[aria-checked="true"] { border-color: var(--accent); background: rgba(79, 195, 161, 0.15); }
+.wave-buttons svg { width: 48px; height: 24px; }
+.wave-buttons polyline { fill: none; stroke: var(--accent); stroke-width: 1.5; }
+
+.channels table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.channels th { text-align: left; color: var(--muted); font-weight: 400; padding: 2px 6px; }
+.channels td { padding: 4px 6px; border-top: 1px solid var(--line); font-family: var(--mono); white-space: nowrap; }
+.channels td.key-on { color: var(--accent); }
+.vol-bar { display: inline-block; height: 8px; background: var(--accent); border-radius: 2px; vertical-align: middle; margin-left: 6px; }
+
+.octave { justify-content: space-between; margin-bottom: 8px; font-family: var(--mono); font-size: 0.9rem; }
+.keyboard {
+  position: relative; height: 150px; touch-action: none; user-select: none; -webkit-user-select: none;
+}
+.keyboard[aria-disabled="true"] { opacity: 0.45; pointer-events: none; }
+.keyboard .key { position: absolute; top: 0; border: 1px solid #0006; border-radius: 0 0 5px 5px; }
+.keyboard .white { height: 100%; background: var(--key-white); z-index: 1; }
+.keyboard .black { height: 60%; background: var(--key-black); z-index: 2; }
+.keyboard .white.down { background: var(--key-white-down); }
+.keyboard .black.down { background: var(--key-black-down); }
+.keyboard .label { position: absolute; bottom: 4px; left: 0; right: 0; text-align: center; font-size: 0.7rem; color: #555; pointer-events: none; }
+select { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 2px 4px; }
+.octave button { white-space: nowrap; }
+.notice-page { padding: 16px; }
+.notice-page a { color: var(--accent); }
+.notice-page pre { white-space: pre-wrap; word-break: break-word; font-family: var(--mono); font-size: 0.8rem; }
