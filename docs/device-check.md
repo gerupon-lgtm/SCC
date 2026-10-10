@@ -7,6 +7,7 @@
 | 項目 | PC（Claude の内蔵ブラウザ、Chromium系） | PC（普段のChrome） | Pixel 6a（Chrome） |
 | --- | --- | --- | --- |
 | localhost で開ける | 【確認】2026-10-10 | 【未】 | 【未】 |
+| GitHub Pages（https）で開き、「音を出す」で開始 | 【確認】2026-10-11 | 【未】 | 【未】 |
 | LANのIP（http://192.168.x.x:8000）で開く | — | — | 【不可】2026-10-10。画面は出るが、安全な接続でないため AudioWorklet が使えない |
 | AudioWorklet（「音を出す」で開始） | 【確認】48,000Hzで開始。画面の鍵盤 → チャンネル表示まで動いた | 【未】 | 【未】 |
 | 実際に音が聞こえる | 【未】（人の耳での確認が必要） | 【未】 | 【未】 |
@@ -25,7 +26,7 @@
 
 ### Android（Pixel 6a）
 
-1. PCとPixelをUSBでつなぎ、`adb reverse tcp:8000 tcp:8000` を実行
-2. Pixel の Chrome で http://localhost:8000 を開く（localhost は安全な接続として扱われる想定。未確認）
+1. Pixel の Chrome で https://gerupon-lgtm.github.io/SCC/ を開く
+2. （ケーブルを使う場合の代わり：`adb reverse tcp:8000 tcp:8000` のあと http://localhost:8000）
 3. PCと同じ 2〜5 を行う。USB-MIDIキーボードは、USBハブやOTGアダプター経由でつなぐ
 4. 音切れがあれば、そのときの「処理の重さ」と「音切れの疑い」の表示を記録する
