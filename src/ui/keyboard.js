@@ -30,6 +30,11 @@ export class Keyboard {
     /** @type {Map<number, number>} note → 押している数 */
     this.held = new Map();
     this.#build();
+    // 長押しでブラウザが独自の動作（文字の選択・検索・メニュー）を始めないようにする。
+    // 始まるとタッチが取り消され（pointercancel）、押している音が止まってしまう
+    root.addEventListener('contextmenu', (e) => e.preventDefault());
+    root.addEventListener('selectstart', (e) => e.preventDefault());
+    root.addEventListener('touchstart', (e) => { if (this.enabled) e.preventDefault(); }, { passive: false });
     root.addEventListener('pointerdown', (e) => this.#pointerDown(e));
     root.addEventListener('pointermove', (e) => this.#pointerMove(e));
     for (const t of ['pointerup', 'pointercancel', 'lostpointercapture']) root.addEventListener(t, (e) => this.#pointerUp(e));
