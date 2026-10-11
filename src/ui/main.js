@@ -155,17 +155,39 @@ function showError(code, message) {
   el.hidden = false;
   el.textContent = `${ERROR_TEXT[code] ?? code}${message ? `：${message}` : ''}`;
 }
+// 処理の重さは、約30回/秒の値を1秒ぶん平均して、1秒に1回だけ表示を変える（目で読めるように）
+// 最大は、その1秒平均の最大を「最大を0に」か「音を出す」まで保持する
+// （約30回/秒の値は Date.now のミリ秒単位の粗さで揺れるため、最大には使わない）
+const LOAD_WINDOW_MS = 1000;
 let loadMax = 0;
+let loadSum = 0;
+let loadCount = 0;
+let loadWindowStart = 0;
+function resetLoad() {
+  loadMax = 0;
+  loadSum = 0;
+  loadCount = 0;
+  loadWindowStart = performance.now();
+  for (const id of ['load', 'load-kb', 'load-max']) $(id).textContent = '—';
+}
 function renderState(s) {
   renderChannels(s.channels);
-  const load = Math.round(s.load * 100);
-  loadMax = Math.max(loadMax, load);
-  $('load').textContent = `${load}%`;
-  // 鍵盤を弾きながら見られるよう、鍵盤の上にも出す
-  $('load-kb').textContent = `${load}%`;
-  $('load-max').textContent = `${loadMax}%`;
   $('voices-kb').textContent = String(s.channels.filter((c) => c.key).length);
+  loadSum += s.load;
+  loadCount++;
+  const now = performance.now();
+  if (now - loadWindowStart < LOAD_WINDOW_MS) return;
+  const avg = Math.round((loadSum / loadCount) * 100);
+  loadMax = Math.max(loadMax, avg);
+  loadSum = 0;
+  loadCount = 0;
+  loadWindowStart = now;
+  // 鍵盤を弾きながら見られるよう、鍵盤の上にも出す
+  $('load').textContent = `${avg}%（最大 ${loadMax}%）`;
+  $('load-kb').textContent = `${avg}%`;
+  $('load-max').textContent = `${loadMax}%`;
 }
+$('load-reset').addEventListener('click', resetLoad);
 
 let pollTimer = 0;
 function startPolling() {
@@ -187,9 +209,8 @@ function setRunning(on) {
   /** @type {HTMLButtonElement} */ ($('oct-down')).disabled = !on;
   /** @type {HTMLButtonElement} */ ($('oct-up')).disabled = !on;
   keyboard.setEnabled(on);
-  if (on) { loadMax = 0; startPolling(); } else stopPolling();
+  if (on) { resetLoad(); startPolling(); } else stopPolling();
   if (!on) {
-    for (const id of ['load', 'load-kb', 'load-max']) $(id).textContent = '—';
     $('voices-kb').textContent = '0';
     renderChannels(SCC_COMPAT.channelWaveBank.map((b) => ({ frequency: 0, volume: 0, key: false, waveBank: b })));
   }
