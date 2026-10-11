@@ -146,17 +146,25 @@ renderChannels(SCC_COMPAT.channelWaveBank.map((b) => ({ frequency: 0, volume: 0,
 let underrunTimer = 0;
 function showUnderrun() {
   $('underrun').hidden = false;
+  $('underrun-kb').hidden = false;
   clearTimeout(underrunTimer);
-  underrunTimer = setTimeout(() => { $('underrun').hidden = true; }, UNDERRUN_HOLD_MS);
+  underrunTimer = setTimeout(() => { $('underrun').hidden = true; $('underrun-kb').hidden = true; }, UNDERRUN_HOLD_MS);
 }
 function showError(code, message) {
   const el = $('error');
   el.hidden = false;
   el.textContent = `${ERROR_TEXT[code] ?? code}${message ? `：${message}` : ''}`;
 }
+let loadMax = 0;
 function renderState(s) {
   renderChannels(s.channels);
-  $('load').textContent = `${Math.round(s.load * 100)}%`;
+  const load = Math.round(s.load * 100);
+  loadMax = Math.max(loadMax, load);
+  $('load').textContent = `${load}%`;
+  // 鍵盤を弾きながら見られるよう、鍵盤の上にも出す
+  $('load-kb').textContent = `${load}%`;
+  $('load-max').textContent = `${loadMax}%`;
+  $('voices-kb').textContent = String(s.channels.filter((c) => c.key).length);
 }
 
 let pollTimer = 0;
@@ -179,9 +187,10 @@ function setRunning(on) {
   /** @type {HTMLButtonElement} */ ($('oct-down')).disabled = !on;
   /** @type {HTMLButtonElement} */ ($('oct-up')).disabled = !on;
   keyboard.setEnabled(on);
-  if (on) startPolling(); else stopPolling();
+  if (on) { loadMax = 0; startPolling(); } else stopPolling();
   if (!on) {
-    $('load').textContent = '—';
+    for (const id of ['load', 'load-kb', 'load-max']) $(id).textContent = '—';
+    $('voices-kb').textContent = '0';
     renderChannels(SCC_COMPAT.channelWaveBank.map((b) => ({ frequency: 0, volume: 0, key: false, waveBank: b })));
   }
 }

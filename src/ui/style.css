@@ -112,3 +112,6 @@ select { background: var(--panel); border: 1px solid var(--line); border-radius:
 .notice-page { padding: 16px; }
 .notice-page a { color: var(--accent); }
 .notice-page pre { white-space: pre-wrap; word-break: break-word; font-family: var(--mono); font-size: 0.8rem; }
+.kb-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+.kb-head h2 { margin-bottom: 0; }
+.kb-status { margin: 0; font-family: var(--mono); font-size: 0.8rem; color: var(--muted); }
