@@ -64,6 +64,15 @@ test('小さな鐘：Cの高さ（C4・C5）で3秒以内に消え、音量は�
   }
 });
 
+test('教会の鐘：Cの高さ（C4・C5）で3秒以内に消え、音量は上がらない', () => {
+  for (const note of [60, 72]) {
+    const { bell, ch } = setup(BELL_PRESETS.church.params);
+    bell.strike(note);
+    const t = runToEnd(bell, ch);
+    assert.ok(t <= 3, `note ${note}：${t.toFixed(2)}秒`);
+  }
+});
+
 test('全体の長さ：減衰が長くても length 秒で必ず消える', () => {
   const params = normalizeParams({ length: 1.0, partials: [{ ratio: 1, level: 15, decay: 30, harmonics: [1] }] });
   const { bell, ch } = setup(params);
@@ -79,8 +88,54 @@ test('倍音は時間とともに弱まり、正弦波に近づく（1つの波�
   assert.ok(a0[1] > 20 && a0[2] > 10, `叩いた直後の2倍・3倍：${a0}`);
   for (let t = 0; t < 1.0; t += DT) bell.advance(DT);
   const a1 = [1, 2, 3].map((k) => harmonicAmp(chip, 0, k));
-  assert.ok(a1[1] < a0[1] * 0.3 && a1[2] < a0[2] * 0.1, `1秒後：${a1}`);
-  assert.ok(Math.abs(a1[0] - a0[0]) <= 2, '1倍の音は弱めない');
+  // 振れ幅全体も下がるので、1倍に対する割合で比べる
+  assert.ok(a1[1] / a1[0] < (a0[1] / a0[0]) * 0.3, `2倍の割合：${a0[1] / a0[0]} → ${a1[1] / a1[0]}`);
+  assert.ok(a1[2] / a1[0] < (a0[2] / a0[0]) * 0.1, `3倍の割合：${a0[2] / a0[0]} → ${a1[2] / a1[0]}`);
+});
+
+/** 実際の大きさ＝音量 × 波形の最大の振れ幅（0〜1） */
+function effective(chip, ch, bank) {
+  const c = chip.snapshot().channels[ch];
+  if (!c.key) return 0;
+  let peak = 0;
+  for (let i = 0; i < 32; i++) peak = Math.max(peak, Math.abs(chip.readWave(bank, i)));
+  return (c.volume * peak) / (15 * 127);
+}
+
+test('消える直前の大きさがごく小さい（チャンネルが消える瞬間を目立たせない）', () => {
+  const { chip, bell } = setup();
+  bell.strike(60);
+  const first = [0, 1, 2].map((ch) => effective(chip, ch, ch));
+  const last = [0, 0, 0];
+  for (let t = 0; t < 3 && bell.ringing; t += DT) {
+    bell.advance(DT);
+    [0, 1, 2].forEach((ch) => { const e = effective(chip, ch, ch); if (e > 0) last[ch] = e; });
+  }
+  // 音量だけで下げると、最後は「音量1」＝初めの約7%（1/14）で途切れる。振れ幅でも下げると1%未満
+  [0, 1, 2].forEach((ch) => assert.ok(last[ch] < first[ch] * 0.01, `ch${ch}：初め ${first[ch].toFixed(3)}、最後 ${last[ch].toFixed(5)}`));
+});
+
+test('実際の大きさは、10ミリ秒ごとの書き換えで大きく跳ねない（上がらない）', () => {
+  const { chip, bell } = setup();
+  bell.strike(60);
+  let prev = effective(chip, 0, 0);
+  for (let t = 0; t < 3 && bell.ringing; t += DT) {
+    bell.advance(DT);
+    const e = effective(chip, 0, 0);
+    // 波形の中身（倍音）も変わるので、最大の振れ幅は少し揺れる。上がるのは2%まで
+    assert.ok(e <= prev * 1.02 + 1e-9, `${t.toFixed(3)}秒：${prev} → ${e}`);
+    prev = e;
+  }
+});
+
+test('4番目と5番目を同時に使うときは、波形を共有するので音量だけで下げる', () => {
+  const params = normalizeParams({ length: 2, partials: [{}, {}, {}, { ratio: 1, level: 12, decay: 1 }, { ratio: 1.5, level: 10, decay: 1 }] });
+  const { chip, bell } = setup(params);
+  bell.strike(60);
+  assert.deepEqual([bell.smooth[3], bell.smooth[4]], [0, 0]);
+  const w0 = chip.snapshot().waves.slice(96, 128);
+  for (let t = 0; t < 1; t += DT) bell.advance(DT);
+  assert.deepEqual(chip.snapshot().waves.slice(96, 128), w0, '共有の波形は小さくしない');
 });
 
 test('ずらし（うなり）は、小さな鐘では0', () => {

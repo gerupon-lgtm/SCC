@@ -7,6 +7,8 @@
 // - 整数倍でない音（鐘らしさの元）だけ、別のチャンネルにする
 // - 倍音は時間とともに弱める（波形を書き換える）。高い倍音ほど早く消える
 // - 全体の長さ（length）で、全チャンネルがそろって消えるようにする
+// - 音の大きさは、音量レジスター（16段階）と波形の振れ幅（-127〜127）の掛け算で細かく下げる。
+//   音量だけで下げると、終わりの 3→2→1→0 の段差で「このチャンネルが消えた」と分かってしまうため
 
 /** 鐘に使うチャンネル数（SCC互換のアドレス層が扱う5チャンネル） */
 export const BELL_CHANNELS = 5;
@@ -15,8 +17,10 @@ export const MAX_HARMONICS = 6;
 const WAVE_LEN = 32;
 /** チャンネル i が使う波形バンク（SCC互換：ch4とch5が共有） */
 const CHANNEL_BANK = [0, 1, 2, 3, 3];
-/** 波形を書き換える間隔（秒）【設計】 */
-const WAVE_UPDATE_SEC = 0.02;
+/** 波形と音量をそろえて書き換える間隔（秒）【設計】 */
+const WAVE_UPDATE_SEC = 0.01;
+/** 波形の振れ幅の最大（符号付き8ビット） */
+const WAVE_PEAK = 127;
 
 /**
  * @typedef {object} Partial 1チャンネル
@@ -55,14 +59,15 @@ export const BELL_PRESETS = {
   },
   church: {
     // 比は鐘の音についての一般的な知識（hum 0.5・prime 1・tierce 1.2・quint 1.5・nominal 2）
+    // 発案者の希望で、3秒以内に消える長さにしている（本物の教会の鐘はもっと長く響く）
     label: '教会の鐘',
     params: {
-      length: 8,
+      length: 2.9,
       partials: [
-        { ratio: 0.5, level: 9, decay: 4.0, cents: 0, harmonics: [1, 0.6], bright: 2.0 }, // hum と prime（2倍）
-        { ratio: 1.2, level: 11, decay: 2.2, cents: 0, harmonics: [1], bright: 1 },
-        { ratio: 1.5, level: 7, decay: 1.6, cents: 0, harmonics: [1], bright: 1 },
-        { ratio: 2.0, level: 10, decay: 1.4, cents: 0, harmonics: [1], bright: 1 },
+        { ratio: 0.5, level: 11, decay: 1.6, cents: 0, harmonics: [1, 0.7], bright: 1.0 }, // hum と prime（2倍）
+        { ratio: 1.2, level: 11, decay: 1.0, cents: 0, harmonics: [1], bright: 1 },        // tierce（短3度）
+        { ratio: 1.5, level: 6, decay: 0.8, cents: 0, harmonics: [1], bright: 1 },         // quint
+        { ratio: 2.0, level: 10, decay: 0.6, cents: 0, harmonics: [1], bright: 1 },        // nominal
         { ratio: 2.0, level: 0, decay: 1.4, cents: 0, harmonics: [1], bright: 1 },
       ],
     },
@@ -141,6 +146,11 @@ export class BellVoice {
     this.harm = new Float64Array(BELL_CHANNELS * MAX_HARMONICS);
     this.harmSum = new Float64Array(BELL_CHANNELS); // 波形が ±127 を超えないための分母
     this.morphs = new Uint8Array(BELL_CHANNELS);    // 2倍以上の倍音がある（波形を書き換える）
+    this.active = new Uint8Array(BELL_CHANNELS);    // 叩いたときに鳴らし始めたチャンネル
+    // 波形の振れ幅でも大きさを下げるチャンネル（波形バンクを1人で使っているときだけ）
+    this.smooth = new Uint8Array(BELL_CHANNELS);
+    // 波形バンクごとに、波形を書くチャンネル（-1 なら誰も書かない）
+    this.bankWriter = new Int32Array(BELL_CHANNELS).fill(-1);
     this.current = new Int32Array(BELL_CHANNELS);   // いま書いてある音量
     this.sinTable = new Float64Array(MAX_HARMONICS * WAVE_LEN);
     for (let k = 0; k < MAX_HARMONICS; k++) {
@@ -149,7 +159,7 @@ export class BellVoice {
     this.length = 3;
     this.velocity = 1;
     this.time = 0;
-    this.nextWaveTime = 0;
+    this.nextUpdate = 0;
     this.ringing = false;
     this.keyMask = 0;
   }
@@ -170,7 +180,7 @@ export class BellVoice {
       this.harmSum[ch] = sum;
       this.morphs[ch] = s.harmonics.some((h, k) => k > 0 && h > 0) ? 1 : 0;
     });
-    for (let ch = 0; ch < BELL_CHANNELS; ch++) this.#writeWave(ch, this.ringing ? this.time : 0);
+    if (!this.ringing) for (let ch = 0; ch < BELL_CHANNELS; ch++) if (CHANNEL_BANK[ch] === ch) this.#writeWave(ch, ch, 0, 1);
   }
 
   /**
@@ -182,54 +192,41 @@ export class BellVoice {
     const base = noteToHz(note);
     this.velocity = Math.min(1, Math.max(0, velocity));
     this.time = 0;
-    this.nextWaveTime = WAVE_UPDATE_SEC;
+    this.nextUpdate = WAVE_UPDATE_SEC;
     this.keyMask = 0;
-    for (let ch = 0; ch < BELL_CHANNELS; ch++) this.#writeWave(ch, 0);
+    this.active.fill(0);
     for (let ch = 0; ch < BELL_CHANNELS; ch++) {
       const hz = base * this.ratio[ch] * 2 ** (this.cents[ch] / 1200);
       const tp = hzToPeriod(hz, this.clock);
-      const on = this.level[ch] > 0 && tp > 8; // 8以下は止まるので使わない
+      this.active[ch] = this.level[ch] > 0 && tp > 8 ? 1 : 0; // 8以下は止まるので使わない
       this.regs.write(0x80 + ch * 2, tp & 0xff);
       this.regs.write(0x81 + ch * 2, tp >> 8);
-      const v = on ? this.#volumeAt(ch, 0) : 0;
-      this.current[ch] = v;
-      this.regs.write(0x8a + ch, v);
-      if (on && v > 0) this.keyMask |= 1 << ch;
     }
-    this.regs.write(0x8f, this.keyMask);
+    // 波形バンクを1人で使うチャンネルだけ、振れ幅でも大きさを下げられる
+    this.bankWriter.fill(-1);
+    for (let ch = 0; ch < BELL_CHANNELS; ch++) {
+      const bank = CHANNEL_BANK[ch];
+      let users = 0;
+      for (let o = 0; o < BELL_CHANNELS; o++) if (CHANNEL_BANK[o] === bank && this.active[o]) users++;
+      this.smooth[ch] = this.active[ch] && users === 1 ? 1 : 0;
+      if (this.bankWriter[bank] === -1 && (this.active[ch] || CHANNEL_BANK[ch] === ch)) this.bankWriter[bank] = ch;
+    }
+    this.#update(true);
     this.ringing = this.keyMask !== 0;
   }
 
   /**
-   * 時間を進める。音量が変わったチャンネルだけ書き、倍音のある波形は一定の間隔で書き換える
-   * すべて0になったら（遅くとも length 秒で）キーを切る
+   * 時間を進める。振れ幅で下げるチャンネルは、波形と音量を WAVE_UPDATE_SEC ごとにそろえて書く。
+   * それ以外は、音量が変わったら書く。すべて0になったら（遅くとも length 秒で）キーを切る
    * @param {number} dt 秒
    */
   advance(dt) {
     if (!this.ringing) return;
     this.time += dt;
-    let mask = 0;
-    for (let ch = 0; ch < BELL_CHANNELS; ch++) {
-      if ((this.keyMask & (1 << ch)) === 0) continue;
-      const v = this.#volumeAt(ch, this.time);
-      if (v !== this.current[ch]) {
-        this.current[ch] = v;
-        this.regs.write(0x8a + ch, v);
-      }
-      if (v > 0) mask |= 1 << ch;
-    }
-    if (this.time >= this.nextWaveTime) {
-      this.nextWaveTime += WAVE_UPDATE_SEC;
-      for (let ch = 0; ch < BELL_CHANNELS; ch++) {
-        // ch4（番号4）の波形は ch3 のバンクを読むので、ch3 が書く
-        if (this.morphs[ch] && CHANNEL_BANK[ch] === ch && (mask & ((1 << ch) | (ch === 3 ? 1 << 4 : 0)))) this.#writeWave(ch, this.time);
-      }
-    }
-    if (mask !== this.keyMask) {
-      this.keyMask = mask;
-      this.regs.write(0x8f, mask);
-    }
-    this.ringing = mask !== 0;
+    const tick = this.time >= this.nextUpdate;
+    if (tick) this.nextUpdate += WAVE_UPDATE_SEC;
+    this.#update(tick);
+    this.ringing = this.keyMask !== 0;
   }
 
   /** すぐに止める */
@@ -243,21 +240,57 @@ export class BellVoice {
     this.ringing = false;
   }
 
-  /**
-   * 指数で減る音量に、終わりで0へなめらかに下げる窓（1 - (t/length)^4）を掛け、0〜15 の整数に丸める
-   */
-  #volumeAt(ch, t) {
-    if (t >= this.length) return 0;
-    const x = t / this.length;
-    const win = 1 - x * x * x * x;
-    return Math.round(this.level[ch] * this.velocity * Math.exp(-t / this.decay[ch]) * win);
+  /** @param {boolean} tick 波形も書き換える時刻か */
+  #update(tick) {
+    const t = this.time;
+    let mask = 0;
+    for (let ch = 0; ch < BELL_CHANNELS; ch++) {
+      if (!this.active[ch] || (this.keyMask & (1 << ch)) === 0 && t > 0) continue;
+      const a = this.#amplitudeAt(ch, t); // 0〜15 の小数
+      let v;
+      if (this.smooth[ch]) {
+        if (!tick) { if (this.current[ch] > 0) mask |= 1 << ch; continue; }
+        // 音量は a 以上で一番小さい段。残りを波形の振れ幅で作る
+        v = a * WAVE_PEAK < 0.5 ? 0 : Math.min(15, Math.ceil(a - 1e-9));
+        this.#writeWave(CHANNEL_BANK[ch], ch, t, v > 0 ? a / v : 0);
+      } else {
+        v = Math.round(a);
+        const bank = CHANNEL_BANK[ch];
+        // 叩いた瞬間は必ず元の大きさの波形を書く（前の音で振れ幅を下げた波形が残っているかもしれない）
+        if ((t === 0 || (tick && this.morphs[ch])) && this.bankWriter[bank] === ch) this.#writeWave(bank, ch, t, 1);
+      }
+      if (v !== this.current[ch] || t === 0) {
+        this.current[ch] = v;
+        this.regs.write(0x8a + ch, v);
+      }
+      if (v > 0) mask |= 1 << ch;
+    }
+    if (t === 0) {
+      for (let ch = 0; ch < BELL_CHANNELS; ch++) {
+        if (!this.active[ch]) { this.current[ch] = 0; this.regs.write(0x8a + ch, 0); }
+      }
+    }
+    if (mask !== this.keyMask || t === 0) {
+      this.keyMask = mask;
+      this.regs.write(0x8f, mask);
+    }
   }
 
-  /** 時刻 t の倍音の強さで、チャンネルの波形を作って書く（ch4 は ch3 と同じバンクなので書かない） */
-  #writeWave(ch, t) {
-    if (CHANNEL_BANK[ch] !== ch) return;
+  /** 指数で減る大きさに、終わりで0へなめらかに下げる窓（1 - (t/length)^4）を掛ける。0〜15 の小数 */
+  #amplitudeAt(ch, t) {
+    if (t >= this.length) return 0;
+    const x = t / this.length;
+    return this.level[ch] * this.velocity * Math.exp(-t / this.decay[ch]) * (1 - x * x * x * x);
+  }
+
+  /**
+   * 時刻 t の倍音の強さ × 振れ幅 scale で波形を作り、バンクに書く
+   * @param {number} bank 書く波形バンク
+   * @param {number} ch 倍音の設定を使うチャンネル
+   */
+  #writeWave(bank, ch, t, scale) {
     const base = ch * MAX_HARMONICS;
-    const norm = this.harmSum[ch] > 0 ? 127 / this.harmSum[ch] : 0;
+    const norm = this.harmSum[ch] > 0 ? (WAVE_PEAK * scale) / this.harmSum[ch] : 0;
     for (let i = 0; i < WAVE_LEN; i++) {
       let s = 0;
       for (let k = 0; k < MAX_HARMONICS; k++) {
@@ -266,7 +299,7 @@ export class BellVoice {
         const g = k === 0 ? 1 : Math.exp((-t * k) / this.bright[ch]);
         s += h * g * this.sinTable[k * WAVE_LEN + i];
       }
-      this.regs.write(CHANNEL_BANK[ch] * WAVE_LEN + i, Math.round(s * norm) & 0xff);
+      this.regs.write(bank * WAVE_LEN + i, Math.round(s * norm) & 0xff);
     }
   }
 }

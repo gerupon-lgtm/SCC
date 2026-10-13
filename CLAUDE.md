@@ -15,7 +15,7 @@ Konami SCC（K051649）を、ブラウザのWeb Audio APIで再現する個人�
 
 ## 実行とテスト
 
-- 起動：`python3 -m http.server 8000` → http://localhost:8000
+- 起動：`python tools/serve.py` → http://localhost:8000（ブラウザに古いファイルを使わせない開発用サーバー。`python -m http.server` だと変更が反映されないことがある）
 - テスト：`node --test`（Node 24では `node --test tests/` のようにフォルダを渡すと動かないため、引数なしで実行します）
 - Android実機：https://gerupon-lgtm.github.io/SCC/ を開く（push 後、反映まで1分ほど）。LANのIP（http://192.168.x.x:8000）では、安全な接続でないため音もMIDIも使えません（2026-10-10 確認）
 - 実装の開始点は `docs/tasks.md` のT-001です。タスクは上から順に進めます
