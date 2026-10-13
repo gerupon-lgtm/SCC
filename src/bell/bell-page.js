@@ -1,4 +1,5 @@
 // 鐘の試作ページ。本体（index.html）とは別に動く。本体のコードは変えずに、部品だけ借りる
+import '../ui/version-check.js'; // 最初に読む：版の食い違いとエラーを画面に出す
 import { VERSION } from '../version.js';
 import { SCC_COMPAT } from '../core/config.js';
 import { DEFAULT_MASTER } from '../core/post-stage.js';

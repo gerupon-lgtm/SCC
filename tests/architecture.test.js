@@ -89,6 +89,15 @@ test('notice.html は NOTICE と同じ内容。CSP も同じく外部通信を�
   assert.match(html, /connect-src 'none'/);
 });
 
+test('各ページの app-version が VERSION と一致（公開時の版の食い違いを見つけるため）', () => {
+  for (const page of ['index.html', 'bell.html']) {
+    const html = readFileSync(join(ROOT, page), 'utf8');
+    const m = html.match(/<meta name="app-version" content="([^"]+)">/);
+    assert.ok(m, `${page} に app-version がありません`);
+    assert.equal(m[1], VERSION, `${page} の app-version を ${VERSION} にしてください`);
+  }
+});
+
 test('バージョンの形式と、NOTICE との一致', () => {
   assert.match(VERSION, /^0\.\d+\.\d+$/);
   const notice = readFileSync(join(ROOT, 'NOTICE'), 'utf8');

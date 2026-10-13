@@ -1,4 +1,5 @@
 // 画面（F-008）。部品をつなぐ：MIDI・画面の鍵盤 → Synth → AudioEngine（Worklet）
+import './version-check.js'; // 最初に読む：版の食い違いとエラーを画面に出す
 import { VERSION } from '../version.js';
 import { SCC_COMPAT } from '../core/config.js';
 import { PRESET_NAMES, getPreset } from '../core/presets.js';
