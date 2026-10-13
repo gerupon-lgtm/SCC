@@ -54,6 +54,13 @@ test('src/core に禁止APIがない', () => {
   }
 });
 
+test('鐘の部品（bell-voice.js）も、画面・音声のAPIを使わない（別のアプリへ切り出すため）', () => {
+  const src = readFileSync(join(ROOT, 'src', 'bell', 'bell-voice.js'), 'utf8');
+  assert.deepEqual(findForbidden(src), []);
+  const imports = findOutsideImports(src).filter((s) => !s.startsWith('../core/'));
+  assert.deepEqual(imports, [], 'src/core 以外を読み込んでいます');
+});
+
 test('検査が働く：document や fetch を書くと見つかる', () => {
   assert.deepEqual(findForbidden('const x = document.body;'), ['document']);
   assert.deepEqual(findForbidden('await fetch(u)'), ['fetch']);

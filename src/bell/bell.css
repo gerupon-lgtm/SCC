@@ -1,0 +1,32 @@
+/* 鐘の試作ページだけの見た目。色は src/ui/style.css の変数を使う */
+.bell-row { margin-top: 10px; }
+.bell-row label { min-width: 3em; color: var(--muted); }
+.bell-row input[type="range"] { flex: 1; accent-color: var(--accent); }
+.bell-row output { font-family: var(--mono); min-width: 3em; text-align: right; }
+.partials-panel, .export-panel { grid-column: 1 / -1; }
+.partials-scroll { overflow-x: auto; }
+.partials { width: 100%; border-collapse: collapse; font-size: 0.85rem; min-width: 520px; }
+.partials th { text-align: left; color: var(--muted); font-weight: 400; padding: 2px 4px; }
+.partials td { padding: 4px; border-top: 1px solid var(--line); white-space: nowrap; }
+.partials input[type="number"] { width: 5.5em; background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 2px 4px; font-family: var(--mono); }
+.partials input[type="range"] { width: 90px; accent-color: var(--accent); vertical-align: middle; }
+.partials output { font-family: var(--mono); display: inline-block; min-width: 2.6em; text-align: right; }
+.partials .live { display: inline-block; height: 8px; background: var(--accent); border-radius: 2px; vertical-align: middle; }
+.partials .hz { color: var(--muted); font-family: var(--mono); font-size: 0.75rem; display: block; }
+.export-panel textarea {
+  width: 100%; background: var(--bg); color: var(--fg); border: 1px solid var(--line); border-radius: 6px;
+  font-family: var(--mono); font-size: 0.8rem; padding: 6px; margin-bottom: 8px;
+}
+
+/* 狭い画面：1チャンネルを1枚のカードにして、横にはみ出さないようにする */
+@media (max-width: 600px) {
+  .partials { min-width: 0; }
+  .partials thead { display: none; }
+  .partials tr { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 12px; padding: 8px 0; border-top: 1px solid var(--line); }
+  .partials td { border-top: 0; padding: 0; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .partials td::before { content: attr(data-label); color: var(--muted); font-size: 0.75rem; min-width: 4.5em; }
+  .partials td:first-child { grid-column: 1 / -1; font-weight: 600; }
+  .partials td:first-child::before { min-width: 0; }
+  .partials input[type="range"] { flex: 1; min-width: 60px; width: auto; }
+  .partials .hz { flex-basis: 100%; }
+}

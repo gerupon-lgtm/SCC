@@ -44,6 +44,8 @@ tools/
   mame-check/                MAMEのk051649.cppを動かす照合の枠（README.md）
   bench.js                   性能測定（T-013）
 notice.html                  NOTICE と同じ内容を画面で見るページ
+bell.html                    鐘の音の試作ページ（本体とは別。docs/bell.md）
+src/bell/                    鐘の試作。bell-voice.js は DOM・Web Audio を使わない（切り出し用）
 docs/
 ```
 
