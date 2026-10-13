@@ -93,6 +93,14 @@ test('倍音は時間とともに弱まり、正弦波に近づく（1つの波�
   assert.ok(a1[2] / a1[0] < (a0[2] / a0[0]) * 0.1, `3倍の割合：${a0[2] / a0[0]} → ${a1[2] / a1[0]}`);
 });
 
+const effective0Church3 = (() => {
+  const chip = new SccRef();
+  const bell = new BellVoice(new SccRegisters(chip), CLOCK);
+  bell.setParams(BELL_PRESETS.church.params);
+  bell.strike(60);
+  return effective(chip, 3, 3);
+})();
+
 /** 実際の大きさ＝音量 × 波形の最大の振れ幅（0〜1） */
 function effective(chip, ch, bank) {
   const c = chip.snapshot().channels[ch];
@@ -128,14 +136,27 @@ test('実際の大きさは、10ミリ秒ごとの書き換えで大きく跳ね
   }
 });
 
-test('4番目と5番目を同時に使うときは、波形を共有するので音量だけで下げる', () => {
-  const params = normalizeParams({ length: 2, partials: [{}, {}, {}, { ratio: 1, level: 12, decay: 1 }, { ratio: 1.5, level: 10, decay: 1 }] });
-  const { chip, bell } = setup(params);
+test('4番目と5番目は波形を共有しても、どちらも細かく下がる（大きいほうに振れ幅を合わせる）', () => {
+  const { chip, bell } = setup(BELL_PRESETS.church.params);
   bell.strike(60);
-  assert.deepEqual([bell.smooth[3], bell.smooth[4]], [0, 0]);
-  const w0 = chip.snapshot().waves.slice(96, 128);
-  for (let t = 0; t < 1; t += DT) bell.advance(DT);
-  assert.deepEqual(chip.snapshot().waves.slice(96, 128), w0, '共有の波形は小さくしない');
+  let last3 = 0;
+  for (let t = 0; t < 3 && bell.ringing; t += DT) {
+    bell.advance(DT);
+    const e = effective(chip, 3, 3);
+    if (e > 0) last3 = e;
+  }
+  assert.ok(last3 < effective0Church3 * 0.01, `ch4 最後 ${last3}`);
+});
+
+test('打撃音：叩いた瞬間だけ鳴り、0.4秒後には消えている', () => {
+  for (const [name, chs] of [['small', [3, 4]], ['church', [4]]]) {
+    const { bell, ch } = setup(BELL_PRESETS[name].params);
+    bell.strike(60);
+    chs.forEach((c) => assert.ok(ch()[c].key && ch()[c].volume > 5, `${name} ch${c} 叩いた瞬間`));
+    for (let t = 0; t < 0.4; t += DT) bell.advance(DT);
+    chs.forEach((c) => assert.ok(!ch()[c].key, `${name} ch${c} 0.4秒後`));
+    assert.ok(ch()[0].key, `${name} 本体は鳴り続ける`);
+  }
 });
 
 test('ずらし（うなり）は、小さな鐘では0', () => {
