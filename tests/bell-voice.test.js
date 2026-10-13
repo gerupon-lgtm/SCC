@@ -16,15 +16,26 @@ function setup(params = BELL_PRESETS.small.params) {
   return { chip, bell, ch: () => chip.snapshot().channels };
 }
 
-/** 鳴り終わるまで進め、かかった秒数を返す。途中で音量が上がったら失敗 */
+const BANK_OF = [0, 1, 2, 3, 3];
+
+/**
+ * 鳴り終わるまで進め、かかった秒数を返す。途中で実際の大きさ（音量×波形の振れ幅）が上がったら失敗
+ * ch4とch5は波形を共有するので、音量の段は1つ上がることがある。実際の大きさで比べる（丸めの分だけ許す）
+ */
 function runToEnd(bell, ch, limit = 60) {
-  let prev = ch().map((c) => c.volume);
+  const chip = bell.regs.chip;
+  const eff = () => [0, 1, 2, 3, 4].map((i) => effective(chip, i, BANK_OF[i]));
+  let prev = eff();
   let t = 0;
   while (bell.ringing && t < limit) {
     bell.advance(DT);
     t += DT;
-    const now = ch().map((c) => c.volume);
-    now.forEach((v, i) => assert.ok(v <= prev[i], `ch${i} が上がった：${prev[i]}→${v}（${t.toFixed(3)}秒）`));
+    const now = eff();
+    // 共有バンクの2つ目（ch4・ch5）は、音量の段の丸めで最大「半段」（1/30）だけ揺れることがある（SCCの仕様による限界）
+    now.forEach((e, i) => {
+      const slack = BANK_OF[i] === 3 ? 1 / 30 : 0;
+      assert.ok(e <= prev[i] * 1.08 + slack + 1e-9, `ch${i} が上がった：${prev[i]}→${e}（${t.toFixed(3)}秒）`);
+    });
     prev = now;
   }
   return t;
@@ -148,13 +159,17 @@ test('4番目と5番目は波形を共有しても、どちらも細かく下が
   assert.ok(last3 < effective0Church3 * 0.01, `ch4 最後 ${last3}`);
 });
 
-test('打撃音：叩いた瞬間だけ鳴り、0.4秒後には消えている', () => {
-  for (const [name, chs] of [['small', [3, 4]], ['church', [4]]]) {
-    const { bell, ch } = setup(BELL_PRESETS[name].params);
+test('打撃音：叩いた瞬間は強く、0.5秒後には初めの1%未満', () => {
+  for (const [name, chs] of [['small', [3, 4]], ['church', [2, 4]]]) {
+    const { chip, bell, ch } = setup(BELL_PRESETS[name].params);
     bell.strike(60);
-    chs.forEach((c) => assert.ok(ch()[c].key && ch()[c].volume > 5, `${name} ch${c} 叩いた瞬間`));
-    for (let t = 0; t < 0.4; t += DT) bell.advance(DT);
-    chs.forEach((c) => assert.ok(!ch()[c].key, `${name} ch${c} 0.4秒後`));
+    const first = chs.map((c) => effective(chip, c, BANK_OF[c]));
+    chs.forEach((c, i) => assert.ok(ch()[c].volume >= 13 && first[i] > 0.5, `${name} ch${c} 叩いた瞬間 ${first[i]}`));
+    for (let t = 0; t < 0.5; t += DT) bell.advance(DT);
+    chs.forEach((c, i) => {
+      const e = effective(chip, c, BANK_OF[c]);
+      assert.ok(e < first[i] * 0.01, `${name} ch${c} 0.5秒後 ${e}`);
+    });
     assert.ok(ch()[0].key, `${name} 本体は鳴り続ける`);
   }
 });

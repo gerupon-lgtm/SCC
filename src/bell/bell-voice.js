@@ -53,9 +53,10 @@ export const BELL_PRESETS = {
         // 整数倍でない音だけ、別のチャンネルに
         { ratio: 2.4, level: 8, decay: 0.45, cents: 0, harmonics: [1], bright: 1 },
         { ratio: 4.2, level: 5, decay: 0.25, cents: 0, harmonics: [1], bright: 1 },
-        // 打撃音（0.1.8〜）：叩いた瞬間の「カン」。とても高い音を一瞬だけ鳴らす
-        { ratio: 6.3, level: 10, decay: 0.035, cents: 0, harmonics: [1], bright: 1 },
-        { ratio: 9.1, level: 8, decay: 0.025, cents: 0, harmonics: [1], bright: 1 },
+        // 打撃音：叩いた瞬間の「カン」。高い音を一瞬だけ鳴らす（0.1.9 で強めた）
+        // 短すぎる音は小さく聞こえるので減衰は約0.1秒。倍音の多い波形で金属らしく（倍音はすぐ消える）
+        { ratio: 6.3, level: 15, decay: 0.1, cents: 0, harmonics: [1, 0.7, 0.5, 0.35], bright: 0.06 },
+        { ratio: 9.1, level: 13, decay: 0.07, cents: 0, harmonics: [1, 0.7, 0.5, 0.35], bright: 0.06 }, // 波形は上と共有
       ],
     },
   },
@@ -66,12 +67,14 @@ export const BELL_PRESETS = {
     params: {
       length: 2.9,
       partials: [
-        { ratio: 0.5, level: 11, decay: 1.6, cents: 0, harmonics: [1, 0.7], bright: 1.0 }, // hum と prime（2倍）
+        // hum・prime（2倍）・quint（3倍）を1つの波形に。quint は 0.1.9 で ch3 から移した（打撃音に ch3 を空けるため）
+        { ratio: 0.5, level: 14, decay: 1.6, cents: 0, harmonics: [1, 0.7, 0.55], bright: 1.3 },
         { ratio: 1.2, level: 11, decay: 1.0, cents: 0, harmonics: [1], bright: 1 },        // tierce（短3度）
-        { ratio: 1.5, level: 6, decay: 0.8, cents: 0, harmonics: [1], bright: 1 },         // quint
+        // 打撃音：叩いた瞬間の「カン」（0.1.9 で強めた）。倍音の多い波形は ch3 だけで使う
+        { ratio: 5.4, level: 15, decay: 0.1, cents: 0, harmonics: [1, 0.7, 0.5, 0.35], bright: 0.06 },
         { ratio: 2.0, level: 10, decay: 0.6, cents: 0, harmonics: [1], bright: 1 },        // nominal
-        // 打撃音（0.1.8〜）：叩いた瞬間の「カン」。波形は nominal と共有（正弦波）
-        { ratio: 5.4, level: 10, decay: 0.045, cents: 0, harmonics: [1], bright: 1 },
+        // 打撃音の2つ目。波形は nominal と共有（正弦波）
+        { ratio: 7.3, level: 13, decay: 0.07, cents: 0, harmonics: [1], bright: 1 },
       ],
     },
   },
