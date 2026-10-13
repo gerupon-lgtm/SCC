@@ -16,7 +16,7 @@ class BellProcessor extends AudioWorkletProcessor {
     this.conv = new WindowConverter(SCC_COMPAT.clock, rate);
     this.post = new PostStage(rate, SCC_COMPAT.channelCount);
     this.bell = new BellVoice(this.regs, SCC_COMPAT.clock);
-    this.bell.setParams(BELL_PRESETS.church.params);
+    this.bell.setParams(BELL_PRESETS.small.params);
     this.bell.stop();
     this.port.onmessage = (e) => this.#onMessage(e.data);
   }

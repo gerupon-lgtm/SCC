@@ -1,13 +1,14 @@
 // 鐘の試作ページ。本体（index.html）とは別に動く。本体のコードは変えずに、部品だけ借りる
 import { VERSION } from '../version.js';
 import { SCC_COMPAT } from '../core/config.js';
-import { PRESET_NAMES } from '../core/presets.js';
 import { DEFAULT_MASTER } from '../core/post-stage.js';
 import { Keyboard, noteName } from '../ui/keyboard.js';
 import { BELL_PRESETS, BELL_CHANNELS, normalizeParams, noteToHz, hzToPeriod } from './bell-voice.js';
 
+const SHARED_WAVE_CH = 4; // ch5（番号4）の波形は ch4 と同じ（SCCの仕様）
+
 const $ = (id) => /** @type {HTMLElement} */ (document.getElementById(id));
-const STORE_KEY = 'bell-params';
+const STORE_KEY = 'bell-params-v2'; // 形が変わったので、前の版の保存とは別にする
 const POLL_MS = 33;
 
 $('version').textContent = VERSION;
@@ -53,7 +54,7 @@ async function stop() {
 
 // ---- 設定 ----
 /** @type {import('./bell-voice.js').BellParams} */
-let params = loadStored() ?? structuredClone(BELL_PRESETS.church.params);
+let params = loadStored() ?? structuredClone(BELL_PRESETS.small.params);
 let lastNote = null;
 
 function loadStored() {
@@ -80,9 +81,11 @@ for (const [key, preset] of Object.entries(BELL_PRESETS)) {
   b.addEventListener('click', () => applyParams(structuredClone(preset.params)));
   $('presets').append(b);
 }
-const waveSel = /** @type {HTMLSelectElement} */ ($('wave'));
-for (const name of PRESET_NAMES) waveSel.append(new Option(name, name));
-waveSel.addEventListener('change', () => applyParams({ ...params, wave: waveSel.value }, { updateInputs: false }));
+const lengthInput = /** @type {HTMLInputElement} */ ($('length'));
+lengthInput.addEventListener('input', () => {
+  $('length-value').textContent = `${Number(lengthInput.value).toFixed(1)}秒`;
+  applyParams({ ...params, length: Number(lengthInput.value) }, { updateInputs: false });
+});
 
 const master = /** @type {HTMLInputElement} */ ($('master'));
 master.value = String(DEFAULT_MASTER);
@@ -100,6 +103,8 @@ const FIELDS = [
   { key: 'ratio', label: '比', type: 'number', min: 0.125, max: 16, step: 0.001 },
   { key: 'level', label: '初めの音量', type: 'range', min: 0, max: 15, step: 1 },
   { key: 'decay', label: '減衰（秒）', type: 'range', min: 0.05, max: 10, step: 0.05 },
+  { key: 'harmonics', label: '倍音', type: 'text' },
+  { key: 'bright', label: '倍音の減衰', type: 'range', min: 0.05, max: 5, step: 0.05 },
   { key: 'cents', label: 'ずらし', type: 'range', min: -50, max: 50, step: 1 },
 ];
 const rows = [];
@@ -114,11 +119,22 @@ for (let ch = 0; ch < BELL_CHANNELS; ch++) {
     const td = document.createElement('td');
     td.dataset.label = f.label; // 狭い画面では、表の見出しの代わりに各欄に出す
     const input = document.createElement('input');
-    Object.assign(input, { type: f.type, min: f.min, max: f.max, step: f.step });
-    input.setAttribute('aria-label', `ch${ch + 1} ${f.key}`);
-    input.addEventListener('input', () => {
-      const partials = params.partials.map((s, i) => (i === ch ? { ...s, [f.key]: Number(input.value) } : s));
-      applyParams({ ...params, partials }, { updateInputs: false });
+    if (f.type === 'text') {
+      input.type = 'text';
+      input.inputMode = 'decimal';
+      input.className = 'harmonics';
+    } else {
+      Object.assign(input, { type: f.type, min: f.min, max: f.max, step: f.step });
+    }
+    input.setAttribute('aria-label', `ch${ch + 1} ${f.label}`);
+    const shared = ch === SHARED_WAVE_CH && (f.key === 'harmonics' || f.key === 'bright');
+    if (shared) { input.disabled = true; input.title = 'ch4 と同じ（SCCの仕様）'; }
+    const readValue = () => (f.key === 'harmonics'
+      ? input.value.split(/[,、\s]+/).filter((x) => x !== '').map(Number)
+      : Number(input.value));
+    input.addEventListener(f.type === 'text' ? 'change' : 'input', () => {
+      const partials = params.partials.map((s, i) => (i === ch ? { ...s, [f.key]: readValue() } : s));
+      applyParams({ ...params, partials }, { updateInputs: f.key === 'harmonics' || ch === SHARED_WAVE_CH - 1 });
       if (out) out.textContent = fmt(f.key, Number(input.value));
     });
     td.append(input);
@@ -149,17 +165,18 @@ for (let ch = 0; ch < BELL_CHANNELS; ch++) {
 }
 
 function fmt(key, v) {
-  if (key === 'decay') return v.toFixed(2);
+  if (key === 'decay' || key === 'bright') return v.toFixed(2);
   if (key === 'cents') return (v > 0 ? '+' : '') + v;
   return String(v);
 }
 
 function renderInputs() {
-  waveSel.value = params.wave;
+  lengthInput.value = String(params.length);
+  $('length-value').textContent = `${params.length.toFixed(1)}秒`;
   params.partials.forEach((s, ch) => {
     for (const f of FIELDS) {
       const { input, out } = rows[ch][f.key];
-      input.value = String(s[f.key]);
+      input.value = f.key === 'harmonics' ? s.harmonics.join(', ') : String(s[f.key]);
       if (out) out.textContent = fmt(f.key, s[f.key]);
     }
   });

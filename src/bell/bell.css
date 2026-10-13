@@ -5,7 +5,7 @@
 .bell-row output { font-family: var(--mono); min-width: 3em; text-align: right; }
 .partials-panel, .export-panel { grid-column: 1 / -1; }
 .partials-scroll { overflow-x: auto; }
-.partials { width: 100%; border-collapse: collapse; font-size: 0.85rem; min-width: 520px; }
+.partials { width: 100%; border-collapse: collapse; font-size: 0.85rem; min-width: 760px; }
 .partials th { text-align: left; color: var(--muted); font-weight: 400; padding: 2px 4px; }
 .partials td { padding: 4px; border-top: 1px solid var(--line); white-space: nowrap; }
 .partials input[type="number"] { width: 5.5em; background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 2px 4px; font-family: var(--mono); }
@@ -30,3 +30,5 @@
   .partials input[type="range"] { flex: 1; min-width: 60px; width: auto; }
   .partials .hz { flex-basis: 100%; }
 }
+.partials input.harmonics { width: 8.5em; background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 2px 4px; font-family: var(--mono); }
+.partials input:disabled { opacity: 0.45; }

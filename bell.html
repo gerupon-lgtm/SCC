@@ -17,7 +17,7 @@
 <main class="app">
   <section class="panel start">
     <button id="start" type="button" class="start-button">▶ 音を出す</button>
-    <p class="note">5つのチャンネルを、整数倍でない高さで同時に鳴らし、音量を時間で下げて鐘の音を作ります。1度に鳴る鐘は1つです。</p>
+    <p class="note">整数倍の音（1・2・3倍…）は1つのチャンネルの波形にまとめ、整数倍でない音だけを別のチャンネルで重ねて、鐘の音を作ります。音量と波形は時間とともに変わり、「全体の長さ」でそろって消えます。1度に鳴る鐘は1つです。</p>
     <p id="error" class="error" hidden></p>
   </section>
 
@@ -25,8 +25,9 @@
     <h2>音色の出発点</h2>
     <div id="presets" class="wave-buttons"></div>
     <div class="row bell-row">
-      <label for="wave">波形</label>
-      <select id="wave"></select>
+      <label for="length">全体の長さ</label>
+      <input id="length" type="range" min="0.3" max="10" step="0.1">
+      <output id="length-value"></output>
     </div>
     <div class="row bell-row">
       <label for="master">音量</label>
@@ -44,11 +45,11 @@
     <h2>部分音（1行 = 1チャンネル）</h2>
     <div class="partials-scroll">
       <table class="partials">
-        <thead><tr><th>ch</th><th>比</th><th>初めの音量</th><th>減衰（秒）</th><th>ずらし（セント）</th><th>今</th></tr></thead>
+        <thead><tr><th>ch</th><th>比</th><th>初めの音量</th><th>減衰（秒）</th><th>倍音</th><th>倍音の減衰（秒）</th><th>ずらし（セント）</th><th>今</th></tr></thead>
         <tbody id="partial-rows"></tbody>
       </table>
     </div>
-    <p class="note">比：基準の高さに対する倍率（1.2 は短3度上）。減衰：音量が約37%になるまでの秒数。ずらし：わずかにずらすと、うなりが出ます。</p>
+    <p class="note">比：基準の高さに対する倍率（1.2 は短3度上）。減衰：音量が約37%になるまでの秒数。倍音：1倍・2倍・3倍…の強さをカンマで区切る（例「1, 0.5, 0.35」。「1」なら正弦波）。倍音の減衰：2倍の音が約37%になるまでの秒数（高い倍音ほど早く消える）。ずらし：0以外だと、うなりが出ます。ch5 の波形は ch4 と同じです（SCCの仕様）。</p>
   </section>
 
   <section class="panel keyboard-panel">
