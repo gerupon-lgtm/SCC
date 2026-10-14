@@ -1,7 +1,7 @@
 # SCCシミュレーター（仮称）— AI実装指示書
 
 Konami SCC（K051649）を、ブラウザのWeb Audio APIで再現する個人開発アプリです。外部のMIDI機器（Web MIDI API）から演奏します。
-要件の正典は、要件定義書 版0.7（https://claude.ai/code/artifact/220db0c5-39f7-4822-ab03-ca7375eaf6af）です。詳細は `docs/` を読んでください。
+要件の正典は、要件定義書 版0.8（https://claude.ai/code/artifact/220db0c5-39f7-4822-ab03-ca7375eaf6af）です。詳細は `docs/` を読んでください。
 
 ## 前提（仮置き）— 実装中に変わり得ます
 
