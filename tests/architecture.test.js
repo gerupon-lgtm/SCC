@@ -61,6 +61,14 @@ test('鐘の部品（bell-voice.js）も、画面・音声のAPIを使わない�
   assert.deepEqual(imports, [], 'src/core 以外を読み込んでいます');
 });
 
+test('MML 再生の部品（src/mgs）も、画面・音声・通信のAPIを使わない（AudioWorklet の中で動かすため）', () => {
+  const dir = join(ROOT, 'src', 'mgs');
+  for (const f of readdirSync(dir).filter((n) => n.endsWith('.js'))) {
+    const src = readFileSync(join(dir, f), 'utf8');
+    assert.deepEqual(findForbidden(src), [], `${f} に禁止APIがあります`);
+  }
+});
+
 test('検査が働く：document や fetch を書くと見つかる', () => {
   assert.deepEqual(findForbidden('const x = document.body;'), ['document']);
   assert.deepEqual(findForbidden('await fetch(u)'), ['fetch']);
