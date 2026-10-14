@@ -1,12 +1,13 @@
 // MIDIの出来事 → SCCのレジスタ書き込み（docs/api-design.md 4章）
-// 書き込み先は write(addr, value) を持つもの（AudioEngine か、テストでは SccRegisters）
+// 書き込み先は write(addr, value) を持つもの（AudioEngine か、テストでは SccExtRegisters）
+// ch1〜5 は SCC互換のアドレス、ch6 以降は追加チャンネルのアドレス（src/core/scc-ext-registers.js）
 import { SCC_COMPAT } from '../core/config.js';
 import { PRESET_NAMES, getPreset } from '../core/presets.js';
+import { COMPAT_CHANNELS, channelAddr, waveAddr } from '../core/scc-ext-registers.js';
 import { VoiceAllocator } from './voice-allocator.js';
 
-/** アドレス層が扱うチャンネル数（SCC互換） */
-const REG_CHANNELS = 5;
-const WAVE_REGION_COUNT = 4; // 0x00〜0x7F の 32バイト×4
+/** SCC互換のキーのアドレス（ch1〜5 のビット） */
+const COMPAT_KEY_ADDR = 0x8f;
 const PITCH_BEND_RANGE = 2; // ±2半音【想定】
 
 /**
@@ -35,14 +36,17 @@ export class Synth {
   /**
    * @param {{ write(addr: number, value: number): unknown }} sink
    * @param {object} [opts]
-   * @param {number} [opts.clock]
+   * @param {import('../core/config.js').SccConfig} [opts.config] チャンネル数・波形バンク数・クロック
    * @param {(voices: import('./voice-allocator.js').Voice[]) => void} [opts.onVoices] 発音中の音が変わったとき
    */
-  constructor(sink, { clock = SCC_COMPAT.clock, onVoices = () => {} } = {}) {
+  constructor(sink, { config = SCC_COMPAT, onVoices = () => {} } = {}) {
     this.sink = sink;
-    this.clock = clock;
+    this.clock = config.clock;
+    this.channelCount = config.channelCount;
+    this.waveBankCount = config.waveBankCount;
+    this.addr = Array.from({ length: this.channelCount }, (_, ch) => channelAddr(ch));
     this.onVoices = onVoices;
-    this.voices = new VoiceAllocator(REG_CHANNELS);
+    this.voices = new VoiceAllocator(this.channelCount);
     this.keyMask = 0;
     this.bend = 0;      // 半音単位
     this.cc7 = 127;
@@ -53,8 +57,11 @@ export class Synth {
   init() {
     this.setWave(this.waveName);
     this.keyMask = 0;
-    this.sink.write(0x8f, 0);
-    for (let ch = 0; ch < REG_CHANNELS; ch++) this.sink.write(0x8a + ch, 0);
+    this.sink.write(COMPAT_KEY_ADDR, 0);
+    for (let ch = 0; ch < this.channelCount; ch++) {
+      this.sink.write(this.addr[ch].volume, 0);
+      if (this.addr[ch].key !== null) this.sink.write(this.addr[ch].key, 0);
+    }
     this.voices.allOff();
     this.onVoices([]);
   }
@@ -80,7 +87,7 @@ export class Synth {
     if (noteToPeriod(note + this.bend, this.clock) <= 8) return; // 止まる高さは鳴らさない
     const { voice } = this.voices.noteOn(note, velocity);
     this.#writeFrequency(voice.ch, note);
-    this.sink.write(0x8a + voice.ch, velocityToVolume(velocity, this.cc7));
+    this.sink.write(this.addr[voice.ch].volume, velocityToVolume(velocity, this.cc7));
     this.#setKey(voice.ch, true);
     this.onVoices(this.voices.active());
   }
@@ -107,31 +114,32 @@ export class Synth {
   /** @param {number} value 0〜127 */
   setChannelVolume(value) {
     this.cc7 = value;
-    for (const v of this.voices.active()) this.sink.write(0x8a + v.ch, velocityToVolume(v.velocity, value));
+    for (const v of this.voices.active()) this.sink.write(this.addr[v.ch].volume, velocityToVolume(v.velocity, value));
   }
 
   /** プリセット波形を全バンクへ書く（MVPでは全チャンネル同じ音色） @param {string} name */
   setWave(name) {
     const wave = getPreset(name);
     this.waveName = name;
-    for (let region = 0; region < WAVE_REGION_COUNT; region++) {
-      for (let i = 0; i < wave.length; i++) this.sink.write(region * 32 + i, wave[i] & 0xff);
+    for (let bank = 0; bank < this.waveBankCount; bank++) {
+      for (let i = 0; i < wave.length; i++) this.sink.write(waveAddr(bank, i), wave[i] & 0xff);
     }
   }
 
   #writeFrequency(ch, note) {
     const tp = noteToPeriod(note + this.bend, this.clock);
-    this.sink.write(0x80 + ch * 2, tp & 0xff);
-    this.sink.write(0x81 + ch * 2, tp >> 8);
+    this.sink.write(this.addr[ch].freqLo, tp & 0xff);
+    this.sink.write(this.addr[ch].freqHi, tp >> 8);
   }
 
   #silence(ch) {
-    this.sink.write(0x8a + ch, 0);
+    this.sink.write(this.addr[ch].volume, 0);
     this.#setKey(ch, false);
   }
 
   #setKey(ch, on) {
+    if (ch >= COMPAT_CHANNELS) { this.sink.write(this.addr[ch].key, on ? 1 : 0); return; }
     this.keyMask = on ? this.keyMask | (1 << ch) : this.keyMask & ~(1 << ch);
-    this.sink.write(0x8f, this.keyMask);
+    this.sink.write(COMPAT_KEY_ADDR, this.keyMask);
   }
 }

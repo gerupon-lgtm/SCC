@@ -57,6 +57,15 @@ export class SccFast {
     for (let i = 0; i < n; i++) this.key[i] = (mask >> i) & 1;
   }
 
+  /**
+   * 1チャンネルだけキーを変える（追加チャンネル用。F-011）。他のチャンネルには触れない
+   * @param {number} ch @param {boolean} on
+   */
+  setChannelKey(ch, on) {
+    this.#check(ch);
+    this.key[ch] = on ? 1 : 0;
+  }
+
   /** @param {number} bank @param {number} index @param {number} int8 */
   writeWave(bank, index, int8) {
     this.waves[this.#bankBase(bank) + (index & WAVE_MASK)] = int8;

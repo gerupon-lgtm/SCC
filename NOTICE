@@ -1,4 +1,4 @@
-SCCシミュレーター（仮称） version 0.2.0
+SCCシミュレーター（仮称） version 0.3.0
 
 このアプリのチップ計算（src/core/）は、MAMEの k051649.cpp の動きにそろえています。
 また、照合用の tools/mame-check/mame/ には、MAMEの k051649.cpp・k051649.h を変更せずに収録しています

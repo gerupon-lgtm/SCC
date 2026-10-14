@@ -1,7 +1,7 @@
 // 画面（F-008）。部品をつなぐ：MIDI・画面の鍵盤 → Synth → AudioEngine（Worklet）
 import './version-check.js'; // 最初に読む：版の食い違いとエラーを画面に出す
 import { VERSION } from '../version.js';
-import { SCC_COMPAT } from '../core/config.js';
+import { SCC_COMPAT, extendedConfig } from '../core/config.js';
 import { PRESET_NAMES, getPreset } from '../core/presets.js';
 import { DEFAULT_MASTER } from '../core/post-stage.js';
 import { AudioEngine } from '../audio/audio-engine.js';
@@ -21,16 +21,30 @@ const MIDI_TEXT = {
 const ERROR_TEXT = {
   E_NO_WORKLET: 'このブラウザでは音を出せません（AudioWorklet が使えません）',
   E_CONFIG: '設定に誤りがあります',
-  E_INSECURE_CONTEXT: 'このアドレスでは音もMIDIも使えません。ブラウザが、https か localhost で開いたページにしか許可しないためです。スマホでは、PCとUSBでつないで「adb reverse tcp:8000 tcp:8000」を実行し、http://localhost:8000 を開いてください',
+  E_INSECURE_CONTEXT: 'このアドレスでは音もMIDIも使えません。ブラウザが、https か localhost で開いたページにしか許可しないためです。公開版 https://gerupon-lgtm.github.io/SCC/ を開いてください',
 };
 const POLL_MS = 33; // 約30回/秒
 const UNDERRUN_HOLD_MS = 3000;
 
 $('version').textContent = VERSION;
 
+// ---- チャンネル数（F-011）。止めているときだけ変えられる ----
+const CHANNEL_CHOICES = [5, 8, 16];
+const channelSelect = /** @type {HTMLSelectElement} */ ($('channel-count'));
+for (const n of CHANNEL_CHOICES) channelSelect.append(new Option(n === 5 ? '5（SCCと同じ）' : String(n), String(n)));
+function configFor(n) {
+  return n === SCC_COMPAT.channelCount ? SCC_COMPAT : extendedConfig(n);
+}
+let config = SCC_COMPAT;
+try {
+  const saved = Number(localStorage.getItem('channel-count'));
+  if (CHANNEL_CHOICES.includes(saved)) config = configFor(saved);
+} catch { /* 保存できなくても動く */ }
+channelSelect.value = String(config.channelCount);
+
 // ---- 部品 ----
 const engine = new AudioEngine({
-  config: SCC_COMPAT,
+  config,
   onState: (s) => renderState(s),
   onError: (code, message) => {
     if (code === 'E_AUDIO_UNDERRUN') showUnderrun();
@@ -38,7 +52,7 @@ const engine = new AudioEngine({
   },
 });
 
-const synth = new Synth(engine, { clock: SCC_COMPAT.clock });
+let synth = new Synth(engine, { config });
 
 const midi = new MidiInput({
   onEvent: (ev) => { if (engine.running) synth.handle(ev); },
@@ -106,20 +120,26 @@ master.addEventListener('input', updateMaster);
 updateMaster();
 
 // ---- チャンネル表示 ----
-const rows = [];
-for (let ch = 0; ch < SCC_COMPAT.channelCount; ch++) {
-  const tr = document.createElement('tr');
-  const cells = ['ch', 'freq', 'vol', 'key', 'bank'].map(() => document.createElement('td'));
-  cells[0].textContent = String(ch + 1);
-  tr.append(...cells);
-  $('channel-rows').append(tr);
-  rows.push(cells);
+let rows = [];
+function buildRows() {
+  rows = [];
+  $('channel-rows').replaceChildren();
+  for (let ch = 0; ch < config.channelCount; ch++) {
+    const tr = document.createElement('tr');
+    const cells = ['ch', 'freq', 'vol', 'key', 'bank'].map(() => document.createElement('td'));
+    cells[0].textContent = String(ch + 1);
+    tr.append(...cells);
+    $('channel-rows').append(tr);
+    rows.push(cells);
+  }
 }
+const idleChannels = () => config.channelWaveBank.map((b) => ({ frequency: 0, volume: 0, key: false, waveBank: b }));
+buildRows();
 function renderChannels(channels) {
   channels.forEach((c, i) => {
     const cells = rows[i];
     if (!cells) return;
-    const hz = c.frequency > 8 ? SCC_COMPAT.clock / (32 * (c.frequency + 1)) : 0;
+    const hz = c.frequency > 8 ? config.clock / (32 * (c.frequency + 1)) : 0;
     cells[1].textContent = c.frequency > 8 ? `${c.frequency}（${hz.toFixed(1)}Hz）` : `${c.frequency}（停止）`;
     cells[2].textContent = String(c.volume).padStart(2, ' ');
     const bar = document.createElement('span');
@@ -131,7 +151,19 @@ function renderChannels(channels) {
     cells[4].textContent = String(c.waveBank + 1);
   });
 }
-renderChannels(SCC_COMPAT.channelWaveBank.map((b) => ({ frequency: 0, volume: 0, key: false, waveBank: b })));
+renderChannels(idleChannels());
+
+channelSelect.addEventListener('change', () => {
+  if (engine.running) return;
+  config = configFor(Number(channelSelect.value));
+  try { localStorage.setItem('channel-count', String(config.channelCount)); } catch { /* 同上 */ }
+  engine.config = config;
+  const waveName = synth.waveName;
+  synth = new Synth(engine, { config });
+  synth.waveName = waveName;
+  buildRows();
+  renderChannels(idleChannels());
+});
 
 // ---- 状態表示 ----
 let underrunTimer = 0;
@@ -200,10 +232,11 @@ function setRunning(on) {
   /** @type {HTMLButtonElement} */ ($('oct-down')).disabled = !on;
   /** @type {HTMLButtonElement} */ ($('oct-up')).disabled = !on;
   keyboard.setEnabled(on);
+  channelSelect.disabled = on;
   if (on) { resetLoad(); startPolling(); } else stopPolling();
   if (!on) {
     $('voices-kb').textContent = '0';
-    renderChannels(SCC_COMPAT.channelWaveBank.map((b) => ({ frequency: 0, volume: 0, key: false, waveBank: b })));
+    renderChannels(idleChannels());
   }
 }
 

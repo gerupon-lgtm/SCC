@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<meta name="app-version" content="0.2.0">
+<meta name="app-version" content="0.3.0">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <title>SCCシミュレーター（仮称）</title>
@@ -18,6 +18,11 @@
   <section class="panel start">
     <button id="start" type="button" class="start-button">▶ 音を出す</button>
     <p id="start-note" class="note">押すと音が出ます。最初は小さめの音量（0.3）です。</p>
+    <div class="row channel-count">
+      <label for="channel-count">チャンネル数</label>
+      <select id="channel-count"></select>
+      <span class="note">止めているときに変えられます。6以上はSCCに無い追加分です（同時に鳴る音が増え、1音ずつは小さくなります）</span>
+    </div>
   </section>
 
   <section class="panel status" aria-live="polite">

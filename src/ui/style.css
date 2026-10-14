@@ -119,3 +119,6 @@ select { background: var(--panel); border: 1px solid var(--line); border-radius:
 .app-banner { background: #3a2a10; color: var(--fg); border-bottom: 1px solid var(--warn); padding: 10px 16px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
 .app-banner p { margin: 0; flex: 1; min-width: 200px; }
 .app-banner button { padding: 6px 12px; border-radius: 6px; border: 1px solid var(--warn); background: transparent; color: var(--warn); cursor: pointer; }
+.channel-count { margin-top: 10px; flex-wrap: wrap; }
+.channel-count label { color: var(--muted); }
+.channel-count .note { margin: 0; flex-basis: 100%; }

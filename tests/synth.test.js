@@ -122,3 +122,29 @@ test('割り当て器：空きを先に使い、なければ最古', () => {
   assert.equal(r.voice.ch, 1);
   assert.equal(r.stolen.note, 61);
 });
+
+test('16チャンネル：16音まで同時に鳴り、17音目で一番古い音が止まる', async () => {
+  const { SccExtRegisters } = await import('../src/core/scc-ext-registers.js');
+  const { extendedConfig } = await import('../src/core/config.js');
+  const cfg = extendedConfig(16);
+  const chip = new SccRef(cfg);
+  let voices = [];
+  const synth = new Synth(new SccExtRegisters(chip), { config: cfg, onVoices: (v) => { voices = v; } });
+  synth.init();
+  for (let i = 0; i < 16; i++) synth.noteOn(48 + i, 100);
+  let ch = chip.snapshot().channels;
+  assert.ok(ch.every((c) => c.key && c.volume > 0), '16音すべて鳴る');
+  assert.deepEqual(ch.map((c) => c.frequency), [...Array(16).keys()].map((i) => noteToPeriod(48 + i)));
+  synth.noteOn(80, 100);
+  assert.equal(voices.length, 16);
+  assert.equal(voices.find((v) => v.ch === 0).note, 80);
+  synth.noteOff(63); // ch15
+  ch = chip.snapshot().channels;
+  assert.deepEqual([ch[15].key, ch[15].volume], [false, 0]);
+  assert.ok(ch[14].key && ch[4].key, 'ほかは鳴り続ける');
+  // 波形は追加チャンネルの専用バンクにも書かれる
+  synth.setWave('sine');
+  assert.equal(chip.readWave(14, 8), getPreset('sine')[8]);
+  synth.allNotesOff();
+  assert.ok(chip.snapshot().channels.every((c) => !c.key && c.volume === 0));
+});

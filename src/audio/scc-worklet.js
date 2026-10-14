@@ -3,7 +3,7 @@
 import { SCC_COMPAT, validateConfig } from '../core/config.js';
 import { SccFast } from '../core/scc-fast.js';
 import { SccRef } from '../core/scc-ref.js';
-import { SccRegisters } from '../core/scc-registers.js';
+import { SccExtRegisters } from '../core/scc-ext-registers.js';
 import { WindowConverter } from '../core/window-converter.js';
 import { PostStage } from '../core/post-stage.js';
 
@@ -31,7 +31,7 @@ class SccProcessor extends AudioWorkletProcessor {
   #build(config) {
     const cfg = validateConfig(config);
     this.chip = this.useRef ? new SccRef(cfg) : new SccFast(cfg);
-    this.regs = new SccRegisters(this.chip);
+    this.regs = new SccExtRegisters(this.chip); // ch1〜5 は SCC互換、ch6 以降は追加チャンネルのアドレス
     this.conv = new WindowConverter(cfg.clock, this.rate);
     const master = this.post?.target;
     this.post = new PostStage(this.rate, cfg.channelCount);

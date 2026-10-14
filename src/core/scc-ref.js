@@ -65,6 +65,14 @@ export class SccRef {
     for (let i = 0; i < n; i++) this.channels[i].key = ((mask >> i) & 1) === 1;
   }
 
+  /**
+   * 1チャンネルだけキーを変える（追加チャンネル用。F-011）。他のチャンネルには触れない
+   * @param {number} ch @param {boolean} on
+   */
+  setChannelKey(ch, on) {
+    this.#channel(ch).key = on;
+  }
+
   /** @param {number} bank @param {number} index @param {number} int8 */
   writeWave(bank, index, int8) {
     this.waves[this.#waveBase(bank) + (index & WAVE_MASK)] = int8;
