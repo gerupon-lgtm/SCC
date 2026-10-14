@@ -8,6 +8,8 @@ cd /d "%~dp0"
 if not exist build mkdir build
 cl /nologo /std:c++17 /O2 /EHsc /W3 /utf-8 /D_CRT_SECURE_NO_WARNINGS /I shim /I mame /Fe:build\harness.exe /Fo:build\ harness.cpp || exit /b 1
 echo built build\harness.exe
+cl /nologo /std:c++17 /O2 /EHsc /W3 /utf-8 /D_CRT_SECURE_NO_WARNINGS /I shim-ay /I mame /Fe:build\harness-ay.exe /Fo:build\ harness-ay.cpp || exit /b 1
+echo built build\harness-ay.exe
 exit /b 0
 :novc
 echo vcvars64.bat not found: "%VCVARS%"

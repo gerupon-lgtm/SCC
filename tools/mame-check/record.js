@@ -21,3 +21,17 @@ for (const c of CASES) {
   writeFileSync(join(OUT_DIR, `${c.name}.out`), runLengthEncode(values));
   console.log(`${c.name}: ${ops.split('\n').length - 1} 命令、${values.length} クロック`);
 }
+
+// PSG（T-110）：MAME の ay8910.cpp を MSX と同じ設定で動かす
+import { AY_CASES, generateAyOps } from './ops-ay.js';
+import { gzipSync } from 'node:zlib';
+const HARNESS_AY = join(HERE, 'build', process.platform === 'win32' ? 'harness-ay.exe' : 'harness-ay');
+for (const c of AY_CASES) {
+  const ops = generateAyOps(c).join('\n') + '\n';
+  const raw = execFileSync(HARNESS_AY, { input: ops, maxBuffer: 1 << 30, encoding: 'utf8' });
+  const values = raw.trim().split('\n');
+  writeFileSync(join(OUT_DIR, `${c.name}.ops`), ops);
+  // 値が tick ごとに変わることが多く大きいので、gzip で縮める
+  writeFileSync(join(OUT_DIR, `${c.name}.out.gz`), gzipSync(runLengthEncode(values), { level: 9 }));
+  console.log(`${c.name}: ${ops.split('\n').length - 1} 命令、${values.length} tick`);
+}
