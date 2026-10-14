@@ -20,6 +20,29 @@ export const INTER_ENTRY = 0x601f;
 /** 曲データの最大の大きさ（0x0200〜0x5FFF） */
 export const MAX_SONG_SIZE = DRIVER_ADDR - SONG_ADDR;
 
+/** MGSDRV.COM の大きさの上限（版 3.20 は 8,220 バイト。演奏に使うのは 0x0D から 8KB だけ） */
+export const MAX_DRIVER_FILE = 0x4000;
+
+/** 文字列がファイルの中にあるか（ASCII として探す） */
+function containsAscii(bytes, text) {
+  outer: for (let i = 0; i + text.length <= bytes.length; i++) {
+    for (let j = 0; j < text.length; j++) if (bytes[i + j] !== text.charCodeAt(j)) continue outer;
+    return true;
+  }
+  return false;
+}
+
+/** 選ばれたファイルが MGSDRV.COM らしいか（MGSC.COM も "MGSDRV" の文字を含むので、それとは区別する） */
+export function looksLikeMgsdrv(bytes) {
+  return bytes.length >= DRIVER_OFFSET + 0x100 && bytes.length <= MAX_DRIVER_FILE
+    && containsAscii(bytes, 'MGSDRV') && !containsAscii(bytes, 'MGSC MML compiler');
+}
+
+/** 選ばれたファイルが MGSC.COM らしいか */
+export function looksLikeMgsc(bytes) {
+  return bytes.length >= 0x100 && bytes.length <= 0x8000 && containsAscii(bytes, 'MGSC MML compiler');
+}
+
 export class MgsdrvError extends Error {
   constructor(message) { super(message); this.name = 'MgsdrvError'; }
 }

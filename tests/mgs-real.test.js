@@ -6,7 +6,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { compileMml } from '../src/mgs/mgsc.js';
 import { encodeSjisForCpm } from '../src/mgs/sjis.js';
-import { MgsdrvHost } from '../src/mgs/mgsdrv-host.js';
+import { MgsdrvHost, looksLikeMgsdrv, looksLikeMgsc } from '../src/mgs/mgsdrv-host.js';
 import { SccFast } from '../src/core/scc-fast.js';
 import { SccRegisters } from '../src/core/scc-registers.js';
 
@@ -28,6 +28,16 @@ test('Shift_JIS への変換：改行は CR+LF、半角カナと漢字、最後�
   assert.deepEqual([...bytes], [0x41, 0x0d, 0x0a, 0xb1, 0x8a, 0xbf, 0x1a]);
   assert.deepEqual(unknown, []);
   assert.deepEqual(encodeSjisForCpm('😀').unknown, ['😀']);
+});
+
+test('ファイルの見分け：本物の MGSDRV.COM・MGSC.COM は受け付け、取り違えや別のファイルは断る', { skip }, () => {
+  const drv = new Uint8Array(readFileSync(local('MGSDRV.COM')));
+  const mgsc = new Uint8Array(readFileSync(local('MGSC.COM')));
+  assert.equal(looksLikeMgsdrv(drv), true, `MGSDRV.COM（${drv.length} バイト）`);
+  assert.equal(looksLikeMgsc(mgsc), true, `MGSC.COM（${mgsc.length} バイト）`);
+  assert.equal(looksLikeMgsdrv(mgsc), false);
+  assert.equal(looksLikeMgsc(drv), false);
+  assert.equal(looksLikeMgsdrv(new TextEncoder().encode('hello'.repeat(100))), false);
 });
 
 test('本物の MGSC で MML を変換できる', { skip }, () => {

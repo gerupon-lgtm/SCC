@@ -2,9 +2,9 @@
 // MGSDRV.COM・MGSC.COM・曲のファイルは、この端末の中だけで使う（どこにも送らない。C-3）
 // MGSDRV.COM と MGSC.COM は、選び直さずに済むよう、このブラウザに保存する
 import { compileMml, MgscError } from '../mgs/mgsc.js';
+import { looksLikeMgsdrv, looksLikeMgsc } from '../mgs/mgsdrv-host.js';
 
 const $ = (id) => /** @type {HTMLElement} */ (document.getElementById(id));
-const MAX_DRIVER_SIZE = 0x0d + 0x2000;
 
 function toBase64(bytes) {
   let s = '';
@@ -83,8 +83,7 @@ export function initSongPanel({ engine, ensureRunning }) {
   $('file-mgsdrv').addEventListener('change', async (e) => {
     const r = await readFile(e.target);
     if (!r) return;
-    const isDriver = r.bytes.length >= 0x100 && r.bytes.length <= MAX_DRIVER_SIZE && new TextDecoder('latin1').decode(r.bytes).includes('MGSDRV');
-    if (!isDriver) { showLog(`${r.name} は MGSDRV.COM ではないようです（大きさ ${r.bytes.length} バイト）`); return; }
+    if (!looksLikeMgsdrv(r.bytes)) { showLog(`${r.name} は MGSDRV.COM ではないようです（大きさ ${r.bytes.length} バイト）`); return; }
     driver = r.bytes;
     store('mgsdrv.com', driver);
     showLog('');
@@ -94,8 +93,7 @@ export function initSongPanel({ engine, ensureRunning }) {
   $('file-mgsc').addEventListener('change', async (e) => {
     const r = await readFile(e.target);
     if (!r) return;
-    // MGSC.COM の中には "MGSC MML compiler" の文字がある。違うファイルを選んだときに気づけるように
-    if (!new TextDecoder('latin1').decode(r.bytes).includes('MGSC MML compiler')) { showLog(`${r.name} は MGSC.COM ではないようです`); return; }
+    if (!looksLikeMgsc(r.bytes)) { showLog(`${r.name} は MGSC.COM ではないようです`); return; }
     mgsc = r.bytes;
     store('mgsc.com', mgsc);
     showLog('');
