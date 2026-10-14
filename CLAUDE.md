@@ -34,6 +34,8 @@ src/core/                    チップの計算。DOM・Web APIを使わない�
   window-converter.js        チップのクロック→音声の変換（整数）
   post-stage.js              後処理（直流除去・音量）
   presets.js                 プリセット波形
+  psg-ref.js                 PSG（AY-3-8910）の基準版。MAME と照合（T-110）
+  psg-stage.js               PSG を音声のサンプルへ直す
 src/engine/                  発音の割り当て、MIDIの対応づけ
 src/audio/                   AudioWorklet、音声エンジン
 src/midi/                    Web MIDI入力

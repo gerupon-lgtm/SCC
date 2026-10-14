@@ -72,3 +72,22 @@ test('本物の MGSDRV で鳴らすと、トラック4は C4 から始まり、1
   // 5音（2.5秒）で曲が終わり、3秒の時点では音量0
   assert.equal(chip.snapshot().channels[0].volume, 0);
 });
+
+test('PSG（トラック1）：本物の MGSDRV で A4 を鳴らすと、PSG の周期の値は 1789772.5÷(16×440) ≒ 254', { skip }, async () => {
+  const { PsgStage } = await import('../src/core/psg-stage.js');
+  const mml = '#opll_mode 1\n1 t120 v15 o4 l1 a\n';
+  const { mgs } = compileMml(new Uint8Array(readFileSync(local('MGSC.COM'))), mml);
+  const psg = new PsgStage();
+  const host = new MgsdrvHost({ driver: new Uint8Array(readFileSync(local('MGSDRV.COM'))), onScc() {}, psg: psg.psg });
+  host.load(mgs);
+  let energy = 0;
+  for (let f = 0; f < 30; f++) {
+    host.frame();
+    for (let i = 0; i < 800; i++) { const v = psg.sample(74.6); energy += v * v; }
+  }
+  const s = psg.psg.snapshot();
+  assert.ok(Math.abs(s.tone[0].period - 254) <= 2, `周期 ${s.tone[0].period}`);
+  assert.equal(s.tone[0].volume & 0x0f, 15);
+  assert.equal(s.regs[7] & 1, 0, 'トーン A が有効');
+  assert.ok(energy > 0, 'PSG から音が出ている');
+});

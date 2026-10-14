@@ -33,11 +33,12 @@ export class WindowConverter {
    * @param {Float32Array} out
    * @param {number} [from]
    * @param {number} [to]
+   * @param {{ sample(L: number): number } | null} [psg] PSG（F-018）。あれば同じ L で進めて足す
    */
-  render(chip, out, from = 0, to = out.length) {
+  render(chip, out, from = 0, to = out.length, psg = null) {
     for (let i = from; i < to; i++) {
       const L = this.nextL();
-      out[i] = chip.sumTicks(L) / (L * OUTPUT_DIVISOR);
+      out[i] = chip.sumTicks(L) / (L * OUTPUT_DIVISOR) + (psg ? psg.sample(L) : 0);
     }
   }
 }

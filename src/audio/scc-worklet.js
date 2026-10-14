@@ -7,6 +7,7 @@ import { SccExtRegisters } from '../core/scc-ext-registers.js';
 import { WindowConverter } from '../core/window-converter.js';
 import { PostStage } from '../core/post-stage.js';
 import { MgsdrvHost } from '../mgs/mgsdrv-host.js';
+import { PsgStage } from '../core/psg-stage.js';
 
 /** MGSDRV を呼ぶ回数（1秒あたり）。MSXplay（libkss）と同じ60【想定】 */
 const DRIVER_HZ = 60;
@@ -32,6 +33,7 @@ class SccProcessor extends AudioWorkletProcessor {
     // 曲の再生（F-016）：本物の MGSDRV を Z80 の上で動かす
     /** @type {MgsdrvHost | null} */
     this.song = null;
+    this.psg = new PsgStage(); // PSG（F-018）。曲の再生中だけ鳴らす
     this.songFrame = 0;     // 何回目の 1/60 秒か
     this.toNextFrame = 0;   // 次に MGSDRV を呼ぶまでのサンプル数
     this.onScc = (addr, value) => this.regs.write(addr, value);
@@ -40,7 +42,8 @@ class SccProcessor extends AudioWorkletProcessor {
 
   #startSong(driver, mgs) {
     try {
-      const host = new MgsdrvHost({ driver, onScc: this.onScc });
+      this.psg.reset();
+      const host = new MgsdrvHost({ driver, onScc: this.onScc, psg: this.psg.psg });
       host.load(mgs);
       this.song = host;
       this.songFrame = 0;
@@ -54,6 +57,7 @@ class SccProcessor extends AudioWorkletProcessor {
 
   #stopSong() {
     this.song = null;
+    this.psg.reset();
     for (let ch = 0; ch < 5; ch++) this.regs.write(0x8a + ch, 0);
     this.regs.write(0x8f, 0);
     this.port.postMessage({ type: 'song', state: 'stopped' });
@@ -124,7 +128,7 @@ class SccProcessor extends AudioWorkletProcessor {
         if (!this.song.frame()) {
           this.song = null;
           this.port.postMessage({ type: 'error', code: 'E_SONG', message: 'MGSDRV が止まりませんでした' });
-          this.conv.render(this.chip, buf, i, buf.length);
+          this.conv.render(this.chip, buf, i, buf.length, this.psg);
           return;
         }
         this.songFrame++;
@@ -132,7 +136,7 @@ class SccProcessor extends AudioWorkletProcessor {
         this.toNextFrame += Math.floor((this.songFrame * this.rate) / DRIVER_HZ) - Math.floor(((this.songFrame - 1) * this.rate) / DRIVER_HZ);
       }
       const n = Math.min(buf.length - i, this.toNextFrame);
-      this.conv.render(this.chip, buf, i, i + n);
+      this.conv.render(this.chip, buf, i, i + n, this.psg);
       i += n;
       this.toNextFrame -= n;
     }

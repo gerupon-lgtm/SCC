@@ -1,6 +1,6 @@
-SCCシミュレーター（仮称） version 0.4.3
+SCCシミュレーター（仮称） version 0.5.0
 
-このアプリのチップ計算（src/core/）は、MAMEの k051649.cpp の動きにそろえています。
+このアプリのチップ計算（src/core/）は、MAMEの k051649.cpp（SCC）と ay8910.cpp（PSG）の動きにそろえています。
 また、照合用の tools/mame-check/mame/ には、MAMEの k051649.cpp・k051649.h を変更せずに収録しています
 （取得元：https://github.com/mamedev/mame 、ファイルの最終変更コミット 20d4667cdf485066a113f1ef24bae0887cd7134c）。
 元のライセンスを次に示します。
@@ -9,6 +9,10 @@ SCCシミュレーター（仮称） version 0.4.3
 MAME src/devices/sound/k051649.cpp, k051649.h
 license: BSD-3-Clause
 copyright-holders: Bryan McPhail
+
+MAME src/devices/sound/ay8910.cpp, ay8910.h（PSG。tools/mame-check/mame/ に変更せずに収録）
+license: BSD-3-Clause
+copyright-holders: Couriersud
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:

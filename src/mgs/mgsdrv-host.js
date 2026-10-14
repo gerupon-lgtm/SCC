@@ -7,6 +7,7 @@
 //     → 以後 1/60 秒ごとに 0x601F
 // DOM・Web Audio に依存しない。frame() はオブジェクトを作らない（AudioWorklet の中で呼ぶため）
 import { Z80 } from './z80.js';
+import { PsgRef } from '../core/psg-ref.js';
 
 const DRIVER_ADDR = 0x6000;
 const DRIVER_OFFSET = 0x0d;
@@ -52,23 +53,25 @@ export class MgsdrvHost {
    * @param {object} opts
    * @param {Uint8Array} opts.driver MGSDRV.COM の中身
    * @param {(addr: number, value: number) => void} opts.onScc SCC への書き込み（addr は 0x00〜0xFF）
-   * @param {(reg: number, value: number) => void} [opts.onPsg] PSG への書き込み（reg は 0〜15）
+   * @param {(reg: number, value: number) => void} [opts.onPsg] PSG への書き込み（reg は 0〜15。記録用）
+   * @param {{ writeAddress(v: number): void, writeData(v: number): void, readData(): number }} [opts.psg]
+   *   PSG（ポート 0xA0・0xA1・0xA2 をそのまま渡す）。省略時は音を出さない PSG
    */
-  constructor({ driver, onScc, onPsg = () => {} }) {
+  constructor({ driver, onScc, onPsg = () => {}, psg = new PsgRef() }) {
     if (!(driver instanceof Uint8Array) || driver.length < DRIVER_OFFSET + 0x20) throw new MgsdrvError('MGSDRV.COM ではないようです（小さすぎます）');
     this.driver = driver;
     this.onScc = onScc;
     this.onPsg = onPsg;
+    this.psg = psg;
     this.mem = new Uint8Array(0x10000);
     this.psgLatch = 0;
-    this.psgRegs = new Uint8Array(16);
     this.sccEnabled = false;
     this.mib = 0;
     const host = this;
     this.cpu = new Z80({
       read: (a) => host.mem[a],
       write: (a, v) => host.#write(a, v),
-      input: (p) => ((p & 0xff) === 0xa2 ? host.psgRegs[host.psgLatch & 0x0f] : 0xff),
+      input: (p) => ((p & 0xff) === 0xa2 ? host.psg.readData() : 0xff),
       output: (p, v) => host.#output(p & 0xff, v),
     });
   }
@@ -84,11 +87,9 @@ export class MgsdrvHost {
   }
 
   #output(p, v) {
-    if (p === 0xa0) this.psgLatch = v;
-    else if (p === 0xa1) {
-      const reg = this.psgLatch & 0x0f;
-      this.psgRegs[reg] = v;
-      this.onPsg(reg, v);
+    if (p === 0xa0) { this.psgLatch = v; this.psg.writeAddress(v); } else if (p === 0xa1) {
+      this.psg.writeData(v);
+      if ((this.psgLatch >> 4) === 0) this.onPsg(this.psgLatch & 0x0f, v);
     }
   }
 
@@ -110,7 +111,6 @@ export class MgsdrvHost {
     m.set([0xd3, 0xa0, 0xdb, 0xa2, 0xc9], 0x09);
     m.set(mgs, SONG_ADDR);
     m.set(this.driver.subarray(DRIVER_OFFSET, DRIVER_OFFSET + DRIVER_SIZE), DRIVER_ADDR);
-    this.psgRegs.fill(0);
     this.sccEnabled = false;
 
     const cpu = this.cpu;
