@@ -4,12 +4,12 @@
 
 ## デザイントークン
 
-- 【想定】`font-family: system-ui, -apple-system, "Hiragino Sans", "Noto Sans JP", sans-serif;`（OS標準のみ。配信なし）
+- 決定（2026-10-15、発案者が3種を実画面で比べて B を選んだ）：`font-family: "BIZ UDPGothic", "Noto Sans JP", "Noto Sans CJK JP", "Hiragino Sans", system-ui, sans-serif;`（OS標準のみ。配信なし）。BIZ UDPゴシックは Windows 標準。Android・iOS には無いので、OS標準の日本語書体になる
 - 【想定】数値表示（周波数など）：`ui-monospace, "SF Mono", Menlo, Consolas, monospace`
 - 【想定】ウェイト：400と600。基準サイズ16px、行間1.5
 - 【想定】アイコン：ライブラリを使わず、文字（▶ ■ など）で表す。混在は禁止
 - 色は、CSSの変数で1か所に集める（暗い背景【想定】）。変更はA区分
-- 見直し：実画面ができた時点で、書体を3種並べて比べる（T-012）
+- 見直し：実画面で3種（A：OS標準、B：UDゴシック系、C：等幅）を比べ、B に決めた（T-012 完了）
 
 ## 画面の構成（上から）
 

@@ -28,16 +28,6 @@ const UNDERRUN_HOLD_MS = 3000;
 
 $('version').textContent = VERSION;
 
-// ---- 書体の比較（T-012。決まったら外す） ----
-const fontSelect = /** @type {HTMLSelectElement} */ ($('font-select'));
-try { fontSelect.value = localStorage.getItem('font') ?? 'a'; } catch { /* 保存できなくても動く */ }
-const applyFont = () => {
-  document.documentElement.dataset.font = fontSelect.value;
-  try { localStorage.setItem('font', fontSelect.value); } catch { /* 同上 */ }
-};
-fontSelect.addEventListener('change', applyFont);
-applyFont();
-
 // ---- 部品 ----
 const engine = new AudioEngine({
   config: SCC_COMPAT,

@@ -13,11 +13,10 @@
   --key-white-down: #9fdcc9;
   --key-black: #22262c;
   --key-black-down: #2f8f74;
-  --font: system-ui, -apple-system, "Hiragino Sans", "Noto Sans JP", sans-serif;
+  /* 書体B（UDゴシック系）に決定（2026-10-15、発案者）。Android には BIZ UDPゴシック が無いので、OS標準の日本語書体になる */
+  --font: "BIZ UDPGothic", "Noto Sans JP", "Noto Sans CJK JP", "Hiragino Sans", system-ui, sans-serif;
   --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 }
-:root[data-font="b"] { --font: "BIZ UDPGothic", "Noto Sans JP", "Hiragino Sans", sans-serif; }
-:root[data-font="c"] { --font: var(--mono); }
 
 * { box-sizing: border-box; }
 body {
