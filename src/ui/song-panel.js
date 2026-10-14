@@ -34,14 +34,19 @@ function mgsTitle(mgs) {
   return new TextDecoder('shift_jis').decode(mgs.subarray(8, end)).replace(/\t/g, ' ').replace(/\s{2,}/g, ' ').trim();
 }
 
-/** @param {{ engine: import('../audio/audio-engine.js').AudioEngine }} deps */
-export function initSongPanel({ engine }) {
+/**
+ * @param {object} deps
+ * @param {import('../audio/audio-engine.js').AudioEngine} deps.engine
+ * @param {() => Promise<boolean>} deps.ensureRunning 音が止まっていれば出す（「曲を再生」から呼ぶ）。出せたら true
+ */
+export function initSongPanel({ engine, ensureRunning }) {
   let driver = loadStored('mgsdrv.com');
   let mgsc = loadStored('mgsc.com');
   /** @type {Uint8Array | null} */
   let mgs = null;
   let running = false;
   let playing = false;
+  let songName = '';
 
   const playBtn = /** @type {HTMLButtonElement} */ ($('song-play'));
   const stopBtn = /** @type {HTMLButtonElement} */ ($('song-stop'));
@@ -51,12 +56,22 @@ export function initSongPanel({ engine }) {
     log.hidden = !text;
     log.textContent = text;
   }
+  function setStatus(id, ok, text) {
+    const el = $(id);
+    el.textContent = text;
+    el.classList.toggle('ok', ok);
+  }
   function update() {
-    $('mgsdrv-status').textContent = driver ? `読み込み済み（${driver.length} バイト）` : '未設定';
-    $('mgsc-status').textContent = mgsc ? `読み込み済み（${mgsc.length} バイト）` : '未設定';
-    playBtn.disabled = !(running && driver && mgs) || playing;
-    stopBtn.disabled = !(running && playing);
-    if (!running) $('song-status').textContent = mgs ? '「音を出す」を押すと再生できます' : '';
+    setStatus('mgsdrv-status', !!driver, driver ? `✓ 読み込み済み（${driver.length} バイト）` : 'まだ選んでいません');
+    setStatus('mgsc-status', !!mgsc, mgsc ? `✓ 読み込み済み（${mgsc.length} バイト）` : 'まだ選んでいません');
+    setStatus('song-file-status', !!mgs, mgs ? `✓ ${songName}` : 'まだ選んでいません');
+    // 3つそろえば押せる。音が止まっていれば、押したときに音を出してから再生する
+    playBtn.disabled = !(driver && mgs) || playing;
+    stopBtn.disabled = !playing;
+    if (!playing) {
+      const missing = [!driver && '1', !mgs && '3'].filter(Boolean);
+      $('song-status').textContent = missing.length ? `${missing.join('と')}を選ぶと再生できます` : '';
+    }
   }
 
   async function readFile(input) {
@@ -91,6 +106,7 @@ export function initSongPanel({ engine }) {
     const r = await readFile(e.target);
     if (!r) return;
     mgs = null;
+    songName = r.name;
     $('song-title').textContent = '';
     try {
       if (/\.mgs$/i.test(r.name)) {
@@ -110,8 +126,11 @@ export function initSongPanel({ engine }) {
     update();
   });
 
-  playBtn.addEventListener('click', () => {
-    if (driver && mgs && engine.playSong(driver, mgs)) showLog('');
+  playBtn.addEventListener('click', async () => {
+    if (!driver || !mgs) return;
+    playBtn.disabled = true;
+    if (!running && !(await ensureRunning())) { update(); return; }
+    if (engine.playSong(driver, mgs)) showLog('');
   });
   stopBtn.addEventListener('click', () => engine.stopSong());
 

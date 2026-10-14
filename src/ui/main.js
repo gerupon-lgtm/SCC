@@ -54,7 +54,7 @@ const engine = new AudioEngine({
   },
   onSong: (state) => songPanel.onSong(state),
 });
-const songPanel = initSongPanel({ engine });
+const songPanel = initSongPanel({ engine, ensureRunning: () => startAudio() });
 
 let synth = new Synth(engine, { config });
 
@@ -246,23 +246,33 @@ function setRunning(on) {
   }
 }
 
-startBtn.addEventListener('click', async () => {
+/** 音を出す。出せたら true（「音を出す」と「曲を再生」の両方から使う） */
+async function startAudio() {
+  if (engine.running) return true;
   startBtn.disabled = true;
   $('error').hidden = true;
   try {
-    if (engine.running) {
-      synth.allNotesOff();
-      await engine.stop();
-      setRunning(false);
-    } else {
-      await engine.start();
-      synth.init();
-      updateMaster();
-      setRunning(true);
-      if (midi.state === null) midi.start();
-    }
+    await engine.start();
+    synth.init();
+    updateMaster();
+    setRunning(true);
+    if (midi.state === null) midi.start();
+    return true;
   } catch (e) {
     showError(e.code ?? 'E_NO_WORKLET', e.code ? '' : String(e.message ?? e));
+    setRunning(false);
+    return false;
+  } finally {
+    startBtn.disabled = false;
+  }
+}
+
+startBtn.addEventListener('click', async () => {
+  if (!engine.running) { await startAudio(); return; }
+  startBtn.disabled = true;
+  try {
+    synth.allNotesOff();
+    await engine.stop();
     setRunning(false);
   } finally {
     startBtn.disabled = false;

@@ -123,10 +123,21 @@ select { background: var(--panel); border: 1px solid var(--line); border-radius:
 .channel-count label { color: var(--muted); }
 .channel-count .note { margin: 0; flex-basis: 100%; }
 .song-panel { grid-column: 1 / -1; }
-.song-files { display: grid; grid-template-columns: auto 1fr; gap: 6px 10px; align-items: center; margin: 8px 0; }
-.song-files label { display: contents; }
-.song-files input[type="file"] { font-size: 0.85rem; max-width: 100%; }
 .song-title { margin: 6px 0; font-weight: 600; }
 .song-log { white-space: pre-wrap; font-family: var(--mono); font-size: 0.8rem; color: var(--muted); background: var(--bg); border-radius: 6px; padding: 6px; margin: 8px 0 0; }
 .song-panel a { color: var(--accent); }
-@media (max-width: 600px) { .song-files { grid-template-columns: 1fr; } }
+.song-steps { list-style: none; counter-reset: step; padding: 0; margin: 8px 0; display: grid; gap: 8px; }
+.song-steps li { counter-increment: step; display: grid; grid-template-columns: 1.8em minmax(0, 1fr) auto; gap: 2px 10px; align-items: center; padding: 8px; border: 1px solid var(--line); border-radius: 8px; }
+.song-steps li::before { content: counter(step); grid-row: 1 / span 2; width: 1.6em; height: 1.6em; border-radius: 50%; background: var(--line); display: grid; place-items: center; font-weight: 600; font-size: 0.85rem; }
+.song-steps .step-name { font-weight: 600; }
+.song-steps .step-name small { display: block; font-weight: 400; color: var(--muted); font-size: 0.8rem; }
+.song-steps .file-button { grid-row: 1 / span 2; grid-column: 3; display: inline-block; }
+.song-steps .step-status { grid-column: 2; font-size: 0.85rem; color: var(--muted); }
+.song-steps .step-status.ok { color: var(--accent); }
+.visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); border: 0; }
+.file-button { cursor: pointer; }
+.file-button { padding: 6px 14px; border-radius: 6px; border: 1px solid var(--accent); color: var(--accent); background: transparent; font-size: 0.9rem; white-space: nowrap; }
+.file-button:hover { background: rgba(79, 195, 161, 0.12); }
+#song-play:not(:disabled) { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); font-weight: 600; }
+.song-panel .row { flex-wrap: wrap; }
+.song-panel .row button { white-space: nowrap; }
