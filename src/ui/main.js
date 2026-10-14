@@ -8,6 +8,7 @@ import { AudioEngine } from '../audio/audio-engine.js';
 import { MidiInput } from '../midi/midi-input.js';
 import { Synth } from '../engine/synth.js';
 import { Keyboard } from './keyboard.js';
+import { initSongPanel } from './song-panel.js';
 
 const $ = (id) => /** @type {HTMLElement} */ (document.getElementById(id));
 
@@ -48,9 +49,12 @@ const engine = new AudioEngine({
   onState: (s) => renderState(s),
   onError: (code, message) => {
     if (code === 'E_AUDIO_UNDERRUN') showUnderrun();
+    else if (code === 'E_SONG') songPanel.onError(message);
     else showError(code, message);
   },
+  onSong: (state) => songPanel.onSong(state),
 });
+const songPanel = initSongPanel({ engine });
 
 let synth = new Synth(engine, { config });
 
@@ -195,6 +199,7 @@ function resetLoad() {
 }
 function renderState(s) {
   renderChannels(s.channels);
+  songPanel.onState(s.song);
   $('voices-kb').textContent = String(s.channels.filter((c) => c.key).length);
   loadSum += s.load;
   loadCount++;
@@ -233,6 +238,7 @@ function setRunning(on) {
   /** @type {HTMLButtonElement} */ ($('oct-up')).disabled = !on;
   keyboard.setEnabled(on);
   channelSelect.disabled = on;
+  songPanel.setRunning(on);
   if (on) { resetLoad(); startPolling(); } else stopPolling();
   if (!on) {
     $('voices-kb').textContent = '0';

@@ -122,3 +122,11 @@ select { background: var(--panel); border: 1px solid var(--line); border-radius:
 .channel-count { margin-top: 10px; flex-wrap: wrap; }
 .channel-count label { color: var(--muted); }
 .channel-count .note { margin: 0; flex-basis: 100%; }
+.song-panel { grid-column: 1 / -1; }
+.song-files { display: grid; grid-template-columns: auto 1fr; gap: 6px 10px; align-items: center; margin: 8px 0; }
+.song-files label { display: contents; }
+.song-files input[type="file"] { font-size: 0.85rem; max-width: 100%; }
+.song-title { margin: 6px 0; font-weight: 600; }
+.song-log { white-space: pre-wrap; font-family: var(--mono); font-size: 0.8rem; color: var(--muted); background: var(--bg); border-radius: 6px; padding: 6px; margin: 8px 0 0; }
+.song-panel a { color: var(--accent); }
+@media (max-width: 600px) { .song-files { grid-template-columns: 1fr; } }

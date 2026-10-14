@@ -7,6 +7,7 @@
 // 未定義命令の扱い・フラグのビット3と5（X・Y）は、一般に知られている実機の動きにそろえる。
 // 正しさは tests/z80.test.js（命令ごとの確認）と、ZEXDOC（Z80 の命令検査プログラム）で確かめる
 
+const IM_MODE = Uint8Array.of(0, 0, 1, 2, 0, 0, 1, 2);
 const FC = 0x01, FN = 0x02, FPV = 0x04, FX = 0x08, FH = 0x10, FY = 0x20, FZ = 0x40, FS = 0x80;
 
 /** S・Z・Y・X と、偶数パリティ（PV）の表 */
@@ -394,7 +395,7 @@ export class Z80 {
         case 3: { const a = this.fetchw(); if (q === 0) this.ww(a, this.getRP(p)); else this.setRP(p, this.rw(a)); return; }
         case 4: { const v = this.a; this.a = 0; this.sub8(v, 0); return; } // NEG
         case 5: this.pc = this.pop(); this.iff1 = this.iff2; return; // RETN・RETI
-        case 6: this.im = [0, 0, 1, 2, 0, 0, 1, 2][y]; return;
+        case 6: this.im = IM_MODE[y]; return;
         default:
           switch (y) {
             case 0: this.i = this.a; return;

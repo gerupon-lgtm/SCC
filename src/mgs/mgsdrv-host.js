@@ -100,6 +100,9 @@ export class MgsdrvHost {
     // SCC を有効にする（libkss と同じ。メガROM の動き）
     this.#write(0xbffe, 0);
     this.#write(0x9000, 0x3f);
+    // MGSDRV は SCC のキー（0x8F）を書かない。MSXplay が使う SCC の再現（emu2212）は、リセット時に
+    // 全チャンネルが有効（ch_enable = 0xff）なので、それに合わせて全5チャンネルを有効にする【MSXplay と同じ。実機は未確認】
+    this.onScc(0x8f, 0x1f);
     cpu.de = SONG_ADDR;
     cpu.b = 0xff; cpu.h = 0xff; cpu.l = 0xff;
     if (!cpu.call(PLAY_ENTRY, SENTINEL)) throw new MgsdrvError('MGSDRV の演奏開始が終わりませんでした');

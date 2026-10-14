@@ -59,6 +59,9 @@ chip.snapshot()                // 状態の取り出し（テスト・表示用�
 | メイン→Worklet | `master` | `{ gain }` |
 | メイン→Worklet | `config` | `{ channelCount, channelWaveBank, clock }`（音を止めてから反映） |
 | メイン→Worklet | `poll` | なし。状態を頼む（約30回/秒）。`process()` の中で状態の物を作らないため【設計】 |
+| メイン→Worklet | `song` | `{ driver, mgs }`：MGSDRV.COM と曲（MGS）。Worklet の中の Z80 で MGSDRV を動かす（F-016） |
+| メイン→Worklet | `songStop` | なし。曲を止め、ch1〜5 を無音にする |
+| Worklet→メイン | `song` | `{ state: 'playing' \| 'stopped' }` |
 | Worklet→メイン | `state` | `{ channels: [...], peak, load }`（load：処理の重さ。0.9を超えたら `E_AUDIO_UNDERRUN`） |
 | Worklet→メイン | `error` | `{ code }` |
 
@@ -87,6 +90,7 @@ chip.snapshot()                // 状態の取り出し（テスト・表示用�
 | `E_MIDI_DENIED` | 許可されなかった | 許可の手順を表示。画面の鍵盤は使える |
 | `E_MIDI_NO_DEVICE` | 接続機器なし | 「機器をつなぐと自動で認識します」を表示 |
 | `E_AUDIO_UNDERRUN` | 音切れの疑い | 状態欄に表示（原因は記録しない） |
+| `E_SONG` | 曲を始められない・MGSDRV が止まらない | 曲の欄に理由を表示（F-016） |
 
 MIDI機器が抜き差しされたときは、`statechange` を受けて再列挙します。
 

@@ -10,11 +10,13 @@ export class AudioEngine {
    * @param {import('../core/config.js').SccConfig} [opts.config]
    * @param {(msg: any) => void} [opts.onState] Worklet からの状態
    * @param {(code: string, message?: string) => void} [opts.onError]
+   * @param {(state: 'playing' | 'stopped') => void} [opts.onSong] 曲の再生の状態（F-016）
    */
-  constructor({ config = SCC_COMPAT, onState = () => {}, onError = () => {} } = {}) {
+  constructor({ config = SCC_COMPAT, onState = () => {}, onError = () => {}, onSong = () => {} } = {}) {
     this.config = config;
     this.onState = onState;
     this.onError = onError;
+    this.onSong = onSong;
     /** @type {AudioContext | null} */
     this.ctx = null;
     /** @type {AudioWorkletNode | null} */
@@ -110,6 +112,21 @@ export class AudioEngine {
     this.node?.port.postMessage({ type: 'master', gain });
   }
 
+  /**
+   * 曲を再生する（本物の MGSDRV を Worklet の中の Z80 で動かす。F-016）
+   * @param {Uint8Array} driver MGSDRV.COM
+   * @param {Uint8Array} mgs 曲（MGS 形式）
+   */
+  playSong(driver, mgs) {
+    if (!this.node) return false;
+    this.node.port.postMessage({ type: 'song', driver, mgs });
+    return true;
+  }
+
+  stopSong() {
+    this.node?.port.postMessage({ type: 'songStop' });
+  }
+
   /** 画面表示用の状態を頼む（返事は onState） */
   poll() {
     this.node?.port.postMessage({ type: 'poll' });
@@ -117,6 +134,7 @@ export class AudioEngine {
 
   #onMessage(msg) {
     if (msg?.type === 'state') this.onState(msg);
+    else if (msg?.type === 'song') this.onSong(msg.state);
     else if (msg?.type === 'error') this.onError(msg.code, msg.message);
   }
 }

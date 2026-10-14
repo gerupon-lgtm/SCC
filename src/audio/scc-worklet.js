@@ -6,6 +6,10 @@ import { SccRef } from '../core/scc-ref.js';
 import { SccExtRegisters } from '../core/scc-ext-registers.js';
 import { WindowConverter } from '../core/window-converter.js';
 import { PostStage } from '../core/post-stage.js';
+import { MgsdrvHost } from '../mgs/mgsdrv-host.js';
+
+/** MGSDRV を呼ぶ回数（1秒あたり）。MSXplay（libkss）と同じ60【想定】 */
+const DRIVER_HZ = 60;
 
 /** 処理の重さがこれを超えたら、音切れの疑いとして知らせる【設計】 */
 const LOAD_WARN = 0.9;
@@ -25,7 +29,34 @@ class SccProcessor extends AudioWorkletProcessor {
     // 処理の重さの測定（Date.now はミリ秒単位なので、多数のブロックの平均で見る）
     this.busyMs = 0;
     this.frames = 0;
+    // 曲の再生（F-016）：本物の MGSDRV を Z80 の上で動かす
+    /** @type {MgsdrvHost | null} */
+    this.song = null;
+    this.songFrame = 0;     // 何回目の 1/60 秒か
+    this.toNextFrame = 0;   // 次に MGSDRV を呼ぶまでのサンプル数
+    this.onScc = (addr, value) => this.regs.write(addr, value);
     this.port.onmessage = (e) => this.#onMessage(e.data);
+  }
+
+  #startSong(driver, mgs) {
+    try {
+      const host = new MgsdrvHost({ driver, onScc: this.onScc });
+      host.load(mgs);
+      this.song = host;
+      this.songFrame = 0;
+      this.toNextFrame = 0;
+      this.port.postMessage({ type: 'song', state: 'playing' });
+    } catch (e) {
+      this.song = null;
+      this.port.postMessage({ type: 'error', code: 'E_SONG', message: String(e.message) });
+    }
+  }
+
+  #stopSong() {
+    this.song = null;
+    for (let ch = 0; ch < 5; ch++) this.regs.write(0x8a + ch, 0);
+    this.regs.write(0x8f, 0);
+    this.port.postMessage({ type: 'song', state: 'stopped' });
   }
 
   #build(config) {
@@ -55,6 +86,12 @@ class SccProcessor extends AudioWorkletProcessor {
           this.port.postMessage({ type: 'error', code: e.code ?? 'E_CONFIG', message: String(e.message) });
         }
         break;
+      case 'song':
+        this.#startSong(msg.driver, msg.mgs);
+        break;
+      case 'songStop':
+        this.#stopSong();
+        break;
       case 'poll': // 画面表示用の状態（メイン側が約30回/秒で頼む）
         this.#sendState();
         break;
@@ -72,10 +109,33 @@ class SccProcessor extends AudioWorkletProcessor {
       channels: s.channels.map((c, i) => ({ frequency: c.frequency, volume: c.volume, key: c.key, waveBank: banks[i] })),
       peak: this.post.takePeak(),
       load,
+      song: this.song ? { playing: this.song.playing, loop: this.song.loopCount, seconds: this.songFrame / DRIVER_HZ } : null,
     });
     if (load > LOAD_WARN) this.port.postMessage({ type: 'error', code: 'E_AUDIO_UNDERRUN' });
     this.busyMs = 0;
     this.frames = 0;
+  }
+
+  /** 曲の再生中：1/60 秒の区切りの位置で MGSDRV を呼び、その間を音にする（オブジェクトを作らない） */
+  #renderSong(buf) {
+    let i = 0;
+    while (i < buf.length) {
+      if (this.toNextFrame <= 0) {
+        if (!this.song.frame()) {
+          this.song = null;
+          this.port.postMessage({ type: 'error', code: 'E_SONG', message: 'MGSDRV が止まりませんでした' });
+          this.conv.render(this.chip, buf, i, buf.length);
+          return;
+        }
+        this.songFrame++;
+        // 1/60 秒のサンプル数を、ずれが積み重ならないよう整数で配る（48,000Hzなら毎回800）
+        this.toNextFrame += Math.floor((this.songFrame * this.rate) / DRIVER_HZ) - Math.floor(((this.songFrame - 1) * this.rate) / DRIVER_HZ);
+      }
+      const n = Math.min(buf.length - i, this.toNextFrame);
+      this.conv.render(this.chip, buf, i, i + n);
+      i += n;
+      this.toNextFrame -= n;
+    }
   }
 
   process(_inputs, outputs) {
@@ -83,7 +143,8 @@ class SccProcessor extends AudioWorkletProcessor {
     const out = outputs[0];
     const left = out[0];
     if (left) {
-      this.conv.render(this.chip, left);
+      if (this.song) this.#renderSong(left);
+      else this.conv.render(this.chip, left);
       this.post.process(left);
       for (let c = 1; c < out.length; c++) out[c].set(left);
       this.frames += left.length;

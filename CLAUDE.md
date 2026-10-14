@@ -38,6 +38,8 @@ src/engine/                  発音の割り当て、MIDIの対応づけ
 src/audio/                   AudioWorklet、音声エンジン
 src/midi/                    Web MIDI入力
 src/ui/                      画面
+src/mgs/                     MML 再生（F-016）：Z80 の再現・最小限の CP/M・本物の MGSDRV を動かす枠。DOM を使わない
+local/                       手元だけのファイル（MGSDRV.COM・MGSC.COM・ZEXDOC など）。Git に入れない
 tests/
   fixtures/mame/             MAMEの出力の記録（T-006）
 tools/

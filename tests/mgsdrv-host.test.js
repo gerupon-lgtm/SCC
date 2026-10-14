@@ -33,7 +33,8 @@ test('初期化・演奏開始・1/60秒ごとの呼び出しで、SCC と PSG �
   assert.equal(host.mem[0x7010] | (host.mem[0x7011] << 8), 0x0200, '曲のアドレスが DE で渡る');
   assert.equal(host.playing, true);
   for (let i = 0; i < 3; i++) assert.equal(host.frame(), true);
-  assert.deepEqual(scc, [[0x8a, 1], [0x8a, 2], [0x8a, 3]]);
+  // 最初の1つは、演奏開始時に全チャンネルを有効にする書き込み（MSXplay と同じ）
+  assert.deepEqual(scc, [[0x8f, 0x1f], [0x8a, 1], [0x8a, 2], [0x8a, 3]]);
   // OUT での書き込みと、BIOS（0x93 WRTPSG）経由の書き込みの両方
   assert.deepEqual(psg, [[7, 0x38], [8, 0x0f], [7, 0x38], [8, 0x0f], [7, 0x38], [8, 0x0f]]);
 });
@@ -42,6 +43,7 @@ test('SCC を有効にする前の 0x9800 への書き込みは捨てる。0x800
   const scc = [];
   const host = new MgsdrvHost({ driver: fakeDriver(), onScc: (a, v) => scc.push([a, v]) });
   host.load(song());
+  scc.length = 0;
   host.sccEnabled = false;
   host.frame();
   assert.deepEqual(scc, []);
