@@ -41,12 +41,12 @@ export class MgsdrvHost {
     this.psgRegs = new Uint8Array(16);
     this.sccEnabled = false;
     this.mib = 0;
-    const self = this;
+    const host = this;
     this.cpu = new Z80({
-      read: (a) => self.mem[a],
-      write: (a, v) => self.#write(a, v),
-      input: (p) => ((p & 0xff) === 0xa2 ? self.psgRegs[self.psgLatch & 0x0f] : 0xff),
-      output: (p, v) => self.#output(p & 0xff, v),
+      read: (a) => host.mem[a],
+      write: (a, v) => host.#write(a, v),
+      input: (p) => ((p & 0xff) === 0xa2 ? host.psgRegs[host.psgLatch & 0x0f] : 0xff),
+      output: (p, v) => host.#output(p & 0xff, v),
     });
   }
 

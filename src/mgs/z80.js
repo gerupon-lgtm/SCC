@@ -53,9 +53,9 @@ export class Z80 {
   wb(a, v) { this.bus.write(a & 0xffff, v & 0xff); }
   rw(a) { return this.rb(a) | (this.rb(a + 1) << 8); }
   ww(a, v) { this.wb(a, v); this.wb(a + 1, v >> 8); }
-  fetch() { const v = this.rb(this.pc); this.pc = (this.pc + 1) & 0xffff; return v; }
+  fetch8() { const v = this.rb(this.pc); this.pc = (this.pc + 1) & 0xffff; return v; }
   fetchw() { const v = this.rw(this.pc); this.pc = (this.pc + 2) & 0xffff; return v; }
-  fetchd() { const d = this.fetch(); return d < 128 ? d : d - 256; }
+  fetchd() { const d = this.fetch8(); return d < 128 ? d : d - 256; }
   push(v) { this.sp = (this.sp - 2) & 0xffff; this.ww(this.sp, v); }
   pop() { const v = this.rw(this.sp); this.sp = (this.sp + 2) & 0xffff; return v; }
   incR() { this.r = (this.r & 0x80) | ((this.r + 1) & 0x7f); }
@@ -216,12 +216,12 @@ export class Z80 {
     this.eiDelay = false;
     if (this.halted) { this.incR(); this.cycles += 4; return; }
     this.idx = 0;
-    let op = this.fetch();
+    let op = this.fetch8();
     this.incR();
     // DD・FD の接頭辞（重なったら最後のものが有効）
     while (op === 0xdd || op === 0xfd) {
       this.idx = op === 0xdd ? 1 : 2;
-      op = this.fetch();
+      op = this.fetch8();
       this.incR();
       this.cycles += 4;
     }
@@ -288,7 +288,7 @@ export class Z80 {
           if (y === 6) { const a = this.addrHL(); this.wb(a, this.dec8(this.rb(a))); } else this.setR(y, this.dec8(this.getR(y, true)), true);
           return;
         case 6:
-          if (y === 6) { const a = this.addrHL(); this.wb(a, this.fetch()); } else this.setR(y, this.fetch(), true);
+          if (y === 6) { const a = this.addrHL(); this.wb(a, this.fetch8()); } else this.setR(y, this.fetch8(), true);
           return;
         default:
           switch (y) {
@@ -324,8 +324,8 @@ export class Z80 {
       case 3:
         switch (y) {
           case 0: this.pc = this.fetchw(); return; // JP
-          case 2: { const n = this.fetch(); this.bus.output((this.a << 8) | n, this.a); return; } // OUT (n),A
-          case 3: { const n = this.fetch(); this.a = this.bus.input((this.a << 8) | n) & 0xff; return; } // IN A,(n)
+          case 2: { const n = this.fetch8(); this.bus.output((this.a << 8) | n, this.a); return; } // OUT (n),A
+          case 3: { const n = this.fetch8(); this.a = this.bus.input((this.a << 8) | n) & 0xff; return; } // IN A,(n)
           case 4: { // EX (SP),HL
             const v = this.rw(this.sp); this.ww(this.sp, this.getHL()); this.setHL(v); return;
           }
@@ -339,7 +339,7 @@ export class Z80 {
         if (q === 0) { this.push(this.getRP2(p)); return; }
         if (p === 0) { const a = this.fetchw(); this.push(this.pc); this.pc = a; return; } // CALL
         return; // DD・ED・FD は step() で処理済み
-      case 6: this.alu(y, this.fetch()); return;
+      case 6: this.alu(y, this.fetch8()); return;
       default: this.push(this.pc); this.pc = y * 8; return; // RST
     }
   }
@@ -350,10 +350,10 @@ export class Z80 {
     if (this.idx) {
       // DD CB d op：(IX+d) が対象。結果はレジスタにも写る（未定義命令の動き）
       addr = this.addrHL();
-      n = this.fetch();
+      n = this.fetch8();
       v = this.rb(addr);
     } else {
-      n = this.fetch();
+      n = this.fetch8();
       this.incR();
       if ((n & 7) === 6) { addr = this.hl; v = this.rb(addr); } else v = this.getR(n & 7, false);
     }
@@ -377,7 +377,7 @@ export class Z80 {
   }
 
   execED() {
-    const op = this.fetch();
+    const op = this.fetch8();
     this.incR();
     this.cycles += 4;
     const x = op >> 6, y = (op >> 3) & 7, z = op & 7, p = y >> 1, q = y & 1;

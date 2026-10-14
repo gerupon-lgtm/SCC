@@ -20,10 +20,10 @@ export class CpmMachine {
     this.exited = false;
     /** 開いているファイル：FCB のアドレス → { name, data（書き込み中は伸びる配列） } */
     this.open = new Map();
-    const self = this;
+    const machine = this;
     this.cpu = new Z80({
-      read: (a) => self.mem[a],
-      write: (a, v) => { self.mem[a] = v; },
+      read: (a) => machine.mem[a],
+      write: (a, v) => { machine.mem[a] = v; },
       input: () => 0xff,
       output: () => {},
     });
