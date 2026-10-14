@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<meta name="app-version" content="0.4.0">
+<meta name="app-version" content="0.4.1">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <title>SCCシミュレーター（仮称）</title>
@@ -52,9 +52,9 @@
     <h2>曲を鳴らす（MGSDRV 形式）</h2>
     <p class="note">手元のファイルを、この端末の中だけで使います（どこにも送りません）。MGSDRV.COM と MGSC.COM は <a href="https://www.gigamix.jp/mgsdrv/">Gigamix</a> から入手し、一度選べばこのブラウザが覚えます。</p>
     <div class="song-files">
-      <label>MGSDRV.COM <input id="file-mgsdrv" type="file" accept=".com,.COM"></label> <span id="mgsdrv-status" class="note"></span>
-      <label>MGSC.COM（MML を変換するとき） <input id="file-mgsc" type="file" accept=".com,.COM"></label> <span id="mgsc-status" class="note"></span>
-      <label>曲（.mml・.mus・.mgs） <input id="file-song" type="file" accept=".mml,.mus,.mgs,.txt,.MML,.MUS,.MGS"></label>
+      <label>MGSDRV.COM <input id="file-mgsdrv" type="file"></label> <span id="mgsdrv-status" class="note"></span>
+      <label>MGSC.COM（MML を変換するとき） <input id="file-mgsc" type="file"></label> <span id="mgsc-status" class="note"></span>
+      <label>曲（.mml・.mus・.mgs） <input id="file-song" type="file"></label>
     </div>
     <p id="song-title" class="song-title"></p>
     <div class="row">

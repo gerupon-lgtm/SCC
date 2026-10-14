@@ -68,7 +68,8 @@ export function initSongPanel({ engine }) {
   $('file-mgsdrv').addEventListener('change', async (e) => {
     const r = await readFile(e.target);
     if (!r) return;
-    if (r.bytes.length < 0x100 || r.bytes.length > MAX_DRIVER_SIZE) { showLog(`${r.name} は MGSDRV.COM ではないようです（大きさ ${r.bytes.length} バイト）`); return; }
+    const isDriver = r.bytes.length >= 0x100 && r.bytes.length <= MAX_DRIVER_SIZE && new TextDecoder('latin1').decode(r.bytes).includes('MGSDRV');
+    if (!isDriver) { showLog(`${r.name} は MGSDRV.COM ではないようです（大きさ ${r.bytes.length} バイト）`); return; }
     driver = r.bytes;
     store('mgsdrv.com', driver);
     showLog('');
@@ -78,6 +79,8 @@ export function initSongPanel({ engine }) {
   $('file-mgsc').addEventListener('change', async (e) => {
     const r = await readFile(e.target);
     if (!r) return;
+    // MGSC.COM の中には "MGSC MML compiler" の文字がある。違うファイルを選んだときに気づけるように
+    if (!new TextDecoder('latin1').decode(r.bytes).includes('MGSC MML compiler')) { showLog(`${r.name} は MGSC.COM ではないようです`); return; }
     mgsc = r.bytes;
     store('mgsc.com', mgsc);
     showLog('');
