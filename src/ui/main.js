@@ -54,7 +54,7 @@ const engine = new AudioEngine({
   },
   onSong: (state) => songPanel.onSong(state),
 });
-const songPanel = initSongPanel({ engine, ensureRunning: () => startAudio() });
+const songPanel = initSongPanel({ engine, ensureRunning: () => startAudio(), getSynth: () => synth });
 
 let synth = new Synth(engine, { config });
 

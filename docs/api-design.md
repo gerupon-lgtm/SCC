@@ -61,6 +61,8 @@ chip.snapshot()                // 状態の取り出し（テスト・表示用�
 | メイン→Worklet | `poll` | なし。状態を頼む（約30回/秒）。`process()` の中で状態の物を作らないため【設計】 |
 | メイン→Worklet | `song` | `{ driver, mgs }`：MGSDRV.COM と曲（MGS）。Worklet の中の Z80 で MGSDRV を動かす（F-016） |
 | メイン→Worklet | `songStop` | なし。曲を止め、ch1〜5 を無音にする |
+| メイン→Worklet | `reg` の `at` | 書き込みに「鳴らす時刻」（AudioContext の秒）を付けると、Worklet が時刻順に並べて、その時刻を含む 128 サンプルの区切りの初めに当てる（SMF の再生、F-017） |
+| メイン→Worklet | `clearTimed` | なし。先渡しした、まだ当てていない書き込みを捨てる |
 | Worklet→メイン | `song` | `{ state: 'playing' \| 'stopped' }` |
 | Worklet→メイン | `state` | `{ channels: [...], peak, load }`（load：処理の重さ。0.9を超えたら `E_AUDIO_UNDERRUN`） |
 | Worklet→メイン | `error` | `{ code }` |

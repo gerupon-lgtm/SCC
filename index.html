@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<meta name="app-version" content="0.5.0">
+<meta name="app-version" content="0.6.0">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <title>SCCシミュレーター（仮称）</title>
@@ -49,7 +49,7 @@
   </section>
 
   <section class="panel song-panel">
-    <h2>曲を鳴らす（MGSDRV 形式）</h2>
+    <h2>曲を鳴らす（MGSDRV 形式・MIDI ファイル）</h2>
     <p class="note">手元のファイルを、この端末の中だけで使います（どこにも送りません）。MGSDRV.COM と MGSC.COM は <a href="https://www.gigamix.jp/mgsdrv/">Gigamix</a> から入手し、一度選べばこのブラウザが覚えます。</p>
     <ol class="song-steps">
       <li>
@@ -65,7 +65,7 @@
         <span id="mgsc-status" class="step-status"></span>
       </li>
       <li>
-        <span class="step-name">曲のファイル<small>.mml・.mus・.mgs</small></span>
+        <span class="step-name">曲のファイル<small>.mml・.mus・.mgs（MGSDRV）、.mid（MIDI ファイル。1・2 は不要）</small></span>
         <input id="file-song" type="file" class="visually-hidden">
         <label for="file-song" class="small file-button">選ぶ</label>
         <span id="song-file-status" class="step-status"></span>

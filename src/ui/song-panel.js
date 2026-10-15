@@ -1,8 +1,10 @@
-// 画面：曲を鳴らす（F-016、MGSDRV 形式）
+// 画面：曲を鳴らす（F-016 MGSDRV 形式、F-017 SMF）
 // MGSDRV.COM・MGSC.COM・曲のファイルは、この端末の中だけで使う（どこにも送らない。C-3）
 // MGSDRV.COM と MGSC.COM は、選び直さずに済むよう、このブラウザに保存する
 import { compileMml, MgscError } from '../mgs/mgsc.js';
 import { looksLikeMgsdrv, looksLikeMgsc } from '../mgs/mgsdrv-host.js';
+import { isSmf, parseSmf } from '../midi/smf.js';
+import { SmfPlayer } from '../engine/smf-player.js';
 
 const $ = (id) => /** @type {HTMLElement} */ (document.getElementById(id));
 
@@ -38,12 +40,17 @@ function mgsTitle(mgs) {
  * @param {object} deps
  * @param {import('../audio/audio-engine.js').AudioEngine} deps.engine
  * @param {() => Promise<boolean>} deps.ensureRunning 音が止まっていれば出す（「曲を再生」から呼ぶ）。出せたら true
+ * @param {() => import('../engine/synth.js').Synth} deps.getSynth SMF を鳴らす割り当て（チャンネル数を変えると作り直されるため関数で受け取る）
  */
-export function initSongPanel({ engine, ensureRunning }) {
+export function initSongPanel({ engine, ensureRunning, getSynth }) {
   let driver = loadStored('mgsdrv.com');
   let mgsc = loadStored('mgsc.com');
   /** @type {Uint8Array | null} */
   let mgs = null;
+  /** @type {ReturnType<typeof parseSmf> | null} */
+  let smf = null;
+  /** @type {SmfPlayer | null} */
+  let smfPlayer = null;
   let running = false;
   let playing = false;
   let songName = '';
@@ -64,13 +71,16 @@ export function initSongPanel({ engine, ensureRunning }) {
   function update() {
     setStatus('mgsdrv-status', !!driver, driver ? `✓ 読み込み済み（${driver.length} バイト）` : 'まだ選んでいません');
     setStatus('mgsc-status', !!mgsc, mgsc ? `✓ 読み込み済み（${mgsc.length} バイト）` : 'まだ選んでいません');
-    setStatus('song-file-status', !!mgs, mgs ? `✓ ${songName}` : 'まだ選んでいません');
-    // 3つそろえば押せる。音が止まっていれば、押したときに音を出してから再生する
-    playBtn.disabled = !(driver && mgs) || playing;
+    const hasSong = !!(mgs || smf);
+    setStatus('song-file-status', hasSong, hasSong ? `✓ ${songName}${smf ? '（MIDI ファイル）' : ''}` : 'まだ選んでいません');
+    // MGS は 1 と 3、SMF は 3 だけで押せる。音が止まっていれば、押したときに音を出してから再生する
+    const ready = smf ? true : !!(driver && mgs);
+    playBtn.disabled = !ready || playing;
     stopBtn.disabled = !playing;
     if (!playing) {
-      const missing = [!driver && '1', !mgs && '3'].filter(Boolean);
-      $('song-status').textContent = missing.length ? `${missing.join('と')}を選ぶと再生できます` : '';
+      const missing = smf ? [] : [!driver && '1', !mgs && '3'].filter(Boolean);
+      // 足りないものがあるときだけ書く（再生が終わったときの「（終わり）」を消さないため）
+      if (missing.length) $('song-status').textContent = `${missing.join('と')}を選ぶと再生できます`;
     }
   }
 
@@ -103,10 +113,21 @@ export function initSongPanel({ engine, ensureRunning }) {
   $('file-song').addEventListener('change', async (e) => {
     const r = await readFile(e.target);
     if (!r) return;
+    stopAll();
     mgs = null;
+    smf = null;
     songName = r.name;
     $('song-title').textContent = '';
+    $('song-status').textContent = '';
     try {
+      if (isSmf(r.bytes)) {
+        smf = parseSmf(r.bytes);
+        const notes = smf.events.filter((ev) => ev.type === 'noteOn').length;
+        showLog(`MIDI ファイル（形式${smf.format}）：音符 ${notes} 個、${fmtTime(smf.duration)}。全パートが同じ音色で鳴ります。10チャンネル目（打楽器）は鳴らしません`);
+        $('song-title').textContent = `曲名：${smf.title || r.name}`;
+        update();
+        return;
+      }
       if (/\.mgs$/i.test(r.name)) {
         mgs = r.bytes;
         showLog('');
@@ -124,22 +145,59 @@ export function initSongPanel({ engine, ensureRunning }) {
     update();
   });
 
+  function fmtTime(sec) {
+    const t = Math.floor(sec);
+    return `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`;
+  }
+
+  /** SMF の再生を止める（MGS の再生は Worklet に止めてもらう） */
+  function stopAll() {
+    if (smfPlayer?.playing) {
+      smfPlayer.stop();
+      engine.clearScheduled();
+      playing = false;
+    }
+    if (playing) engine.stopSong();
+  }
+
   playBtn.addEventListener('click', async () => {
-    if (!driver || !mgs) return;
+    if (!smf && (!driver || !mgs)) return;
     playBtn.disabled = true;
     if (!running && !(await ensureRunning())) { update(); return; }
+    if (smf) {
+      smfPlayer = new SmfPlayer({
+        synth: getSynth(),
+        clock: engine,
+        onEnd: () => { playing = false; $('song-status').textContent = `${fmtTime(smf.duration)}（終わり）`; update(); },
+      });
+      smfPlayer.load(smf);
+      smfPlayer.play();
+      playing = true;
+      update();
+      return;
+    }
     if (engine.playSong(driver, mgs)) showLog('');
   });
-  stopBtn.addEventListener('click', () => engine.stopSong());
+  stopBtn.addEventListener('click', () => {
+    if (smfPlayer?.playing) { stopAll(); update(); } else engine.stopSong();
+  });
 
   update();
   return {
     /** @param {boolean} on 音が出せる状態か */
-    setRunning(on) { running = on; if (!on) playing = false; update(); },
+    setRunning(on) {
+      running = on;
+      if (!on) { smfPlayer?.stop(); playing = false; }
+      update();
+    },
     /** @param {'playing' | 'stopped'} state */
     onSong(state) { playing = state === 'playing'; update(); },
     /** @param {{ playing: boolean, loop: number, seconds: number } | null} s */
     onState(s) {
+      if (smfPlayer?.playing) {
+        $('song-status').textContent = `${fmtTime(smfPlayer.position)} / ${fmtTime(smfPlayer.duration)}`;
+        return;
+      }
       if (!s) return;
       const t = Math.floor(s.seconds);
       $('song-status').textContent = `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}・くり返し ${s.loop} 回${s.playing ? '' : '（終わり）'}`;

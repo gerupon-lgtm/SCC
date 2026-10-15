@@ -37,7 +37,32 @@ class SccProcessor extends AudioWorkletProcessor {
     this.songFrame = 0;     // 何回目の 1/60 秒か
     this.toNextFrame = 0;   // 次に MGSDRV を呼ぶまでのサンプル数
     this.onScc = (addr, value) => this.regs.write(addr, value);
+    // 時刻つきの書き込み（SMF の再生、F-017）。古い順に並べ、process() で時刻が来たものを当てる
+    /** @type {{ at: number, addr: number, value: number }[]} */
+    this.timed = [];
+    this.timedHead = 0;
     this.port.onmessage = (e) => this.#onMessage(e.data);
+  }
+
+  /** 時刻が付いていて、まだ先なら並べて待つ。そうでなければすぐ書く */
+  #writeOrQueue(w) {
+    if (typeof w.at !== 'number' || w.at <= currentTime) { this.regs.write(w.addr, w.value); return; }
+    if (this.timedHead === this.timed.length) { this.timed.length = 0; this.timedHead = 0; }
+    // 使い終わった分を詰める（process() の外で行う）
+    if (this.timedHead > 512) { this.timed.splice(0, this.timedHead); this.timedHead = 0; }
+    const q = this.timed;
+    let i = q.length;
+    while (i > this.timedHead && q[i - 1].at > w.at) i--; // ほとんどの場合、最後に足すだけ
+    q.splice(i, 0, w);
+  }
+
+  /** この区切り（128サンプル）の終わりまでに時刻が来る書き込みを当てる。オブジェクトを作らない */
+  #applyTimed(blockEnd) {
+    const q = this.timed;
+    while (this.timedHead < q.length && q[this.timedHead].at < blockEnd) {
+      const w = q[this.timedHead++];
+      this.regs.write(w.addr, w.value);
+    }
   }
 
   #startSong(driver, mgs) {
@@ -77,8 +102,12 @@ class SccProcessor extends AudioWorkletProcessor {
   #onMessage(msg) {
     switch (msg?.type) {
       case 'reg':
-        if (Array.isArray(msg.writes)) for (const w of msg.writes) this.regs.write(w.addr, w.value);
+        if (Array.isArray(msg.writes)) for (const w of msg.writes) this.#writeOrQueue(w);
         else this.regs.write(msg.addr, msg.value);
+        break;
+      case 'clearTimed':
+        this.timed.length = 0;
+        this.timedHead = 0;
         break;
       case 'master':
         this.post.setMaster(msg.gain);
@@ -147,6 +176,7 @@ class SccProcessor extends AudioWorkletProcessor {
     const out = outputs[0];
     const left = out[0];
     if (left) {
+      if (this.timedHead < this.timed.length) this.#applyTimed(currentTime + left.length / sampleRate);
       if (this.song) this.#renderSong(left);
       else this.conv.render(this.chip, left);
       this.post.process(left);

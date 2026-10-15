@@ -27,6 +27,8 @@ export class AudioEngine {
     this.pending = [];
     this.flushScheduled = false;
     this.master = undefined;
+    /** @type {number | null} 書き込みに付ける「鳴らす時刻」（F-017） */
+    this.scheduleTime = null;
   }
 
   get running() {
@@ -91,7 +93,8 @@ export class AudioEngine {
    */
   write(addr, value) {
     if (!this.node) return false;
-    this.pending.push({ addr, value });
+    // SMF の再生中は「鳴らす時刻」を付けて先渡しする（F-017）。Worklet がその時刻の区切りで当てる
+    this.pending.push(this.scheduleTime === null ? { addr, value } : { addr, value, at: this.scheduleTime });
     if (!this.flushScheduled) {
       this.flushScheduled = true;
       queueMicrotask(() => this.flush());
@@ -125,6 +128,25 @@ export class AudioEngine {
 
   stopSong() {
     this.node?.port.postMessage({ type: 'songStop' });
+  }
+
+  /**
+   * 以後の write() に付ける「鳴らす時刻」（AudioContext の時刻、秒）。null で、すぐ鳴らす
+   * @param {number | null} t
+   */
+  setScheduleTime(t) {
+    this.scheduleTime = t;
+  }
+
+  /** 音声の時計（AudioContext の時刻、秒）。止まっているときは 0 */
+  now() {
+    return this.ctx ? this.ctx.currentTime : 0;
+  }
+
+  /** 先渡しした、まだ鳴らしていない書き込みを捨てる */
+  clearScheduled() {
+    this.flush();
+    this.node?.port.postMessage({ type: 'clearTimed' });
   }
 
   /** 画面表示用の状態を頼む（返事は onState） */
