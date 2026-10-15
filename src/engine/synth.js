@@ -3,6 +3,9 @@
 // ch1〜5 は SCC互換のアドレス、ch6 以降は追加チャンネルのアドレス（src/core/scc-ext-registers.js）
 import { SCC_COMPAT } from '../core/config.js';
 import { PRESET_NAMES, getPreset } from '../core/presets.js';
+
+/** 波形エディターの波形の名前 */
+export const CUSTOM = 'custom';
 import { COMPAT_CHANNELS, channelAddr, waveAddr } from '../core/scc-ext-registers.js';
 import { VoiceAllocator } from './voice-allocator.js';
 
@@ -51,6 +54,8 @@ export class Synth {
     this.bend = 0;      // 半音単位
     this.cc7 = 127;
     this.waveName = PRESET_NAMES[0];
+    /** @type {Int8Array | null} 波形エディターで作った波形（F-007）。waveName が 'custom' のとき使う */
+    this.customWave = null;
   }
 
   /** 開始直後に呼ぶ：波形を書き、全チャンネルを無音にする */
@@ -119,11 +124,20 @@ export class Synth {
 
   /** プリセット波形を全バンクへ書く（MVPでは全チャンネル同じ音色） @param {string} name */
   setWave(name) {
-    const wave = getPreset(name);
+    const wave = name === CUSTOM && this.customWave ? this.customWave : getPreset(name);
     this.waveName = name;
     for (let bank = 0; bank < this.waveBankCount; bank++) {
       for (let i = 0; i < wave.length; i++) this.sink.write(waveAddr(bank, i), wave[i] & 0xff);
     }
+  }
+
+  /**
+   * 波形エディターで作った波形を全バンクへ書く（F-007）
+   * @param {ArrayLike<number>} wave 32個、-128〜127
+   */
+  setWaveData(wave) {
+    this.customWave = Int8Array.from(wave);
+    this.setWave(CUSTOM);
   }
 
   #writeFrequency(ch, note) {

@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<meta name="app-version" content="0.6.0">
+<meta name="app-version" content="0.7.0">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <title>SCCシミュレーター（仮称）</title>
@@ -46,6 +46,25 @@
   <section class="panel waves">
     <h2>波形</h2>
     <div id="wave-buttons" class="wave-buttons" role="radiogroup" aria-label="プリセット波形"></div>
+  </section>
+
+  <section class="panel wave-editor-panel">
+    <h2>波形エディター</h2>
+    <p class="note">32個の点をなぞって描くと、すぐ音に反映します（「自作」の波形になります）。保存はしません。残したい波形は下の文字を写してください（MGSDRV の @s と同じ書き方です）。</p>
+    <div id="wave-editor" class="wave-editor"></div>
+    <div class="row wave-editor-tools">
+      <button id="we-from-preset" type="button" class="small">今の波形を写す</button>
+      <button id="we-smooth" type="button" class="small">なめらかに</button>
+      <button id="we-invert" type="button" class="small">上下を反転</button>
+      <button id="we-clear" type="button" class="small">0にする</button>
+    </div>
+    <label class="we-text-label" for="we-text">16進の文字（@s と同じ。貼り付けて読み込めます）</label>
+    <textarea id="we-text" class="we-text" rows="2" spellcheck="false"></textarea>
+    <div class="row">
+      <button id="we-load" type="button" class="small">この文字を読み込む</button>
+      <button id="we-copy" type="button" class="small">文字を写す</button>
+      <span id="we-message" class="note"></span>
+    </div>
   </section>
 
   <section class="panel song-panel">

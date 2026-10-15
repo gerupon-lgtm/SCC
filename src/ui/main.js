@@ -6,13 +6,14 @@ import { PRESET_NAMES, getPreset } from '../core/presets.js';
 import { DEFAULT_MASTER } from '../core/post-stage.js';
 import { AudioEngine } from '../audio/audio-engine.js';
 import { MidiInput } from '../midi/midi-input.js';
-import { Synth } from '../engine/synth.js';
+import { Synth, CUSTOM } from '../engine/synth.js';
 import { Keyboard } from './keyboard.js';
 import { initSongPanel } from './song-panel.js';
+import { WaveEditor } from './wave-editor.js';
 
 const $ = (id) => /** @type {HTMLElement} */ (document.getElementById(id));
 
-const WAVE_LABELS = { square: '矩形', saw: 'のこぎり', triangle: '三角', sine: '正弦', pulse25: 'パルス25%' };
+const WAVE_LABELS = { square: '矩形', saw: 'のこぎり', triangle: '三角', sine: '正弦', pulse25: 'パルス25%', [CUSTOM]: '自作' };
 const MIDI_TEXT = {
   unsupported: 'このブラウザはMIDIに対応していません。画面の鍵盤で弾けます',
   denied: 'MIDIが許可されませんでした。アドレス欄の左のボタンからMIDIを「許可」にして、「もう一度試す」を押してください。画面の鍵盤は使えます',
@@ -94,22 +95,50 @@ function wavePreview(name) {
   svg.append(line);
   return svg;
 }
-const waveButtons = PRESET_NAMES.map((name) => {
+/** 「自作」ボタンの小さな絵（波形エディターの波形を写す） */
+const customPreview = wavePreview('square');
+function updateCustomPreview(wave) {
+  const pts = [];
+  wave.forEach((v, i) => { const y = 12 - (v / 128) * 10; pts.push(`${i},${y}`, `${i + 1},${y}`); });
+  customPreview.querySelector('polyline').setAttribute('points', pts.join(' '));
+}
+const waveButtons = [...PRESET_NAMES, CUSTOM].map((name) => {
   const b = document.createElement('button');
   b.type = 'button';
   b.setAttribute('role', 'radio');
   b.dataset.wave = name;
   const label = document.createElement('span');
   label.textContent = WAVE_LABELS[name] ?? name;
-  b.append(wavePreview(name), label);
+  b.append(name === CUSTOM ? customPreview : wavePreview(name), label);
   b.addEventListener('click', () => selectWave(name));
   $('wave-buttons').append(b);
   return b;
 });
 function selectWave(name) {
-  synth.setWave(name); // 開始前は書き込みを捨てるが、名前は覚えて開始時に書く
+  if (name === CUSTOM) synth.setWaveData(waveEditor.wave);
+  else synth.setWave(name); // 開始前は書き込みを捨てるが、名前は覚えて開始時に書く
   for (const b of waveButtons) b.setAttribute('aria-checked', String(b.dataset.wave === name));
 }
+
+// ---- 波形エディター（F-007） ----
+const waveEditor = new WaveEditor(
+  { canvas: $('wave-editor'), text: /** @type {HTMLTextAreaElement} */ ($('we-text')), message: $('we-message') },
+  (wave) => { updateCustomPreview(wave); selectWave(CUSTOM); },
+);
+$('we-from-preset').addEventListener('click', () => {
+  waveEditor.set(synth.waveName === CUSTOM && synth.customWave ? synth.customWave : getPreset(synth.waveName));
+});
+$('we-smooth').addEventListener('click', () => waveEditor.smooth());
+$('we-invert').addEventListener('click', () => waveEditor.invert());
+$('we-clear').addEventListener('click', () => waveEditor.set(new Int8Array(32)));
+$('we-load').addEventListener('click', () => waveEditor.loadText());
+$('we-copy').addEventListener('click', async () => {
+  const t = /** @type {HTMLTextAreaElement} */ ($('we-text'));
+  try { await navigator.clipboard.writeText(t.value); $('we-message').textContent = '写しました'; } catch { t.select(); $('we-message').textContent = '選んだ状態にしました。手で写してください'; }
+});
+// 最初は矩形波を写しておく（「自作」は押されるまで使わない）
+waveEditor.set(getPreset('square'), false);
+updateCustomPreview(waveEditor.wave);
 selectWave(synth.waveName);
 
 // ---- 音量 ----
@@ -162,9 +191,10 @@ channelSelect.addEventListener('change', () => {
   config = configFor(Number(channelSelect.value));
   try { localStorage.setItem('channel-count', String(config.channelCount)); } catch { /* 同上 */ }
   engine.config = config;
-  const waveName = synth.waveName;
+  const { waveName, customWave } = synth;
   synth = new Synth(engine, { config });
   synth.waveName = waveName;
+  synth.customWave = customWave;
   buildRows();
   renderChannels(idleChannels());
 });

@@ -148,3 +148,16 @@ test('16チャンネル：16音まで同時に鳴り、17音目で一番古い�
   synth.allNotesOff();
   assert.ok(chip.snapshot().channels.every((c) => !c.key && c.volume === 0));
 });
+
+test('波形エディターの波形（F-007）：全バンクに書かれ、初期化し直しても残る', async () => {
+  const { CUSTOM } = await import('../src/engine/synth.js');
+  const { chip, synth } = setup();
+  const w = Int8Array.from({ length: 32 }, (_, i) => (i * 8) - 128);
+  synth.setWaveData(w);
+  assert.equal(synth.waveName, CUSTOM);
+  for (let b = 0; b < 4; b++) assert.equal(chip.readWave(b, 5), w[5]);
+  synth.init();
+  assert.equal(chip.readWave(2, 31), w[31]);
+  synth.setWave('square');
+  assert.equal(chip.readWave(0, 0), 127);
+});

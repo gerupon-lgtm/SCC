@@ -141,3 +141,11 @@ select { background: var(--panel); border: 1px solid var(--line); border-radius:
 #song-play:not(:disabled) { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); font-weight: 600; }
 .song-panel .row { flex-wrap: wrap; }
 .song-panel .row button { white-space: nowrap; }
+.wave-editor-panel { grid-column: 1 / -1; }
+.wave-editor { touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+.wave-editor-svg { width: 100%; max-width: 640px; height: auto; aspect-ratio: 320 / 256; display: block; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; cursor: crosshair; }
+.wave-editor-bar { fill: var(--accent); }
+.wave-editor-axis { stroke: var(--line); stroke-width: 1; }
+.wave-editor-tools { flex-wrap: wrap; margin: 8px 0; }
+.we-text-label { display: block; color: var(--muted); font-size: 0.85rem; margin-top: 4px; }
+.we-text { width: 100%; max-width: 640px; background: var(--bg); color: var(--fg); border: 1px solid var(--line); border-radius: 6px; font-family: var(--mono); font-size: 0.85rem; padding: 6px; margin: 4px 0; }
