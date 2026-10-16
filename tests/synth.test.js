@@ -97,7 +97,7 @@ test('高すぎて止まる音は鳴らさない', () => {
   assert.equal(voices().length, 0);
 });
 
-test('ピッチベンド ±2半音・CC7・プログラムチェンジ', () => {
+test('ピッチベンド ±2半音・CC7。プログラムチェンジは使わない（音色は画面で選ぶ、F-015）', () => {
   const { chip, synth, ch } = setup();
   synth.noteOn(69, 127);
   synth.handle({ type: 'pitchBend', value: 8191, channel: 0 });
@@ -107,9 +107,8 @@ test('ピッチベンド ±2半音・CC7・プログラムチェンジ', () => {
   synth.handle({ type: 'cc', controller: 7, value: 64, channel: 0 });
   assert.equal(ch()[0].volume, 8);
   synth.handle({ type: 'program', program: 3, channel: 0 });
-  assert.equal(chip.readWave(0, 8), getPreset('sine')[8]);
-  synth.handle({ type: 'program', program: 7, channel: 0 }); // 5種で折り返す → triangle
-  assert.equal(chip.readWave(3, 1), getPreset('triangle')[1]);
+  assert.equal(chip.readWave(0, 8), getPreset('square')[8]);
+  assert.equal(synth.waveName, 'square');
 });
 
 test('割り当て器：空きを先に使い、なければ最古', () => {

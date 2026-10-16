@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<meta name="app-version" content="0.7.0">
+<meta name="app-version" content="0.8.0">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <title>SCCシミュレーター（仮称）</title>
@@ -46,6 +46,13 @@
   <section class="panel waves">
     <h2>波形</h2>
     <div id="wave-buttons" class="wave-buttons" role="radiogroup" aria-label="プリセット波形"></div>
+    <p class="note">ここで選ぶのはパート1（画面の鍵盤と MIDI チャンネル1）の波形です</p>
+  </section>
+
+  <section class="panel parts">
+    <h2>パート（MIDI チャンネルごとの波形）</h2>
+    <div id="part-rows" class="part-rows"></div>
+    <p class="note">MIDI チャンネル1〜8 がパート1〜8 です。10 は PSG のドラム、9・11〜16 は鳴らしません。SCC と同じ5チャンネルでは、ch4 と ch5 が波形を共有するため、違う波形のパートは同時にそこへ入れません</p>
   </section>
 
   <section class="panel wave-editor-panel">
@@ -102,7 +109,7 @@
   <section class="panel channels">
     <h2>チャンネル</h2>
     <table>
-      <thead><tr><th>ch</th><th>周波数</th><th>音量</th><th>キー</th><th>波形</th></tr></thead>
+      <thead><tr><th>ch</th><th>周波数</th><th>音量</th><th>キー</th><th>波形</th><th>パート</th></tr></thead>
       <tbody id="channel-rows"></tbody>
     </table>
   </section>

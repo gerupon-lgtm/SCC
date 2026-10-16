@@ -8,6 +8,7 @@ import { WindowConverter } from '../core/window-converter.js';
 import { PostStage } from '../core/post-stage.js';
 import { MgsdrvHost } from '../mgs/mgsdrv-host.js';
 import { PsgStage } from '../core/psg-stage.js';
+import { PsgDrums, DRUM_ADDR, DRUM_STOP_ADDR } from '../engine/psg-drums.js';
 
 /** MGSDRV を呼ぶ回数（1秒あたり）。MSXplay（libkss）と同じ60【想定】 */
 const DRIVER_HZ = 60;
@@ -33,7 +34,8 @@ class SccProcessor extends AudioWorkletProcessor {
     // 曲の再生（F-016）：本物の MGSDRV を Z80 の上で動かす
     /** @type {MgsdrvHost | null} */
     this.song = null;
-    this.psg = new PsgStage(); // PSG（F-018）。曲の再生中だけ鳴らす
+    this.psg = new PsgStage(); // PSG（F-018）。曲の再生中と、ドラム（F-019）を鳴らしてからだけ音にする
+    this.drums = new PsgDrums(this.psg.psg);
     this.songFrame = 0;     // 何回目の 1/60 秒か
     this.toNextFrame = 0;   // 次に MGSDRV を呼ぶまでのサンプル数
     this.onScc = (addr, value) => this.regs.write(addr, value);
@@ -46,7 +48,7 @@ class SccProcessor extends AudioWorkletProcessor {
 
   /** 時刻が付いていて、まだ先なら並べて待つ。そうでなければすぐ書く */
   #writeOrQueue(w) {
-    if (typeof w.at !== 'number' || w.at <= currentTime) { this.regs.write(w.addr, w.value); return; }
+    if (typeof w.at !== 'number' || w.at <= currentTime) { this.#write(w.addr, w.value); return; }
     if (this.timedHead === this.timed.length) { this.timed.length = 0; this.timedHead = 0; }
     // 使い終わった分を詰める（process() の外で行う）
     if (this.timedHead > 512) { this.timed.splice(0, this.timedHead); this.timedHead = 0; }
@@ -61,13 +63,22 @@ class SccProcessor extends AudioWorkletProcessor {
     const q = this.timed;
     while (this.timedHead < q.length && q[this.timedHead].at < blockEnd) {
       const w = q[this.timedHead++];
-      this.regs.write(w.addr, w.value);
+      this.#write(w.addr, w.value);
     }
+  }
+
+  /** SCC のレジスタか、ドラム（DRUM_ADDR 以降）へ。曲の再生中は PSG を曲が使うので、ドラムは鳴らさない */
+  #write(addr, value) {
+    if (addr < DRUM_ADDR) { this.regs.write(addr, value); return; }
+    if (this.song) return;
+    if (addr === DRUM_STOP_ADDR) this.drums.stopAll();
+    else if (addr < DRUM_STOP_ADDR) this.drums.trigger(addr - DRUM_ADDR, value);
   }
 
   #startSong(driver, mgs) {
     try {
       this.psg.reset();
+      this.drums.reset();
       const host = new MgsdrvHost({ driver, onScc: this.onScc, psg: this.psg.psg });
       host.load(mgs);
       this.song = host;
@@ -83,6 +94,7 @@ class SccProcessor extends AudioWorkletProcessor {
   #stopSong() {
     this.song = null;
     this.psg.reset();
+    this.drums.reset();
     for (let ch = 0; ch < 5; ch++) this.regs.write(0x8a + ch, 0);
     this.regs.write(0x8f, 0);
     this.port.postMessage({ type: 'song', state: 'stopped' });
@@ -103,7 +115,7 @@ class SccProcessor extends AudioWorkletProcessor {
     switch (msg?.type) {
       case 'reg':
         if (Array.isArray(msg.writes)) for (const w of msg.writes) this.#writeOrQueue(w);
-        else this.regs.write(msg.addr, msg.value);
+        else this.#write(msg.addr, msg.value);
         break;
       case 'clearTimed':
         this.timed.length = 0;
@@ -178,7 +190,10 @@ class SccProcessor extends AudioWorkletProcessor {
     if (left) {
       if (this.timedHead < this.timed.length) this.#applyTimed(currentTime + left.length / sampleRate);
       if (this.song) this.#renderSong(left);
-      else this.conv.render(this.chip, left);
+      else if (this.drums.active) {
+        this.conv.render(this.chip, left, 0, left.length, this.psg);
+        this.drums.tick(left.length / sampleRate); // ドラムの音量・音程は 128 サンプル（約2.7ミリ秒）ごとに変える
+      } else this.conv.render(this.chip, left);
       this.post.process(left);
       for (let c = 1; c < out.length; c++) out[c].set(left);
       this.frames += left.length;

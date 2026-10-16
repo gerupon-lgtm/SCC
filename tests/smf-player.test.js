@@ -8,8 +8,8 @@ function setup(events, duration) {
   let schedule = null;
   const log = [];
   const synth = {
-    noteOn: (note, v) => log.push(['on', note, v, schedule]),
-    noteOff: (note) => log.push(['off', note, schedule]),
+    handle: (ev) => log.push([ev.type, ev.channel, ev.note ?? ev.value ?? ev.program, schedule]),
+    resetControllers: () => log.push(['reset']),
     allNotesOff: () => log.push(['allOff']),
   };
   let ended = 0;
@@ -24,32 +24,30 @@ function setup(events, duration) {
   return { player, log, advance: (dt) => { now += dt; player.pump(); }, ended: () => ended };
 }
 
-test('先渡し：今から0.2秒先までの音符を、鳴らす時刻を付けて処理する', () => {
+test('先渡し：今から0.2秒先までの出来事を、鳴らす時刻を付けて Synth へ渡す', () => {
   const { player, log, advance } = setup([
     { type: 'noteOn', note: 60, velocity: 100, channel: 0, time: 0 },
     { type: 'noteOn', note: 64, velocity: 100, channel: 0, time: 0.25 },
     { type: 'noteOff', note: 60, channel: 0, time: 1.0 },
   ], 1.0);
   player.play(); // 開始は 10.1 秒（0.1秒の余裕）
-  assert.deepEqual(log, [['on', 60, 100, 10.1]]);
+  assert.deepEqual(log, [['reset'], ['noteOn', 0, 60, 10.1]]);
   advance(0.2); // 10.2 → 曲の 0.1 秒。0.3 秒先までなので 0.25 の音も
-  assert.deepEqual(log.at(-1), ['on', 64, 100, 10.35]);
+  assert.deepEqual(log.at(-1), ['noteOn', 0, 64, 10.35]);
   advance(1.0);
-  assert.deepEqual(log.at(-1), ['off', 60, 11.1]);
+  assert.deepEqual(log.at(-1), ['noteOff', 0, 60, 11.1]);
   player.stop();
 });
 
-test('10チャンネル目（打楽器）は鳴らさない。CC7 はパートごとにベロシティへ掛ける', () => {
+test('全チャンネル（打楽器・プログラムチェンジ・ピッチベンドも）を Synth へ渡す。振り分けは Synth が行う', () => {
   const { player, log } = setup([
     { type: 'noteOn', note: 36, velocity: 100, channel: 9, time: 0 },
     { type: 'cc', controller: 7, value: 64, channel: 1, time: 0 },
-    { type: 'noteOn', note: 60, velocity: 127, channel: 1, time: 0 },
-    { type: 'noteOn', note: 62, velocity: 127, channel: 2, time: 0 },
     { type: 'program', program: 3, channel: 1, time: 0 },
     { type: 'pitchBend', value: 4000, channel: 1, time: 0 },
   ], 0);
   player.play();
-  assert.deepEqual(log.map((e) => e.slice(0, 3)), [['on', 60, 64], ['on', 62, 127]]);
+  assert.deepEqual(log.slice(1).map((e) => e.slice(0, 2)), [['noteOn', 9], ['cc', 1], ['program', 1], ['pitchBend', 1]]);
   player.stop();
 });
 

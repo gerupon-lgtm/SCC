@@ -6,7 +6,7 @@ import { PRESET_NAMES, getPreset } from '../core/presets.js';
 import { DEFAULT_MASTER } from '../core/post-stage.js';
 import { AudioEngine } from '../audio/audio-engine.js';
 import { MidiInput } from '../midi/midi-input.js';
-import { Synth, CUSTOM } from '../engine/synth.js';
+import { Synth, CUSTOM, PART_COUNT } from '../engine/synth.js';
 import { Keyboard } from './keyboard.js';
 import { initSongPanel } from './song-panel.js';
 import { WaveEditor } from './wave-editor.js';
@@ -57,7 +57,15 @@ const engine = new AudioEngine({
 });
 const songPanel = initSongPanel({ engine, ensureRunning: () => startAudio(), getSynth: () => synth });
 
-let synth = new Synth(engine, { config });
+let synth = new Synth(engine, { config, drums: true });
+// パートの波形（F-015）は覚えておく（自作の波形そのものは覚えない）
+try {
+  const saved = JSON.parse(localStorage.getItem('part-waves') ?? 'null');
+  if (Array.isArray(saved)) saved.slice(0, PART_COUNT).forEach((name, p) => { if ([...PRESET_NAMES, CUSTOM].includes(name)) synth.parts[p].waveName = name; });
+} catch { /* 保存できなくても動く */ }
+function savePartWaves() {
+  try { localStorage.setItem('part-waves', JSON.stringify(synth.partWaves())); } catch { /* 同上 */ }
+}
 
 const midi = new MidiInput({
   onEvent: (ev) => { if (engine.running) synth.handle(ev); },
@@ -114,16 +122,46 @@ const waveButtons = [...PRESET_NAMES, CUSTOM].map((name) => {
   $('wave-buttons').append(b);
   return b;
 });
-function selectWave(name) {
-  if (name === CUSTOM) synth.setWaveData(waveEditor.wave);
-  else synth.setWave(name); // 開始前は書き込みを捨てるが、名前は覚えて開始時に書く
-  for (const b of waveButtons) b.setAttribute('aria-checked', String(b.dataset.wave === name));
+/** パートの波形を選ぶ。パート1は波形ボタンと同じ */
+function selectWave(name, part = 0) {
+  if (name === CUSTOM) synth.setWaveData(waveEditor.wave, part);
+  else synth.setWave(name, part); // 開始前は書き込みを捨てるが、名前は覚えて開始時に書く
+  if (part === 0) for (const b of waveButtons) b.setAttribute('aria-checked', String(b.dataset.wave === name));
+  partSelects[part].value = name;
+  savePartWaves();
+}
+
+// ---- パート（F-015） ----
+const partSelects = [];
+for (let p = 0; p < PART_COUNT; p++) {
+  const label = document.createElement('label');
+  const name = document.createElement('span');
+  name.className = 'part-name';
+  name.textContent = p === 0 ? '1（鍵盤）' : String(p + 1);
+  const sel = document.createElement('select');
+  sel.setAttribute('aria-label', `パート${p + 1}の波形`);
+  for (const w of [...PRESET_NAMES, CUSTOM]) sel.append(new Option(WAVE_LABELS[w] ?? w, w));
+  sel.value = synth.parts[p].waveName;
+  sel.addEventListener('change', () => selectWave(sel.value, p));
+  label.append(name, sel);
+  $('part-rows').append(label);
+  partSelects.push(sel);
+}
+{
+  const drum = document.createElement('div');
+  drum.className = 'part-drum';
+  drum.textContent = '10：PSG のドラム';
+  $('part-rows').append(drum);
 }
 
 // ---- 波形エディター（F-007） ----
 const waveEditor = new WaveEditor(
   { canvas: $('wave-editor'), text: /** @type {HTMLTextAreaElement} */ ($('we-text')), message: $('we-message') },
-  (wave) => { updateCustomPreview(wave); selectWave(CUSTOM); },
+  (wave) => {
+    updateCustomPreview(wave);
+    // 描いたらパート1を「自作」にする。ほかに「自作」のパートがあれば、そちらにも効く
+    selectWave(CUSTOM);
+  },
 );
 $('we-from-preset').addEventListener('click', () => {
   waveEditor.set(synth.waveName === CUSTOM && synth.customWave ? synth.customWave : getPreset(synth.waveName));
@@ -159,7 +197,7 @@ function buildRows() {
   $('channel-rows').replaceChildren();
   for (let ch = 0; ch < config.channelCount; ch++) {
     const tr = document.createElement('tr');
-    const cells = ['ch', 'freq', 'vol', 'key', 'bank'].map(() => document.createElement('td'));
+    const cells = ['ch', 'freq', 'vol', 'key', 'bank', 'part'].map(() => document.createElement('td'));
     cells[0].textContent = String(ch + 1);
     tr.append(...cells);
     $('channel-rows').append(tr);
@@ -182,6 +220,8 @@ function renderChannels(channels) {
     cells[3].textContent = c.key ? 'ON' : '—';
     cells[3].classList.toggle('key-on', c.key);
     cells[4].textContent = String(c.waveBank + 1);
+    const v = c.key ? synth.voices.slots[i] : null;
+    cells[5].textContent = v ? String(v.part + 1) : '—';
   });
 }
 renderChannels(idleChannels());
@@ -191,9 +231,10 @@ channelSelect.addEventListener('change', () => {
   config = configFor(Number(channelSelect.value));
   try { localStorage.setItem('channel-count', String(config.channelCount)); } catch { /* 同上 */ }
   engine.config = config;
-  const { waveName, customWave } = synth;
-  synth = new Synth(engine, { config });
-  synth.waveName = waveName;
+  const { customWave } = synth;
+  const waves = synth.partWaves();
+  synth = new Synth(engine, { config, drums: true });
+  waves.forEach((name, p) => { synth.parts[p].waveName = name; });
   synth.customWave = customWave;
   buildRows();
   renderChannels(idleChannels());

@@ -2,13 +2,7 @@
 // タイミング：画面側のタイマーで少し先（lookahead）までの出来事を処理し、その書き込みに「鳴らす時刻」を付けて
 // AudioWorklet へ先渡しする（AudioEngine.setScheduleTime）。Worklet は 128 サンプル（約2.7ミリ秒）の区切りで当てる
 //
-// マルチティンバー（F-015）が無いので、全パートが同じ音色で鳴る。次は鳴らさない【設計】
-//   - 10チャンネル目（打楽器。音程のある音として鳴ってしまうため）
-//   - プログラムチェンジ（全体の音色が曲の途中で次々に変わってしまうため）
-//   - ピッチベンド（全体にかかってしまうため）
-// CC7（音量）は、パートごとに覚えてベロシティに掛ける
-
-const DRUM_CHANNEL = 9;
+// 出来事は、外部の MIDI 機器と同じく Synth.handle() へ渡す（F-015 のパート・F-019 のドラム・CC7・ピッチベンドはそちらで扱う）
 
 export class SmfPlayer {
   /**
@@ -31,7 +25,6 @@ export class SmfPlayer {
     this.index = 0;
     this.startTime = 0;
     this.timer = 0;
-    this.cc7 = new Uint8Array(16).fill(127);
     this.playing = false;
   }
 
@@ -45,7 +38,7 @@ export class SmfPlayer {
   play() {
     this.stop();
     this.index = 0;
-    this.cc7.fill(127);
+    this.synth.resetControllers();
     this.startTime = this.clock.now() + 0.1;
     this.playing = true;
     this.timer = setInterval(() => this.pump(), this.interval);
@@ -81,19 +74,6 @@ export class SmfPlayer {
   }
 
   #handle(ev) {
-    if (ev.channel === DRUM_CHANNEL) return;
-    switch (ev.type) {
-      case 'noteOn': {
-        const v = Math.round((ev.velocity * this.cc7[ev.channel]) / 127);
-        if (v > 0) this.synth.noteOn(ev.note, v); else this.synth.noteOff(ev.note);
-        break;
-      }
-      case 'noteOff': this.synth.noteOff(ev.note); break;
-      case 'cc':
-        if (ev.controller === 7) this.cc7[ev.channel] = ev.value;
-        else if (ev.controller === 120 || ev.controller === 123) this.synth.allNotesOff();
-        break;
-      default: break;
-    }
+    this.synth.handle(ev);
   }
 }
