@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<meta name="app-version" content="0.8.0">
+<meta name="app-version" content="0.8.1">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <title>SCCシミュレーター（仮称）</title>
@@ -46,7 +46,7 @@
   <section class="panel waves">
     <h2>波形</h2>
     <div id="wave-buttons" class="wave-buttons" role="radiogroup" aria-label="プリセット波形"></div>
-    <p class="note">ここで選ぶのはパート1（画面の鍵盤と MIDI チャンネル1）の波形です</p>
+    <p class="note" id="wave-target">ここで選ぶのは、画面の鍵盤で鳴らすパート（パート1）の波形です</p>
   </section>
 
   <section class="panel parts">
@@ -123,6 +123,11 @@
       <button id="oct-down" type="button" class="small" disabled aria-label="1オクターブ下げる">◀ 低く</button>
       <span id="octave-label"></span>
       <button id="oct-up" type="button" class="small" disabled aria-label="1オクターブ上げる">高く ▶</button>
+    </div>
+    <div class="row kb-part">
+      <label for="kb-part">鳴らすパート</label>
+      <select id="kb-part"></select>
+      <span id="kb-part-note" class="note"></span>
     </div>
     <div id="keyboard" class="keyboard" aria-label="画面の鍵盤" aria-disabled="true"></div>
   </section>

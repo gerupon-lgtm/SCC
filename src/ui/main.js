@@ -6,7 +6,7 @@ import { PRESET_NAMES, getPreset } from '../core/presets.js';
 import { DEFAULT_MASTER } from '../core/post-stage.js';
 import { AudioEngine } from '../audio/audio-engine.js';
 import { MidiInput } from '../midi/midi-input.js';
-import { Synth, CUSTOM, PART_COUNT } from '../engine/synth.js';
+import { Synth, CUSTOM, PART_COUNT, DRUM_CHANNEL } from '../engine/synth.js';
 import { Keyboard } from './keyboard.js';
 import { initSongPanel } from './song-panel.js';
 import { WaveEditor } from './wave-editor.js';
@@ -76,9 +76,11 @@ const midi = new MidiInput({
   onDisconnect: () => synth.allNotesOff(),
 });
 
+// 画面の鍵盤で鳴らすパート（0〜7、ドラムは DRUM_CHANNEL）。外部の MIDI 機器と同じ道（synth.handle）で鳴らす
+let kbPart = 0;
 const keyboard = new Keyboard($('keyboard'), {
-  onDown: (note) => synth.noteOn(note, 100),
-  onUp: (note) => synth.noteOff(note),
+  onDown: (note) => synth.handle({ type: 'noteOn', channel: kbPart, note, velocity: 100 }),
+  onUp: (note) => synth.handle({ type: 'noteOff', channel: kbPart, note, velocity: 0 }),
 });
 const updateOctave = () => { $('octave-label').textContent = keyboard.rangeLabel; };
 $('keyboard').addEventListener('octavechange', updateOctave);
@@ -123,13 +125,43 @@ const waveButtons = [...PRESET_NAMES, CUSTOM].map((name) => {
   return b;
 });
 /** パートの波形を選ぶ。パート1は波形ボタンと同じ */
-function selectWave(name, part = 0) {
+/** パートの波形を選ぶ。波形ボタンは、画面の鍵盤で鳴らすパートの波形 */
+function selectWave(name, part = waveButtonPart()) {
   if (name === CUSTOM) synth.setWaveData(waveEditor.wave, part);
   else synth.setWave(name, part); // 開始前は書き込みを捨てるが、名前は覚えて開始時に書く
-  if (part === 0) for (const b of waveButtons) b.setAttribute('aria-checked', String(b.dataset.wave === name));
   partSelects[part].value = name;
+  updateWaveButtons();
   savePartWaves();
 }
+/** 波形ボタンが対象にするパート（鍵盤がドラムのときはパート1） */
+function waveButtonPart() {
+  return kbPart === DRUM_CHANNEL ? 0 : kbPart;
+}
+function updateWaveButtons() {
+  const part = waveButtonPart();
+  const name = synth.parts[part].waveName;
+  for (const b of waveButtons) b.setAttribute('aria-checked', String(b.dataset.wave === name));
+  $('wave-target').textContent = `ここで選ぶのは、画面の鍵盤で鳴らすパート（パート${part + 1}）の波形です`;
+}
+
+// ---- 画面の鍵盤で鳴らすパート ----
+const kbPartSelect = /** @type {HTMLSelectElement} */ ($('kb-part'));
+for (let p = 0; p < PART_COUNT; p++) kbPartSelect.append(new Option(`パート${p + 1}（ch${p + 1}）`, String(p)));
+kbPartSelect.append(new Option('ドラム（ch10）', String(DRUM_CHANNEL)));
+const DRUM_KEYS_BASE = 36;
+let kbBaseBeforeDrum = 60;
+kbPartSelect.addEventListener('change', () => {
+  keyboard.releaseAll(); // 押したままの音を、元のパートで離す
+  const wasDrum = kbPart === DRUM_CHANNEL;
+  kbPart = Number(kbPartSelect.value);
+  const isDrum = kbPart === DRUM_CHANNEL;
+  // ドラムは C2〜B3（36〜59）にあるので、鍵盤をそこへ動かす。戻すときは元の高さへ
+  if (isDrum && !wasDrum) { kbBaseBeforeDrum = keyboard.base; keyboard.shift((DRUM_KEYS_BASE - keyboard.base) / 12); }
+  else if (!isDrum && wasDrum) keyboard.shift((kbBaseBeforeDrum - keyboard.base) / 12);
+  updateOctave();
+  $('kb-part-note').textContent = isDrum ? 'C2 バスドラム、D2 スネア、F#2 ハイハット、C#3 シンバルなど（GM の配置）' : '';
+  updateWaveButtons();
+});
 
 // ---- パート（F-015） ----
 const partSelects = [];
@@ -137,7 +169,7 @@ for (let p = 0; p < PART_COUNT; p++) {
   const label = document.createElement('label');
   const name = document.createElement('span');
   name.className = 'part-name';
-  name.textContent = p === 0 ? '1（鍵盤）' : String(p + 1);
+  name.textContent = String(p + 1);
   const sel = document.createElement('select');
   sel.setAttribute('aria-label', `パート${p + 1}の波形`);
   for (const w of [...PRESET_NAMES, CUSTOM]) sel.append(new Option(WAVE_LABELS[w] ?? w, w));
@@ -159,12 +191,13 @@ const waveEditor = new WaveEditor(
   { canvas: $('wave-editor'), text: /** @type {HTMLTextAreaElement} */ ($('we-text')), message: $('we-message') },
   (wave) => {
     updateCustomPreview(wave);
-    // 描いたらパート1を「自作」にする。ほかに「自作」のパートがあれば、そちらにも効く
+    // 描いたら、鍵盤で鳴らすパートを「自作」にする。ほかに「自作」のパートがあれば、そちらにも効く
     selectWave(CUSTOM);
   },
 );
 $('we-from-preset').addEventListener('click', () => {
-  waveEditor.set(synth.waveName === CUSTOM && synth.customWave ? synth.customWave : getPreset(synth.waveName));
+  const name = synth.parts[waveButtonPart()].waveName;
+  waveEditor.set(name === CUSTOM && synth.customWave ? synth.customWave : getPreset(name));
 });
 $('we-smooth').addEventListener('click', () => waveEditor.smooth());
 $('we-invert').addEventListener('click', () => waveEditor.invert());
