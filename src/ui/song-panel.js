@@ -122,8 +122,15 @@ export function initSongPanel({ engine, ensureRunning, getSynth }) {
     try {
       if (isSmf(r.bytes)) {
         smf = parseSmf(r.bytes);
-        const notes = smf.events.filter((ev) => ev.type === 'noteOn').length;
-        showLog(`MIDI ファイル（形式${smf.format}）：音符 ${notes} 個、${fmtTime(smf.duration)}。全パートが同じ音色で鳴ります。10チャンネル目（打楽器）は鳴らしません`);
+        // チャンネル1〜8 はパート（SCC）、10 は PSG のドラム、ほかは鳴らさない（F-015・F-019）
+        let parts = 0, drums = 0, skipped = 0;
+        for (const ev of smf.events) {
+          if (ev.type !== 'noteOn' || ev.velocity === 0) continue;
+          if (ev.channel < 8) parts++; else if (ev.channel === 9) drums++; else skipped++;
+        }
+        showLog(`MIDI ファイル（形式${smf.format}）：${fmtTime(smf.duration)}。音符はパート（ch1〜8）${parts} 個、ドラム（ch10）${drums} 個`
+          + (skipped > 0 ? `。ch9・ch11〜16 の ${skipped} 個は鳴らしません` : '')
+          + '。パートの波形は「パート」欄で選べます');
         $('song-title').textContent = `曲名：${smf.title || r.name}`;
         update();
         return;

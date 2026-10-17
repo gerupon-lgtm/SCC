@@ -1,2 +1,2 @@
 // バージョンの正典。形式は 0.MINOR.PATCH（docs/api-design.md 6章）
-export const VERSION = '0.8.2';
+export const VERSION = '0.8.3';
