@@ -33,6 +33,22 @@ test('3チャンネルを使い回し、4音目は一番古い音を止める。
   assert.deepEqual([...d.notes], [42, 38, 49]);
 });
 
+test('GM の配置：35〜81 のすべてのキーに音がある', () => {
+  for (let n = 35; n <= 81; n++) assert.ok(DRUM_MAP[n], `ノート${n}`);
+  assert.equal(DRUM_MAP[36], DRUM_MAP[35], 'バスドラム');
+  assert.equal(DRUM_MAP[38], DRUM_MAP[40], 'スネア');
+});
+
+test('止め合う組：ホイッスル・ギロ・クイーカも、同じ組の音を止める。組の外は止めない', () => {
+  const d = new PsgDrums(new PsgRef());
+  d.trigger(71, 100); d.trigger(36, 100);
+  d.trigger(72, 100);
+  assert.ok(!d.notes.includes(71));
+  assert.ok(d.notes.includes(36));
+  d.trigger(73, 100); d.trigger(74, 100);
+  assert.ok(!d.notes.includes(73));
+});
+
 test('クローズのハイハットはオープンを止める', () => {
   const d = new PsgDrums(new PsgRef());
   d.trigger(46, 100);
@@ -45,8 +61,8 @@ test('ベロシティで音量が下がる。表に無いノートは鳴らさ�
   const d = new PsgDrums(psg);
   d.trigger(38, 32);
   assert.equal(psg.readReg(8), 15 - 4);
-  assert.equal(d.trigger(20, 100), false);
-  assert.equal(d.trigger(81, 100), false);
+  assert.equal(d.trigger(34, 100), false);
+  assert.equal(d.trigger(82, 100), false);
 });
 
 test('全部止める：音量0', () => {

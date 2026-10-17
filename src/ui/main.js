@@ -159,7 +159,7 @@ kbPartSelect.addEventListener('change', () => {
   if (isDrum && !wasDrum) { kbBaseBeforeDrum = keyboard.base; keyboard.shift((DRUM_KEYS_BASE - keyboard.base) / 12); }
   else if (!isDrum && wasDrum) keyboard.shift((kbBaseBeforeDrum - keyboard.base) / 12);
   updateOctave();
-  $('kb-part-note').textContent = isDrum ? 'C2 バスドラム、D2 スネア、F#2 ハイハット、C#3 シンバルなど（GM の配置）' : '';
+  $('kb-part-note').textContent = isDrum ? 'GM の配置：C2 バスドラム、D2 スネア、F#2 ハイハット、C#3 シンバルなど。C4 より上（ボンゴ・コンガなど）は「高く ▶」で' : '';
   updateWaveButtons();
 });
 
