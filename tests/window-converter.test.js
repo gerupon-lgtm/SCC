@@ -80,17 +80,17 @@ test('後処理：直流を取り除く', () => {
   assert.ok(Math.abs(buf[47999]) < 0.01, `1秒後 ${buf[47999]}`);
 });
 
-test('後処理：音量の初期値は0.5以下、範囲外は丸める、なめらかに変わる', () => {
-  assert.ok(DEFAULT_MASTER <= 0.5);
+test('後処理：音量の初期値は0.8、上限は2、範囲外は丸める、なめらかに変わる', () => {
+  assert.equal(DEFAULT_MASTER, 0.8);
   const p = new PostStage(48000, 5);
   assert.equal(p.target, DEFAULT_MASTER);
-  p.setMaster(2); assert.equal(p.target, 1);
+  p.setMaster(3); assert.equal(p.target, 2);
   p.setMaster(-1); assert.equal(p.target, 0);
   p.setMaster(NaN); assert.equal(p.target, 0);
-  p.setMaster(1);
+  p.setMaster(2);
   const buf = new Float32Array(4).fill(0.4);
   p.process(buf);
-  assert.ok(p.gain > DEFAULT_MASTER && p.gain < 1, `gain ${p.gain}`);
+  assert.ok(p.gain > DEFAULT_MASTER && p.gain < 2, `gain ${p.gain}`);
 });
 
 test('後処理：大きすぎる値は -1〜1 に収める。最大値を報告する', () => {

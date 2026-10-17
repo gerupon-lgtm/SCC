@@ -52,7 +52,7 @@ waves: Int8Array(waveBankCount * 32)
 ## 4. 画面側の状態（保存しない）
 
 ```js
-{ masterVolume: 0.0..1.0,              // 初期0.3【想定】
+{ masterVolume: 0.0..2.0,              // 初期0.8（2026-10-17 発案者。以前は0.3）、1.0 が 0.8.4 までの最大
   audioState: 'stopped'|'running',
   midiState: 'unsupported'|'denied'|'noDevice'|'ready',
   voices: [{ ch, note, velocity, startedAt }],   // 発音中

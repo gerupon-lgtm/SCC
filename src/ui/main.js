@@ -217,7 +217,7 @@ const master = /** @type {HTMLInputElement} */ ($('master'));
 master.value = String(DEFAULT_MASTER);
 const updateMaster = () => {
   const g = Number(master.value);
-  $('master-value').textContent = g.toFixed(2);
+  $('master-value').textContent = `${Math.round(g * 100)}%`;
   engine.setMaster(g);
 };
 master.addEventListener('input', updateMaster);

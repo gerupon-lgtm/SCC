@@ -2,8 +2,14 @@
 // 基準版と高速版の両方に、同じ後処理をかける
 import { SCC_COMPAT } from './config.js';
 
-/** 音量の初期値（docs/data-model.md 4章、0.5以下：CLAUDE.md 変更禁止事項6） */
-export const DEFAULT_MASTER = 0.3;
+/** 音量の初期値（docs/data-model.md 4章。2026-10-17 発案者の指示で 0.3 → 0.8：CLAUDE.md 変更禁止事項6） */
+export const DEFAULT_MASTER = 0.8;
+
+/**
+ * 音量の上限。1 が 0.8.4 までの最大で、それより上げられるようにした（2026-10-17 発案者）
+ * SCC 1音の最大は約 0.116 なので、2倍でも単音は余裕がある。和音や曲では 1 を超えた分が切れて（音割れ）しまうことがある
+ */
+export const MAX_MASTER = 2;
 
 /** 直流除去の目安の周波数（Hz）【設計】 */
 const DC_CUTOFF_HZ = 10;
@@ -27,9 +33,9 @@ export class PostStage {
     this.peak = 0;
   }
 
-  /** @param {number} g 0〜1。範囲外は丸める */
+  /** @param {number} g 0〜MAX_MASTER。範囲外は丸める */
   setMaster(g) {
-    this.target = Number.isFinite(g) ? Math.min(1, Math.max(0, g)) : 0;
+    this.target = Number.isFinite(g) ? Math.min(MAX_MASTER, Math.max(0, g)) : 0;
   }
 
   /** 状態を消す（止めて再開するとき） */
