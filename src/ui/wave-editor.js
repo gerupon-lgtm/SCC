@@ -25,6 +25,7 @@ export class WaveEditor {
 
     const svg = document.createElementNS(SVG_NS, 'svg');
     svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    svg.setAttribute('preserveAspectRatio', 'none'); // 枠の形に合わせて伸ばす（なぞる位置の計算も枠の大きさで行う）
     svg.setAttribute('class', 'wave-editor-svg');
     svg.setAttribute('role', 'img');
     svg.setAttribute('aria-label', '波形（32点）。なぞって描く');
