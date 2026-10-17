@@ -1,4 +1,4 @@
-# SCCシミュレーター（仮称）— AI実装指示書
+# SCCシミュレーター— AI実装指示書
 
 Konami SCC（K051649）を、ブラウザのWeb Audio APIで再現する個人開発アプリです。外部のMIDI機器（Web MIDI API）から演奏します。
 要件の正典は、要件定義書 版0.10（https://claude.ai/code/artifact/220db0c5-39f7-4822-ab03-ca7375eaf6af）です。詳細は `docs/` を読んでください。
@@ -7,11 +7,11 @@ Konami SCC（K051649）を、ブラウザのWeb Audio APIで再現する個人�
 
 - 【想定】素のJavaScript（ES Modules）。ビルド手順なし。型はJSDocコメントのみ
 - 【想定】テストはNode.js標準（`node --test`）。Node 20以上
-- 公開：GitHub Pages（https://gerupon-lgtm.github.io/SCC/ 、リポジトリ gerupon-lgtm/SCC、公開）。2026-10-11 決定。https で配信するので、スマホでも音とMIDIが使える。`main` に push すると更新される。正式名称・ライセンスは未定
+- 公開：GitHub Pages（https://gerupon-lgtm.github.io/SCC/ 、リポジトリ gerupon-lgtm/SCC、公開）。2026-10-11 決定。https で配信するので、スマホでも音とMIDIが使える。`main` に push すると更新される。正式名称は「SCCシミュレーター」（2026-10-17 決定）。ライセンスは未定
 - 【想定】MIDIから音への割り当ての既定値は、`docs/api-design.md` の表のとおり
 - 【想定】フォントはOS標準のみ。アイコンライブラリは使わない
 - 【想定】プリセット波形は5種（`docs/data-model.md`）
-- 【要確認】IKASCCとの照合、DAWプラグイン化、正式名称、公開名義（実装は止めない）
+- 【要確認】IKASCCとの照合、DAWプラグイン化、公開名義（実装は止めない）
 
 ## 実行とテスト
 
