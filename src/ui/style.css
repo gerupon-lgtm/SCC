@@ -94,11 +94,20 @@ button.small:disabled { opacity: 0.4; cursor: default; }
 .wave-buttons svg { width: 48px; height: 24px; }
 .wave-buttons polyline { fill: none; stroke: var(--accent); stroke-width: 1.5; }
 
-.channels table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-.channels th { text-align: left; color: var(--muted); font-weight: 400; padding: 2px 6px; }
-.channels td { padding: 4px 6px; border-top: 1px solid var(--line); font-family: var(--mono); white-space: nowrap; }
+/* 曲の再生中は数字やバーの長さが細かく変わる。列の幅を中身で決めると表がずっと揺れるので、幅を固定する（0.8.12） */
+.channels-scroll { overflow-x: auto; max-width: 100%; }
+.channels table { width: 100%; border-collapse: collapse; font-size: 0.9rem; table-layout: fixed; }
+.channels col.c-ch { width: 2.2em; }
+.channels col.c-vol { width: 5em; }
+.channels col.c-key { width: 2.8em; }
+.channels col.c-wave { width: 2.8em; }
+.channels col.c-part { width: 3.6em; }
+@media (max-width: 480px) { .channels table { font-size: 0.8rem; } }
+.channels th, .channels td { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.channels th { text-align: left; color: var(--muted); font-weight: 400; padding: 2px 4px; }
+.channels td { padding: 4px 4px; border-top: 1px solid var(--line); font-family: var(--mono); white-space: nowrap; }
 .channels td.key-on { color: var(--accent); }
-.vol-bar { display: inline-block; height: 8px; background: var(--accent); border-radius: 2px; vertical-align: middle; margin-left: 6px; }
+.vol-bar { display: inline-block; max-width: 30px; height: 8px; background: var(--accent); border-radius: 2px; vertical-align: middle; margin-left: 6px; }
 
 .octave { justify-content: space-between; margin-bottom: 8px; font-family: var(--mono); font-size: 0.9rem; }
 .keyboard {

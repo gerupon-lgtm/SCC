@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<meta name="app-version" content="0.8.11">
+<meta name="app-version" content="0.8.12">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <title>SCCシミュレーター</title>
@@ -137,10 +137,13 @@
 
   <section class="panel channels">
     <h2>チャンネル</h2>
+    <div class="channels-scroll">
     <table>
+      <colgroup><col class="c-ch"><col class="c-freq"><col class="c-vol"><col class="c-key"><col class="c-wave"><col class="c-part"></colgroup>
       <thead><tr><th>ch</th><th>周波数</th><th>音量</th><th>キー</th><th>波形</th><th>パート</th></tr></thead>
       <tbody id="channel-rows"></tbody>
     </table>
+    </div>
   </section>
 </main>
 

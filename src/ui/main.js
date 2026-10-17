@@ -246,11 +246,11 @@ function renderChannels(channels) {
     const cells = rows[i];
     if (!cells) return;
     const hz = c.frequency > 8 ? config.clock / (32 * (c.frequency + 1)) : 0;
-    cells[1].textContent = c.frequency > 8 ? `${c.frequency}（${hz.toFixed(1)}Hz）` : `${c.frequency}（停止）`;
+    cells[1].textContent = c.frequency > 8 ? `${c.frequency} ${hz.toFixed(1)}Hz` : `${c.frequency} 停止`;
     cells[2].textContent = String(c.volume).padStart(2, ' ');
     const bar = document.createElement('span');
     bar.className = 'vol-bar';
-    bar.style.width = `${c.volume * 3}px`;
+    bar.style.width = `${c.volume * 2}px`; // 音量15で30px（列の幅に収める）
     cells[2].append(bar);
     cells[3].textContent = c.key ? 'ON' : '—';
     cells[3].classList.toggle('key-on', c.key);
