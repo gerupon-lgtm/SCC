@@ -68,7 +68,8 @@ function savePartWaves() {
 }
 
 const midi = new MidiInput({
-  onEvent: (ev) => { if (engine.running) synth.handle(ev); },
+  // 外部の MIDI キーボードは、送ってきたチャンネルに関係なく、画面の「鳴らすパート」で鳴らす（2026-10-17 発案者）
+  onEvent: (ev) => { if (engine.running) synth.handle({ ...ev, channel: kbPart }); },
   onState: (state, names) => {
     $('midi-state').textContent = state === 'ready' ? `${MIDI_TEXT.ready}（${names.join('、')}）` : MIDI_TEXT[state];
     $('midi-retry').hidden = state !== 'denied';
@@ -141,7 +142,7 @@ function updateWaveButtons() {
   const part = waveButtonPart();
   const name = synth.parts[part].waveName;
   for (const b of waveButtons) b.setAttribute('aria-checked', String(b.dataset.wave === name));
-  $('wave-target').textContent = `ここで選ぶのは、画面の鍵盤で鳴らすパート（パート${part + 1}）の波形です`;
+  $('wave-target').textContent = `ここで選ぶのは、鍵盤で鳴らすパート（パート${part + 1}）の波形です`;
 }
 
 // ---- 画面の鍵盤で鳴らすパート ----
@@ -153,6 +154,7 @@ let kbBaseBeforeDrum = 60;
 kbPartSelect.addEventListener('change', () => {
   keyboard.releaseAll(); // 押したままの音を、元のパートで離す
   const wasDrum = kbPart === DRUM_CHANNEL;
+  if (!wasDrum) synth.allNotesOff(kbPart); // 外部キーボードで押したままの音も止める（離したときは新しいパートに届くため）
   kbPart = Number(kbPartSelect.value);
   const isDrum = kbPart === DRUM_CHANNEL;
   // ドラムは C2〜B3（36〜59）にあるので、鍵盤をそこへ動かす。戻すときは元の高さへ
