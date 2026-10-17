@@ -2,14 +2,25 @@
 // 基準版と高速版の両方に、同じ後処理をかける
 import { SCC_COMPAT } from './config.js';
 
-/** 音量の初期値（docs/data-model.md 4章。2026-10-17 発案者の指示で 0.3 → 0.8：CLAUDE.md 変更禁止事項6） */
-export const DEFAULT_MASTER = 0.8;
-
 /**
- * 音量の上限。1 が 0.8.4 までの最大で、それより上げられるようにした（2026-10-17 発案者）
- * SCC 1音の最大は約 0.116 なので、2倍でも単音は余裕がある。和音や曲では 1 を超えた分が切れて（音割れ）しまうことがある
+ * 音量の上限（倍率）。0.8.4 までの最大（1）の2倍にした（2026-10-17 発案者）。画面のスライダーの 100% がこれ
+ * SCC 1音の最大は約 0.116 なので、単音は余裕がある。5音の和音を最大の強さで弾くと、約83%（倍率1.67）から上は 1 を超えた分が切れる（音割れ）
  */
 export const MAX_MASTER = 2;
+
+/** 画面のスライダーの初期位置（%）。2026-10-17 発案者：CLAUDE.md 変更禁止事項6 */
+export const DEFAULT_SLIDER = 80;
+
+/**
+ * 画面のスライダー（0〜100%）→ 音量の倍率（0〜MAX_MASTER）
+ * @param {number} percent
+ */
+export function sliderToGain(percent) {
+  return (percent / 100) * MAX_MASTER;
+}
+
+/** 音量の初期値（倍率。スライダーの 80% ＝ 1.6。0.8.4 までの 0.3 の約5倍）docs/data-model.md 4章 */
+export const DEFAULT_MASTER = sliderToGain(DEFAULT_SLIDER);
 
 /** 直流除去の目安の周波数（Hz）【設計】 */
 const DC_CUTOFF_HZ = 10;

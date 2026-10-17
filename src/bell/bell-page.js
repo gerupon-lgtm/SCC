@@ -2,7 +2,7 @@
 import '../ui/version-check.js'; // 最初に読む：版の食い違いとエラーを画面に出す
 import { VERSION } from '../version.js';
 import { SCC_COMPAT } from '../core/config.js';
-import { DEFAULT_MASTER } from '../core/post-stage.js';
+import { DEFAULT_SLIDER, sliderToGain } from '../core/post-stage.js';
 import { Keyboard, noteName } from '../ui/keyboard.js';
 import { BELL_PRESETS, BELL_CHANNELS, normalizeParams, noteToHz, hzToPeriod } from './bell-voice.js';
 
@@ -39,7 +39,7 @@ async function start() {
     throw e;
   }
   send({ type: 'params', params });
-  send({ type: 'master', gain: Number(master.value) });
+  send({ type: 'master', gain: sliderToGain(Number(master.value)) });
   pollTimer = setInterval(() => send({ type: 'poll' }), POLL_MS);
 }
 
@@ -89,12 +89,12 @@ lengthInput.addEventListener('input', () => {
 });
 
 const master = /** @type {HTMLInputElement} */ ($('master'));
-master.value = String(DEFAULT_MASTER);
+master.value = String(DEFAULT_SLIDER);
 master.addEventListener('input', () => {
-  $('master-value').textContent = Number(master.value).toFixed(2);
-  send({ type: 'master', gain: Number(master.value) });
+  $('master-value').textContent = `${master.value}%`;
+  send({ type: 'master', gain: sliderToGain(Number(master.value)) });
 });
-$('master-value').textContent = Number(master.value).toFixed(2);
+$('master-value').textContent = `${master.value}%`;
 
 const velocity = /** @type {HTMLInputElement} */ ($('velocity'));
 velocity.addEventListener('input', () => { $('velocity-value').textContent = Number(velocity.value).toFixed(2); });

@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<meta name="app-version" content="0.8.6">
+<meta name="app-version" content="0.8.7">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <title>鐘の音の試作 — SCCシミュレーター（仮称）</title>
@@ -32,8 +32,8 @@
     </div>
     <div class="row bell-row">
       <label for="master">音量</label>
-      <input id="master" type="range" min="0" max="1" step="0.01" value="0.8" disabled>
-      <output id="master-value">0.80</output>
+      <input id="master" type="range" min="0" max="100" step="1" value="80" disabled>
+      <output id="master-value">80%</output>
     </div>
     <div class="row bell-row">
       <label for="velocity">強さ</label>

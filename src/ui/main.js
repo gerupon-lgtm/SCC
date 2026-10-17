@@ -3,7 +3,7 @@ import './version-check.js'; // 最初に読む：版の食い違いとエラー
 import { VERSION } from '../version.js';
 import { SCC_COMPAT, extendedConfig } from '../core/config.js';
 import { PRESET_NAMES, getPreset } from '../core/presets.js';
-import { DEFAULT_MASTER } from '../core/post-stage.js';
+import { DEFAULT_SLIDER, sliderToGain } from '../core/post-stage.js';
 import { AudioEngine } from '../audio/audio-engine.js';
 import { MidiInput } from '../midi/midi-input.js';
 import { Synth, CUSTOM, PART_COUNT, DRUM_CHANNEL } from '../engine/synth.js';
@@ -214,11 +214,11 @@ selectWave(synth.waveName);
 
 // ---- 音量 ----
 const master = /** @type {HTMLInputElement} */ ($('master'));
-master.value = String(DEFAULT_MASTER);
+master.value = String(DEFAULT_SLIDER);
 const updateMaster = () => {
-  const g = Number(master.value);
-  $('master-value').textContent = `${Math.round(g * 100)}%`;
-  engine.setMaster(g);
+  const pct = Number(master.value);
+  $('master-value').textContent = `${pct}%`;
+  engine.setMaster(sliderToGain(pct));
 };
 master.addEventListener('input', updateMaster);
 updateMaster();
