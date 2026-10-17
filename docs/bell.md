@@ -1,6 +1,6 @@
 # 鐘の音の試作（T-201）
 
-本体（`index.html`）とは別のページです：`bell.html`（公開：https://gerupon-lgtm.github.io/SCC/bell.html ）。
+本体（`index.html`）とは別のページです：`bell.html`（公開：https://scc-sim.sikumilab.com/bell.html ）。
 発案者が、鐘の音（単音）を別のアプリで使うための試作です。本体のコードは変えていません。
 
 ## なぜこの作りか

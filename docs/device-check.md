@@ -22,7 +22,7 @@ iOS（Safari）：2026-10-11 発案者が、音が出ることを確認。長押
 
 ## 通しの確認（T-014、MVPの完了の目安）
 
-公開ページ https://gerupon-lgtm.github.io/SCC/ で行います。画面の下の版が最新か（古ければ再読み込み）を先に見ます。
+公開ページ https://scc-sim.sikumilab.com/ で行います。画面の下の版が最新か（古ければ再読み込み）を先に見ます。
 
 ### PC（Chrome・外部MIDIキーボード）
 
@@ -52,7 +52,7 @@ iOS（Safari）：2026-10-11 発案者が、音が出ることを確認。長押
 
 ### PC
 
-1. Chrome で https://gerupon-lgtm.github.io/SCC/ を開く（手元で動かす場合は `python tools/serve.py` → http://localhost:8000）
+1. Chrome で https://scc-sim.sikumilab.com/ を開く（手元で動かす場合は `python tools/serve.py` → http://localhost:8000）
 2. 「▶ 音を出す」を押す。画面の鍵盤を押して、音が出るか聴く（最初は音量0.3）
 3. 外部のMIDIキーボードをつなぎ、MIDIの許可を求められたら「許可」。「つながっています」になり、弾くと鳴るか
 4. 6音を同時に押して、一番古い音が止まるか。波形のボタンで音色が変わるか
@@ -60,7 +60,7 @@ iOS（Safari）：2026-10-11 発案者が、音が出ることを確認。長押
 
 ### Android（Pixel 6a）
 
-1. Pixel の Chrome で https://gerupon-lgtm.github.io/SCC/ を開く
+1. Pixel の Chrome で https://scc-sim.sikumilab.com/ を開く
 2. （ケーブルを使う場合の代わり：`adb reverse tcp:8000 tcp:8000` のあと http://localhost:8000）
 3. PCと同じ 2〜5 を行う。USB-MIDIキーボードは、USBハブやOTGアダプター経由でつなぐ
 4. 音切れがあれば、そのときの「処理の重さ」と「音切れの疑い」の表示を記録する

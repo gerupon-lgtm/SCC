@@ -7,7 +7,7 @@ Konami SCC（K051649）を、ブラウザのWeb Audio APIで再現する個人�
 
 - 【想定】素のJavaScript（ES Modules）。ビルド手順なし。型はJSDocコメントのみ
 - 【想定】テストはNode.js標準（`node --test`）。Node 20以上
-- 公開：GitHub Pages（https://gerupon-lgtm.github.io/SCC/ 、リポジトリ gerupon-lgtm/SCC、公開）。2026-10-11 決定。https で配信するので、スマホでも音とMIDIが使える。`main` に push すると更新される。正式名称は「SCCシミュレーター」（2026-10-17 決定）。ライセンスは未定
+- 公開：GitHub Pages（https://scc-sim.sikumilab.com/ 。独自ドメインは 2026-10-17 発案者が設定。旧 https://gerupon-lgtm.github.io/SCC/ は転送される。リポジトリ gerupon-lgtm/SCC、公開）。2026-10-11 決定。https で配信するので、スマホでも音とMIDIが使える。`main` に push すると更新される。正式名称は「SCCシミュレーター」（2026-10-17 決定）。ライセンスは未定
 - 【想定】MIDIから音への割り当ての既定値は、`docs/api-design.md` の表のとおり
 - 【想定】フォントはOS標準のみ。アイコンライブラリは使わない
 - 【想定】プリセット波形は5種（`docs/data-model.md`）
@@ -17,7 +17,7 @@ Konami SCC（K051649）を、ブラウザのWeb Audio APIで再現する個人�
 
 - 起動：`python tools/serve.py` → http://localhost:8000（ブラウザに古いファイルを使わせない開発用サーバー。`python -m http.server` だと変更が反映されないことがある）
 - テスト：`node --test`（Node 24では `node --test tests/` のようにフォルダを渡すと動かないため、引数なしで実行します）
-- Android実機：https://gerupon-lgtm.github.io/SCC/ を開く（push 後、反映まで1分ほど）。LANのIP（http://192.168.x.x:8000）では、安全な接続でないため音もMIDIも使えません（2026-10-10 確認）
+- Android実機：https://scc-sim.sikumilab.com/ を開く（push 後、反映まで1分ほど）。LANのIP（http://192.168.x.x:8000）では、安全な接続でないため音もMIDIも使えません（2026-10-10 確認）
 - 実装の開始点は `docs/tasks.md` のT-001です。タスクは上から順に進めます
 
 ## 構成

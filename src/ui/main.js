@@ -23,7 +23,7 @@ const MIDI_TEXT = {
 const ERROR_TEXT = {
   E_NO_WORKLET: 'このブラウザでは音を出せません（AudioWorklet が使えません）',
   E_CONFIG: '設定に誤りがあります',
-  E_INSECURE_CONTEXT: 'このアドレスでは音もMIDIも使えません。ブラウザが、https か localhost で開いたページにしか許可しないためです。公開版 https://gerupon-lgtm.github.io/SCC/ を開いてください',
+  E_INSECURE_CONTEXT: 'このアドレスでは音もMIDIも使えません。ブラウザが、https か localhost で開いたページにしか許可しないためです。公開版 https://scc-sim.sikumilab.com/ を開いてください',
 };
 const POLL_MS = 33; // 約30回/秒
 const UNDERRUN_HOLD_MS = 3000;
